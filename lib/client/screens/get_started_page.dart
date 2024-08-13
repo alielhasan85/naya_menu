@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:naya_menu/client/screens/login_page.dart';
 
+// starting page or loading page to be edited
 class GetStartedPage extends StatelessWidget {
   const GetStartedPage({super.key});
 
@@ -15,14 +16,14 @@ class GetStartedPage extends StatelessWidget {
           children: [
             const Spacer(),
             Text(
-              'Book tracker',
+              'Naya Menu',
               style: Theme.of(context).textTheme.displayMedium,
             ),
             const SizedBox(
               height: 15,
             ),
             const Text(
-              'Read. Change. Yourself',
+              'Create Your Own Special Menu!',
               style: TextStyle(
                   fontWeight: FontWeight.bold,
                   color: Colors.black26,
@@ -34,7 +35,8 @@ class GetStartedPage extends StatelessWidget {
             TextButton.icon(
               style: TextButton.styleFrom(
                   foregroundColor: Colors.white,
-                  backgroundColor: HexColor('#69639f'),
+                  backgroundColor:
+                      HexColor('#69639f'), // need to work on the color plate
                   textStyle: const TextStyle(fontSize: 18)),
               onPressed: () {
                 Navigator.push(

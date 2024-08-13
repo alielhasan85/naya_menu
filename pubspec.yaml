@@ -38,6 +38,7 @@ dependencies:
   firebase_core: ^3.3.0
   firebase_auth: ^5.1.4
   hexcolor: ^3.0.1
+  font_awesome_flutter: ^10.7.0
 
 dev_dependencies:
   flutter_test:
