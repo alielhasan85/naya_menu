@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "496204255608",
+    "project_id": "naya-menu-478de",
+    "storage_bucket": "naya-menu-478de.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:496204255608:android:72b7de6ac880c4c146788d",
+        "android_client_info": {
+          "package_name": "com.example.naya_menu"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBWqvB6OxI2MD6zAXEATj6pOs4AkxPJFwQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
