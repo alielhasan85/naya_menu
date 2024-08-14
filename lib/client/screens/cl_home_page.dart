@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:hexcolor/hexcolor.dart';
-import 'package:naya_menu/client/screens/login_page.dart';
+import 'package:naya_menu/client/screens/cl_auth_page.dart';
 
 // starting page or loading page to be edited
 class GetStartedPage extends StatelessWidget {
@@ -11,7 +11,8 @@ class GetStartedPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Material(
       child: CircleAvatar(
-        backgroundColor: HexColor('#f5f6f8'),
+        backgroundColor:
+            HexColor('#f5f6f8'), //shall be changed to match ui design
         child: Column(
           children: [
             const Spacer(),

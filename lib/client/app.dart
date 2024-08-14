@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:naya_menu/client/screens/get_started_page.dart';
+import 'package:naya_menu/client/screens/cl_home_page.dart';
+import 'package:naya_menu/client/screens/cl_main_page.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -14,7 +15,9 @@ class MyApp extends StatelessWidget {
             ColorScheme.fromSeed(seedColor: Color.fromARGB(255, 154, 197, 228)),
         useMaterial3: true,
       ),
-      home: const GetStartedPage(),
+      home: //const GetStartedPage(),
+
+          MainPage(),
     );
   }
 }

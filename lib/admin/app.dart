@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:naya_menu/admin/screen/ad_home.dart';
-import 'package:naya_menu/client/screens/get_started_page.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});

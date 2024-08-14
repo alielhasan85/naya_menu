@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:naya_menu/client/widgets/input_fields.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:naya_menu/client/screens/main_screen.dart'; // Import MainPage
+import 'package:naya_menu/client/screens/cl_main_page.dart'; // Import MainPage
 
 class SignUpForm extends StatefulWidget {
   final GlobalKey<FormState> formKey;
