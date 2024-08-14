@@ -23,9 +23,11 @@ class SignUpForm extends StatefulWidget {
 }
 
 class _SignUpFormState extends State<SignUpForm> {
-  bool _showConfirmPassword = false;
-  bool _isLoading = false;
+  bool _showConfirmPassword =
+      false; // Flag to toggle the confirm password field
+  bool _isLoading = false; // Flag to indicate loading state during sign-up
 
+  // Method to validate email input
   String? _validateEmail(String? value) {
     if (value == null || value.isEmpty) {
       return 'Please enter an email address';
@@ -37,6 +39,7 @@ class _SignUpFormState extends State<SignUpForm> {
     return null;
   }
 
+  // Method to validate password input
   String? _validatePassword(String? value) {
     if (value == null || value.isEmpty) {
       return 'Please enter a password';
@@ -47,6 +50,7 @@ class _SignUpFormState extends State<SignUpForm> {
     return null;
   }
 
+  // Check if the email and password fields are valid before showing the confirm password field
   void _checkFields() {
     final isEmailValid = _validateEmail(widget.emailController.text) == null;
     final isPasswordValid =
@@ -57,31 +61,43 @@ class _SignUpFormState extends State<SignUpForm> {
     });
   }
 
-// function for firebase authentication
+  // Simulate the sign-up process (this can be replaced with actual sign-up logic)
   Future<void> _signUp() async {
-    if (!widget.formKey.currentState!.validate()) return;
+    if (!widget.formKey.currentState!.validate())
+      return; // Validate form fields
 
     setState(() {
-      _isLoading = true;
+      _isLoading = true; // Show loading indicator
     });
+
+    // Simulated sign-up delay (replace this with your sign-up logic)
+    await Future.delayed(Duration(seconds: 2));
+
+    setState(() {
+      _isLoading = false; // Hide loading indicator
+    });
+
+    // Optionally, navigate to another screen or show a success message
   }
 
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
-    double titleFontSize = screenWidth < 600 ? 20.0 : 30.0;
+    double titleFontSize =
+        screenWidth < 600 ? 20.0 : 30.0; // Responsive font size
 
     return Form(
-      key: widget.formKey,
+      key: widget.formKey, // Form key for validation
       child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisSize: MainAxisSize.min, // Adjusts to the size of its children
+        crossAxisAlignment:
+            CrossAxisAlignment.center, // Center-align the content
         children: <Widget>[
           Text(
             'Create Your Free Account',
             style: TextStyle(
               fontSize: titleFontSize,
-              fontWeight: FontWeight.w900,
+              fontWeight: FontWeight.w900, // Bold text
             ),
           ),
           const SizedBox(height: 15.0),
@@ -89,7 +105,7 @@ class _SignUpFormState extends State<SignUpForm> {
             'No Credit Card required.',
             style: TextStyle(
               fontSize: 14,
-              fontStyle: FontStyle.italic,
+              fontStyle: FontStyle.italic, // Italicized text
             ),
           ),
           const SizedBox(height: 20.0),
@@ -98,7 +114,7 @@ class _SignUpFormState extends State<SignUpForm> {
             hintText: "Enter your email",
             controller: widget.emailController,
             validator: _validateEmail,
-            onChanged: (value) => _checkFields(),
+            onChanged: (value) => _checkFields(), // Check fields on change
           ),
           const SizedBox(height: 20.0),
           InputField(
@@ -106,8 +122,8 @@ class _SignUpFormState extends State<SignUpForm> {
             hintText: "Enter your password",
             controller: widget.passwordController,
             validator: _validatePassword,
-            onChanged: (value) => _checkFields(),
-            obscureText: true,
+            onChanged: (value) => _checkFields(), // Check fields on change
+            obscureText: true, // Hide password input
           ),
           if (_showConfirmPassword) const SizedBox(height: 20.0),
           if (_showConfirmPassword)
@@ -121,19 +137,20 @@ class _SignUpFormState extends State<SignUpForm> {
                 }
                 return null;
               },
-              obscureText: true,
+              obscureText: true, // Hide confirm password input
             ),
           const SizedBox(height: 20.0),
           SizedBox(
             width: 400,
             child: ElevatedButton(
-              onPressed: _isLoading ? null : _signUp,
+              onPressed:
+                  _isLoading ? null : _signUp, // Disable button if loading
               child: _isLoading
-                  ? CircularProgressIndicator()
+                  ? CircularProgressIndicator() // Show loading indicator if in progress
                   : const Text('Create Account'),
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.greenAccent,
-                foregroundColor: Colors.white,
+                backgroundColor: Colors.greenAccent, // Button background color
+                foregroundColor: Colors.white, // Button text color
                 padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 15.0),
                 textStyle: TextStyle(fontSize: 16.0),
               ),
@@ -165,14 +182,15 @@ class _SignUpFormState extends State<SignUpForm> {
               ),
               label: const Text('Sign Up with Google'),
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.white,
-                foregroundColor: Colors.black,
+                backgroundColor: Colors.white, // Button background color
+                foregroundColor: Colors.black, // Button text color
                 padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 15.0),
                 textStyle: TextStyle(fontSize: 16.0),
               ),
             ),
           ),
           const SizedBox(height: 20.0),
+          // Toggle to login form if the user already has an account
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -183,7 +201,7 @@ class _SignUpFormState extends State<SignUpForm> {
                 ),
               ),
               TextButton(
-                onPressed: widget.onToggle,
+                onPressed: widget.onToggle, // Trigger form toggle
                 child: const Text(
                   "Log in",
                   style: TextStyle(color: Colors.blue),

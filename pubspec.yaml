@@ -39,6 +39,7 @@ dependencies:
   firebase_auth: ^5.1.4
   hexcolor: ^3.0.1
   font_awesome_flutter: ^10.7.0
+  flutter_riverpod: ^2.5.1
 
 dev_dependencies:
   flutter_test:

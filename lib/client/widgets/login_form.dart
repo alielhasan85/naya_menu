@@ -3,10 +3,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:naya_menu/client/screens/main_screen.dart';
 import 'package:naya_menu/client/widgets/input_fields.dart';
 
-// TODO: add forget passworld page
-// TODO: add and check google login steps
-// TODO: add otp request with phone number
-
 class LoginForm extends StatefulWidget {
   final GlobalKey<FormState> formKey;
   final TextEditingController emailController;
@@ -28,6 +24,7 @@ class LoginForm extends StatefulWidget {
 class _LoginFormState extends State<LoginForm> {
   bool _isLoading = false;
 
+  // Validate email input
   String? _validateEmail(String? value) {
     if (value == null || value.isEmpty) {
       return 'Please enter an email address';
@@ -39,6 +36,7 @@ class _LoginFormState extends State<LoginForm> {
     return null;
   }
 
+  // Validate password input
   String? _validatePassword(String? value) {
     if (value == null || value.isEmpty) {
       return 'Please enter a password';
@@ -49,6 +47,7 @@ class _LoginFormState extends State<LoginForm> {
     return null;
   }
 
+  // Log in process with Firebase authentication
   Future<void> _logIn() async {
     if (!widget.formKey.currentState!.validate()) return;
 
@@ -65,7 +64,7 @@ class _LoginFormState extends State<LoginForm> {
       // Navigate to MainPage on successful login
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => const MainScreenPage()),
+        MaterialPageRoute(builder: (context) => const MainPage()),
       );
     } on FirebaseAuthException catch (e) {
       // Handle error (e.g., show a dialog or Snackbar)
@@ -123,24 +122,27 @@ class _LoginFormState extends State<LoginForm> {
             width: 400,
             child: ElevatedButton(
               onPressed: _isLoading ? null : _logIn,
-              child: _isLoading
-                  ? CircularProgressIndicator()
-                  : const Text('Log In'),
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.greenAccent,
                 foregroundColor: Colors.white,
-                padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 15.0),
-                textStyle: TextStyle(fontSize: 16.0),
+                padding: const EdgeInsets.symmetric(
+                    horizontal: 20.0, vertical: 15.0),
+                textStyle: const TextStyle(fontSize: 16.0),
               ),
+              child: _isLoading
+                  ? const CircularProgressIndicator()
+                  : const Text('Log In'),
             ),
           ),
           const SizedBox(height: 20.0),
+          // Toggle to sign-up form if the user doesn't have an account
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               const Text("Don't have an account? "),
               TextButton(
-                onPressed: widget.onToggle,
+                onPressed:
+                    widget.onToggle, // Trigger form toggle using Riverpod
                 child: const Text(
                   "Sign Up",
                   style: TextStyle(color: Colors.blue),
