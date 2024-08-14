@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:naya_menu/client/widgets/input_fields.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:naya_menu/client/screens/main_screen.dart'; // Import MainPage
 
 class SignUpForm extends StatefulWidget {
   final GlobalKey<FormState> formKey;
@@ -61,7 +63,7 @@ class _SignUpFormState extends State<SignUpForm> {
     });
   }
 
-  // Simulate the sign-up process (this can be replaced with actual sign-up logic)
+  // Method to handle sign-up process with Firebase authentication
   Future<void> _signUp() async {
     if (!widget.formKey.currentState!.validate())
       return; // Validate form fields
@@ -70,14 +72,38 @@ class _SignUpFormState extends State<SignUpForm> {
       _isLoading = true; // Show loading indicator
     });
 
-    // Simulated sign-up delay (replace this with your sign-up logic)
-    await Future.delayed(Duration(seconds: 2));
+    try {
+      // Create a new user with FirebaseAuth
+      await FirebaseAuth.instance.createUserWithEmailAndPassword(
+        email: widget.emailController.text,
+        password: widget.passwordController.text,
+      );
 
-    setState(() {
-      _isLoading = false; // Hide loading indicator
-    });
+      // Navigate to MainPage on successful sign-up
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const MainPage()),
+      );
+    } on FirebaseAuthException catch (e) {
+      // Handle errors during sign-up
+      String errorMessage;
 
-    // Optionally, navigate to another screen or show a success message
+      if (e.code == 'weak-password') {
+        errorMessage = 'The password provided is too weak.';
+      } else if (e.code == 'email-already-in-use') {
+        errorMessage = 'An account already exists for that email.';
+      } else {
+        errorMessage = 'An error occurred. Please try again.';
+      }
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(errorMessage)),
+      );
+    } finally {
+      setState(() {
+        _isLoading = false; // Hide loading indicator
+      });
+    }
   }
 
   @override
