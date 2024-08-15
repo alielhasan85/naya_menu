@@ -152,3 +152,4 @@ firebase_options.dart
 
 # Specific build directories
 /build/web/
+node_modules
