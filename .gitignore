@@ -1,6 +1,9 @@
 # Do not remove or rename entries in this file, only add new ones
 # See https://github.com/flutter/flutter/issues/128635 for more context.
 
+# Do not remove or rename entries in this file, only add new ones
+# See https://github.com/flutter/flutter/issues/128635 for more context.
+
 # Miscellaneous
 *.class
 *.lock
@@ -63,6 +66,13 @@ flutter_*.png
 linked_*.ds
 unlinked.ds
 unlinked_spec.ds
+
+# Firebase related
+/.firebase/
+/.firebaserc
+
+# GitHub Workflows
+/.github/
 
 # Android related
 **/android/**/gradle-wrapper.jar
@@ -139,3 +149,6 @@ app.*.symbols
 !/dev/ci/**/Gemfile.lock
 !.vscode/settings.json
 firebase_options.dart
+
+# Specific build directories
+/build/web/
