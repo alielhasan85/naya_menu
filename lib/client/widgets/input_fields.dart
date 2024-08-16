@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:naya_menu/theme/app_theme.dart'; // Import your AppTheme
 
 class InputField extends StatelessWidget {
-  final String label;
+  final String? label; // Made label optional
   final String hintText;
   final TextEditingController controller;
   final String? Function(String?)? validator;
@@ -10,10 +11,10 @@ class InputField extends StatelessWidget {
   final bool obscureText;
   final TextInputType keyboardType;
   final TextCapitalization textCapitalization;
-  final bool labelAboveField; // New property to control label position
+  final bool labelAboveField; // Property to control label position
 
   InputField({
-    required this.label,
+    this.label, // Label is now optional
     required this.hintText,
     required this.controller,
     this.validator,
@@ -27,34 +28,40 @@ class InputField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final border = OutlineInputBorder(
-      borderRadius: BorderRadius.circular(12),
-      borderSide: BorderSide(color: HexColor('#69639f'), width: 2),
+    // Use the theme's input decoration theme
+    final inputDecoration = InputDecoration(
+      border: AppTheme.inputDecorationTheme.border,
+      focusedBorder: AppTheme.inputDecorationTheme.focusedBorder,
+      enabledBorder: AppTheme.inputDecorationTheme.enabledBorder,
+      contentPadding: AppTheme.inputDecorationTheme.contentPadding ??
+          const EdgeInsets.all(10.0),
+      hintText: hintText,
+      hintStyle: AppTheme.inputDecorationTheme.hintStyle ??
+          const TextStyle(fontSize: 14.0),
+      filled: AppTheme.inputDecorationTheme.filled ?? true,
+      fillColor: AppTheme.inputDecorationTheme.fillColor ?? Colors.blue.shade50,
     );
 
     return labelAboveField
         ? Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              Text(
-                label,
-                textAlign: TextAlign.left,
-              ),
-              const SizedBox(height: 8.0),
+              if (label != null && label!.isNotEmpty)
+                Text(
+                  label!,
+                  textAlign: TextAlign.left,
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodyMedium, // Use theme text style
+                ),
+              if (label != null && label!.isNotEmpty)
+                const SizedBox(height: 8.0),
               TextFormField(
                 controller: controller,
                 keyboardType: keyboardType,
                 textCapitalization: textCapitalization,
                 style: const TextStyle(fontSize: 15.0),
-                decoration: InputDecoration(
-                  border: border,
-                  focusedBorder: border,
-                  enabledBorder: border,
-                  contentPadding: const EdgeInsets.all(10.0),
-                  hintText: hintText,
-                  filled: true,
-                  fillColor: Colors.blue.shade50,
-                ),
+                decoration: inputDecoration,
                 validator: validator,
                 onChanged: onChanged,
                 obscureText: obscureText,
@@ -63,31 +70,28 @@ class InputField extends StatelessWidget {
           )
         : Row(
             children: <Widget>[
-              SizedBox(
-                width: 100.0,
-                child: Text(
-                  label,
-                  textAlign: TextAlign.left,
+              if (label != null && label!.isNotEmpty)
+                SizedBox(
+                  width: 100.0,
+                  child: Text(
+                    label!,
+                    textAlign: TextAlign.left,
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodyMedium, // Use theme text style
+                  ),
                 ),
-              ),
-              const SizedBox(
-                width: 10.0,
-              ),
+              if (label != null && label!.isNotEmpty)
+                const SizedBox(
+                  width: 10.0,
+                ),
               Expanded(
                 child: TextFormField(
                   controller: controller,
                   keyboardType: keyboardType,
                   textCapitalization: textCapitalization,
                   style: const TextStyle(fontSize: 15.0),
-                  decoration: InputDecoration(
-                    border: border,
-                    focusedBorder: border,
-                    enabledBorder: border,
-                    contentPadding: const EdgeInsets.all(10.0),
-                    hintText: hintText,
-                    filled: true,
-                    fillColor: Colors.blue.shade50,
-                  ),
+                  decoration: inputDecoration,
                   validator: validator,
                   onChanged: onChanged,
                   obscureText: obscureText,

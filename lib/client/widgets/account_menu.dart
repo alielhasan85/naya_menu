@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+// drop down menu from github nice ux to work on the ui
 
 class SimpleAccountMenu extends StatefulWidget {
   final List<Icon> icons;
@@ -62,7 +63,7 @@ class _SimpleAccountMenuState extends State<SimpleAccountMenu>
     findButton();
     _animationController.forward();
     _overlayEntry = _overlayEntryBuilder();
-    Overlay.of(context)?.insert(_overlayEntry!);
+    Overlay.of(context).insert(_overlayEntry!);
     isMenuOpen = !isMenuOpen;
   }
 
