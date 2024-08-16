@@ -10,7 +10,7 @@ class GetStartedPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Material(
       child: CircleAvatar(
-        backgroundColor: AppTheme.nearlyWhite, // Use your theme color
+        backgroundColor: AppTheme.notWhite, // Use your theme color
         child: Column(
           children: [
             const Spacer(),

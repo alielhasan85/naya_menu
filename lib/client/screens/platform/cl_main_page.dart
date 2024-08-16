@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:naya_menu/client/screens/platform/cl_drawer.dart';
+import 'package:naya_menu/client/widgets/account_menu.dart';
 import 'package:naya_menu/client/widgets/input_fields.dart';
 
 // Providers to manage the selected section and text visibility
@@ -37,6 +38,17 @@ class MainPage extends ConsumerWidget {
               // Handle notification icon button press
             },
           ),
+
+          /// nice drop down menu to be used for account setting control
+          SimpleAccountMenu(
+              onChange: (index) {
+                print(index);
+              },
+              icons: [
+                Icon(Icons.person),
+                Icon(Icons.settings),
+                Icon(Icons.credit_card),
+              ]),
         ],
       ),
       body: Row(

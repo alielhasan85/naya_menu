@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:naya_menu/client/widgets/account_menu.dart';
+
 import 'package:naya_menu/client/widgets/input_fields.dart';
 import 'package:naya_menu/models/users.dart';
 import 'package:naya_menu/service/firebase/firestore_user.dart';
 import 'package:naya_menu/client/screens/platform/cl_main_page.dart';
+import 'package:naya_menu/theme/app_theme.dart'; // Import your AppTheme
 
 class ClSignUpUserData extends StatefulWidget {
   final String userId;
@@ -77,24 +80,14 @@ class _ClSignUpUserDataState extends State<ClSignUpUserData> {
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            DropdownButton<String>(
-              value: 'English',
-              icon: const Icon(Icons.language),
-              onChanged: (String? newValue) {
-                // Handle language change
-              },
-              items: <String>['English']
-                  .map<DropdownMenuItem<String>>((String value) {
-                return DropdownMenuItem<String>(
-                  value: value,
-                  child: Text(value),
-                );
-              }).toList(),
+            CircleAvatar(
+              backgroundColor: Colors.black87,
+              backgroundImage: NetworkImage(
+                'https://images.pexels.com/photos/1537635/pexels-photo-1537635.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
+              ),
+              radius: 20.0,
             ),
-            Image.asset(
-              'assets/images/logo.png', // Path to your logo image
-              height: 40,
-            ),
+            LanguageDropdown()
           ],
         ),
         backgroundColor: Colors.transparent,
@@ -108,17 +101,23 @@ class _ClSignUpUserDataState extends State<ClSignUpUserData> {
           ),
           child: Container(
             padding: const EdgeInsets.all(20),
-            width: 400,
+            width: 500,
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
                 Text(
-                  'Welcome to NayaMenu!',
-                  style: TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.greenAccent, // Customize the color
-                  ),
+                  'Welcome to Naya Menu!',
+                  style: Theme.of(context)
+                      .textTheme
+                      .headlineSmall!
+                      .copyWith(color: Colors.indigo),
+                ),
+                Text(
+                  'Tell us about yourself',
+                  style: Theme.of(context)
+                      .textTheme
+                      .titleLarge!
+                      .copyWith(color: const Color.fromARGB(255, 181, 63, 161)),
                 ),
                 const SizedBox(height: 10.0),
                 const Text(
@@ -209,6 +208,45 @@ class _ClSignUpUserDataState extends State<ClSignUpUserData> {
         ),
       ),
       backgroundColor: Colors.white, // Customize background color here
+    );
+  }
+}
+
+class LanguageDropdown extends StatelessWidget {
+  final String currentLanguage = 'English';
+
+  @override
+  Widget build(BuildContext context) {
+    return PopupMenuButton<String>(
+      // icon: Icon(Icons.arrow_drop_down, color: AppTheme.grey),
+
+      surfaceTintColor: AppTheme.chipBackground,
+      //clipBehavior: Clip.none,
+      //shadowColor: AppTheme.chipBackground,
+      onSelected: (String newValue) {
+        // Handle language change
+      },
+      itemBuilder: (BuildContext context) {
+        return ['English', 'Arabic', 'Spanish', 'French', 'German']
+            .map((String choice) {
+          return PopupMenuItem<String>(
+            value: choice,
+            child: Text(choice),
+          );
+        }).toList();
+      },
+      child: Row(
+        children: [
+          Icon(Icons.language, color: AppTheme.grey),
+          SizedBox(width: 8),
+          Text(
+            currentLanguage,
+            style: TextStyle(color: AppTheme.grey, fontSize: 16),
+          ),
+          SizedBox(width: 8),
+          Icon(Icons.arrow_drop_down, color: AppTheme.grey),
+        ],
+      ),
     );
   }
 }

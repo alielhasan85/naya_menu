@@ -64,7 +64,7 @@ class InputField extends StatelessWidget {
         : Row(
             children: <Widget>[
               SizedBox(
-                width: 70.0,
+                width: 100.0,
                 child: Text(
                   label,
                   textAlign: TextAlign.left,
