@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:naya_menu/client/screens/login/cl_signup_user_data.dart';
 import 'package:naya_menu/client/widgets/input_fields.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:naya_menu/client/screens/platform/cl_main_page.dart'; // Import MainPage
 
 class SignUpForm extends StatefulWidget {
   final GlobalKey<FormState> formKey;
@@ -65,8 +65,7 @@ class _SignUpFormState extends State<SignUpForm> {
 
   // Method to handle sign-up process with Firebase authentication
   Future<void> _signUp() async {
-    if (!widget.formKey.currentState!.validate())
-      return; // Validate form fields
+    if (!widget.formKey.currentState!.validate()) return;
 
     setState(() {
       _isLoading = true; // Show loading indicator
@@ -74,15 +73,21 @@ class _SignUpFormState extends State<SignUpForm> {
 
     try {
       // Create a new user with FirebaseAuth
-      await FirebaseAuth.instance.createUserWithEmailAndPassword(
+      UserCredential userCredential =
+          await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: widget.emailController.text,
         password: widget.passwordController.text,
       );
 
-      // Navigate to MainPage on successful sign-up
+      // Navigate to ClSignUpUserData to collect additional user data
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => const MainPage()),
+        MaterialPageRoute(
+          builder: (context) => ClSignUpUserData(
+            userId: userCredential.user!.uid,
+            email: widget.emailController.text,
+          ),
+        ),
       );
     } on FirebaseAuthException catch (e) {
       // Handle errors during sign-up
@@ -108,9 +113,9 @@ class _SignUpFormState extends State<SignUpForm> {
 
   @override
   Widget build(BuildContext context) {
-    double screenWidth = MediaQuery.of(context).size.width;
-    double titleFontSize =
-        screenWidth < 600 ? 20.0 : 30.0; // Responsive font size
+    // double screenWidth = MediaQuery.of(context).size.width;
+    // double titleFontSize =
+    //     screenWidth < 600 ? 20.0 : 30.0; // Responsive font size
 
     return Form(
       key: widget.formKey, // Form key for validation
@@ -119,10 +124,10 @@ class _SignUpFormState extends State<SignUpForm> {
         crossAxisAlignment:
             CrossAxisAlignment.center, // Center-align the content
         children: <Widget>[
-          Text(
+          const Text(
             'Create Your Free Account',
             style: TextStyle(
-              fontSize: titleFontSize,
+              fontSize: 25,
               fontWeight: FontWeight.w900, // Bold text
             ),
           ),

@@ -18,33 +18,44 @@ the user will have this data:
 
 
 */
-
 class UserModel {
   final String id; // Firebase UID
-  final String name;
-  final String email; // This will be retrieved from FirebaseAuth
-  final String phoneNumber;
-  final String address;
+  final String firstName; // Required
+  final String lastName; // Required
+  final String email; // Retrieved from FirebaseAuth
+  final String phoneNumber; // Required
   final String country;
+  final String jobTitle; // Required
+  final String businessName; // Required
+  final bool emailNotification; // Optional, default true
+  final bool smsNotification; // Optional, default true
 
   UserModel({
     required this.id,
-    required this.name,
+    required this.firstName,
+    required this.lastName,
     required this.email,
     required this.phoneNumber,
-    required this.address,
     required this.country,
+    required this.businessName,
+    this.jobTitle = '',
+    this.emailNotification = true, // Default to true
+    this.smsNotification = true, // Default to true
   });
 
   // Convert a UserModel into a Map. The keys must correspond to the names of the fields in Firestore.
   Map<String, dynamic> toMap() {
     return {
       'id': id,
-      'name': name,
+      'firstName': firstName,
+      'lastName': lastName,
       'email': email,
       'phoneNumber': phoneNumber,
-      'address': address,
       'country': country,
+      'businesName': businessName,
+      'jobTitle': jobTitle,
+      'emailNotification': emailNotification,
+      'smsNotification': smsNotification,
     };
   }
 
@@ -52,11 +63,15 @@ class UserModel {
   factory UserModel.fromMap(Map<String, dynamic> map, String id) {
     return UserModel(
       id: id,
-      name: map['name'],
+      firstName: map['firstName'],
+      lastName: map['lastName'],
       email: map['email'],
       phoneNumber: map['phoneNumber'],
-      address: map['address'],
       country: map['country'],
+      businessName: map['businesName'],
+      jobTitle: map['jobTitle'],
+      emailNotification: map['emailNotification'] ?? true,
+      smsNotification: map['smsNotification'] ?? true,
     );
   }
 }
