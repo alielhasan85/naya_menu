@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:naya_menu/client/screens/cl_home_page.dart';
+import 'package:naya_menu/client/screens/starting_page/cl_home_page.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});

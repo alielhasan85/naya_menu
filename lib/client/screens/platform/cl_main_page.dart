@@ -12,7 +12,7 @@ class MainPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final isDrawerExpanded = ref.watch(isDrawerExpandedProvider);
+    //final isDrawerExpanded = ref.watch(isDrawerExpandedProvider);
     final selectedSection = ref.watch(selectedSectionProvider);
 
     return Scaffold(
@@ -45,7 +45,7 @@ class MainPage extends ConsumerWidget {
           AnimatedContainer(
             duration: const Duration(milliseconds: 200),
             // width: 200, //isDrawerExpanded ? 250 : 70,
-            child: ClDrawer(),
+            child: const ClDrawer(),
           ),
           // Main Content
           Expanded(

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:naya_menu/client/screens/cl_home_page.dart';
-import 'package:naya_menu/client/screens/cl_main_page.dart';
+import 'package:naya_menu/client/screens/starting_page/cl_home_page.dart';
+import 'package:naya_menu/client/screens/platform/cl_main_page.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -17,7 +17,7 @@ class MyApp extends StatelessWidget {
       ),
       home: //const GetStartedPage(),
 
-          MainPage(),
+          GetStartedPage(),
     );
   }
 }

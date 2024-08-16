@@ -1,0 +1,11 @@
+in this folder we will have the pages of the marcketing page it means the first page that we will do marcketing 
+for it
+examples 
+
+https://oddmenu.com/ -- very simple apporach - only 10 dollars subscription one page or 2 pages
+https://www.finedinemenu.com/en/ -- an advanced solution that propose CRM management, QR code per table, 
+                                    reports, feedback on menu items price around 50 to 150 dollar per months
+
+
+
+my plan is to end up with both solution but we will start with with the simple one. 
