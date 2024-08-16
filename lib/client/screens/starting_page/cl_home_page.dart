@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-
-import 'package:hexcolor/hexcolor.dart';
 import 'package:naya_menu/client/screens/login/cl_auth_page.dart';
+import 'package:naya_menu/theme/app_theme.dart'; // Import your AppTheme
 
 // starting page or loading page to be edited
 class GetStartedPage extends StatelessWidget {
@@ -11,48 +10,53 @@ class GetStartedPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Material(
       child: CircleAvatar(
-        backgroundColor:
-            HexColor('#f5f6f8'), //shall be changed to match ui design
+        backgroundColor: AppTheme.nearlyWhite, // Use your theme color
         child: Column(
           children: [
             const Spacer(),
             Text(
               'Naya Menu',
-              style: Theme.of(context).textTheme.displayMedium,
+              style: Theme.of(context)
+                  .textTheme
+                  .headlineMedium, // Use themed text style
             ),
             const SizedBox(
               height: 15,
             ),
-            const Text(
+            Text(
               'Create Your Own Special Menu!',
-              style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black26,
-                  fontSize: 29),
+              style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                    fontWeight: FontWeight.bold,
+                    color: AppTheme.lightText,
+                  ), // Use themed text style with custom modifications
             ),
             const SizedBox(
               height: 50,
             ),
             TextButton.icon(
               style: TextButton.styleFrom(
-                  foregroundColor: Colors.white,
-                  backgroundColor:
-                      HexColor('#69639f'), // need to work on the color plate
-                  textStyle: const TextStyle(fontSize: 18)),
+                foregroundColor: AppTheme.white, // Use your theme color
+                backgroundColor: AppTheme.grey, // Use your theme color
+                textStyle: Theme.of(context).textTheme.titleLarge?.copyWith(
+                      fontSize: 18,
+                      color: AppTheme.white,
+                    ), // Use themed text style with custom modifications
+              ),
               onPressed: () {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => LoginPage(),
+                    builder: (context) => const LoginPage(),
                   ),
                 );
               },
               icon: const Icon(Icons.login_rounded),
               label: const Padding(
-                  padding: EdgeInsets.symmetric(vertical: 10, horizontal: 50),
-                  child: Text('Sign to Get Started')),
+                padding: EdgeInsets.symmetric(vertical: 10, horizontal: 50),
+                child: Text('Sign to Get Started'),
+              ),
             ),
-            const Spacer()
+            const Spacer(),
           ],
         ),
       ),
