@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:hexcolor/hexcolor.dart';
-import 'package:naya_menu/client/screens/cl_auth_page.dart';
+import 'package:naya_menu/client/screens/login/cl_auth_page.dart';
 
 // starting page or loading page to be edited
 class GetStartedPage extends StatelessWidget {

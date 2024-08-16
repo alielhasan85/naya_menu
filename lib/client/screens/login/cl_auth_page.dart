@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
-import 'package:naya_menu/client/widgets/cl_signup_form.dart';
-import 'package:naya_menu/client/widgets/cl_login_form.dart';
+import 'package:naya_menu/client/screens/login/cl_login_form.dart';
+import 'package:naya_menu/client/screens/login/cl_signup_form.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 final authFormProvider = StateProvider<AuthForm>((ref) => AuthForm.login);
