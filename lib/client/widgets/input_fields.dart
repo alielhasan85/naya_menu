@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:hexcolor/hexcolor.dart';
 import 'package:naya_menu/theme/app_theme.dart'; // Import your AppTheme
+
+//input field flexible to use in all the app
 
 class InputField extends StatelessWidget {
   final String? label; // Made label optional

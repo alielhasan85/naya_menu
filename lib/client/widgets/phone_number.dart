@@ -1,49 +1,46 @@
 import 'package:flutter/material.dart';
 import 'package:country_picker/country_picker.dart';
-import 'package:naya_menu/theme/app_theme.dart'; // Ensure this imports your theme
+import 'package:naya_menu/theme/app_theme.dart'; // Your custom theme
 
-class PhoneNumberInput extends StatelessWidget {
+class PhoneNumberInput extends StatefulWidget {
   final TextEditingController controller;
   final String? Function(String?)? validator;
 
   const PhoneNumberInput({required this.controller, this.validator, Key? key})
       : super(key: key);
 
+  @override
+  _PhoneNumberInputState createState() => _PhoneNumberInputState();
+}
+
+class _PhoneNumberInputState extends State<PhoneNumberInput> {
+  String selectedCountryCode = '+1'; // Default to US
+  String selectedFlagEmoji = '🇺🇸'; // Default to US flag
+
   void _openCountryPickerDialog(BuildContext context) {
     showCountryPicker(
       context: context,
       showPhoneCode: true, // Show phone code alongside country name
       onSelect: (Country country) {
-        controller.text = '+${country.phoneCode}'; // Set phone code
+        setState(() {
+          selectedCountryCode = '+${country.phoneCode}';
+          selectedFlagEmoji = country.flagEmoji; // Set the selected flag emoji
+        });
+        widget.controller.text =
+            '$selectedCountryCode '; // Initialize with country code
       },
-      countryListTheme: CountryListThemeData(
-        borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(16.0),
-          topRight: Radius.circular(16.0),
-        ),
-        inputDecoration: InputDecoration(
-          hintText: 'Search your country',
-          border: InputBorder.none,
-          contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-        ),
-        searchTextStyle: TextStyle(
-          color: Colors.black,
-          fontSize: 18,
-        ),
-      ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    // Define InputDecoration based on your theme
     final inputDecoration = InputDecoration(
       border: AppTheme.inputDecorationTheme.border,
       focusedBorder: AppTheme.inputDecorationTheme.focusedBorder,
       enabledBorder: AppTheme.inputDecorationTheme.enabledBorder,
       contentPadding: AppTheme.inputDecorationTheme.contentPadding ??
           const EdgeInsets.all(10.0),
-      hintText: 'Enter your phone number', // Customize the hint text as needed
+      hintText: 'Enter your phone number',
       hintStyle: AppTheme.inputDecorationTheme.hintStyle ??
           const TextStyle(fontSize: 14.0),
       filled: AppTheme.inputDecorationTheme.filled ?? true,
@@ -68,7 +65,7 @@ class PhoneNumberInput extends StatelessWidget {
             child: Row(
               children: [
                 Text(
-                  controller.text.isNotEmpty ? controller.text : '+1',
+                  '$selectedFlagEmoji $selectedCountryCode',
                   style: TextStyle(fontSize: 16),
                 ),
                 Icon(Icons.arrow_drop_down),
@@ -79,10 +76,10 @@ class PhoneNumberInput extends StatelessWidget {
         const SizedBox(width: 10),
         Expanded(
           child: TextFormField(
-            controller: controller,
+            controller: widget.controller,
             keyboardType: TextInputType.phone,
             decoration: inputDecoration,
-            validator: validator,
+            validator: widget.validator,
           ),
         ),
       ],

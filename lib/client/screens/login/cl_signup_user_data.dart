@@ -38,15 +38,34 @@ class _ClSignUpUserDataState extends State<ClSignUpUserData> {
       });
 
       try {
+        // Check if the phone number already exists
+        bool phoneExists = await _firestoreUser.checkIfUserExists(
+          email: widget.email,
+          phoneNumber: _phoneController.text.trim(),
+        );
+
+        if (phoneExists) {
+          // Notify the user that the phone number is already in use
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+                content: Text(
+                    'This phone number is already associated with an account. Please use a different phone number.')),
+          );
+          setState(() {
+            _isLoading = false;
+          });
+          return;
+        }
+
         // Create UserModel with the provided information
         UserModel user = UserModel(
           id: widget.userId,
           firstName: _firstNameController.text,
           lastName: _lastNameController.text,
           email: widget.email, // Email from FirebaseAuth
-          phoneNumber: _phoneController.text,
-          country: _countryController.text,
-          businessName: _businessController.text,
+          phoneNumber: _phoneController.text.trim(),
+          country: _countryController.text.trim(),
+          businessName: _businessController.text.trim(),
           emailNotification: true, // Default value
           smsNotification: true, // Default value
         );

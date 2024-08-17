@@ -44,6 +44,7 @@ dependencies:
   dropdown_search: ^5.0.6
   intl_phone_field: ^3.2.0
   country_picker: ^2.0.26
+  country_picker_pro: ^0.0.5
 
 dev_dependencies:
   flutter_test:

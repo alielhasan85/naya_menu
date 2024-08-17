@@ -13,8 +13,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Client Interface',
       theme: AppTheme.themeData(context), // Use your custom theme here
-      home: ClSignUpUserData(
-          userId: 'd9o5XsNzPIhkLzK0ua0uR2TrgvH2', email: 'ahhh@hjh.cc'),
+      home: GetStartedPage(),
     );
   }
 }
