@@ -1,78 +1,47 @@
 import 'package:flutter/material.dart';
-import 'package:naya_menu/models/country.dart';
+import 'package:intl_phone_field/intl_phone_field.dart';
+import 'package:intl_phone_field/phone_number.dart';
+import 'package:naya_menu/theme/app_theme.dart'; // Import your AppTheme
 
-class PhoneNumberInput extends StatefulWidget {
+class PhoneNumberInput extends StatelessWidget {
   final TextEditingController controller;
-  final String? Function(String?)? validator;
+  final String? Function(PhoneNumber?)? validator; // Adjusted the type
 
   const PhoneNumberInput({required this.controller, this.validator, Key? key})
       : super(key: key);
 
   @override
-  _PhoneNumberInputState createState() => _PhoneNumberInputState();
-}
-
-class _PhoneNumberInputState extends State<PhoneNumberInput> {
-  Country? selectedCountry;
-
-  @override
-  void initState() {
-    super.initState();
-    selectedCountry = countries.first; // Default to the first country
-  }
-
-  @override
   Widget build(BuildContext context) {
-    final border = OutlineInputBorder(
-      borderRadius: BorderRadius.circular(12),
-      borderSide: BorderSide(color: Colors.grey, width: 2),
+    final inputDecoration = InputDecoration(
+      border: AppTheme.inputDecorationTheme.border,
+      focusedBorder: AppTheme.inputDecorationTheme.focusedBorder,
+      enabledBorder: AppTheme.inputDecorationTheme.enabledBorder,
+      contentPadding: AppTheme.inputDecorationTheme.contentPadding ??
+          const EdgeInsets.all(10.0),
+      isCollapsed: true,
+      hintText: 'Enter your phone number', // Customize the hint text as needed
+      hintStyle: AppTheme.inputDecorationTheme.hintStyle ??
+          const TextStyle(fontSize: 14.0),
+      filled: AppTheme.inputDecorationTheme.filled ?? true,
+      fillColor: AppTheme.inputDecorationTheme.fillColor ?? Colors.blue.shade50,
     );
 
-    return Row(
-      children: [
-        DropdownButton<Country>(
-          value: selectedCountry,
-          onChanged: (Country? newValue) {
-            setState(() {
-              selectedCountry = newValue!;
-            });
-          },
-          items: countries.map<DropdownMenuItem<Country>>((Country country) {
-            return DropdownMenuItem<Country>(
-              value: country,
-              child: Row(
-                children: [
-                  Text(country.dialCode),
-                  const SizedBox(width: 8),
-                  Text(country.name),
-                ],
-              ),
-            );
-          }).toList(),
-        ),
-        const SizedBox(width: 10),
-        Expanded(
-          child: TextFormField(
-            controller: widget.controller,
-            keyboardType: TextInputType.phone,
-            decoration: InputDecoration(
-              border: border,
-              focusedBorder: border,
-              enabledBorder: border,
-              contentPadding: const EdgeInsets.all(10.0),
-              hintText: 'Enter your phone number',
-              filled: true,
-              fillColor: Colors.blue.shade50,
-            ),
-            validator: widget.validator,
-            onChanged: (value) {
-              if (selectedCountry != null) {
-                widget.controller.text = '${selectedCountry!.dialCode} $value';
-              }
-            },
-          ),
-        ),
-      ],
+    return SizedBox(
+      width: 500,
+      child: IntlPhoneField(
+        controller: controller,
+        decoration: inputDecoration,
+        style: TextStyle(fontSize: 15.0),
+        initialCountryCode: 'US', // Set your default country code
+        onChanged: (phone) {
+          // Handle phone number changes if needed
+        },
+        onSaved: (phone) {
+          controller.text = phone?.completeNumber ?? '';
+        },
+        validator: validator,
+        disableLengthCheck: true, // Use the provided validator
+      ),
     );
   }
 }

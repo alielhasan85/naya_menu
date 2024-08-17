@@ -178,21 +178,8 @@ class _ClSignUpUserDataState extends State<ClSignUpUserData> {
                         ),
                         PhoneNumberInput(
                           controller: _phoneController,
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return 'Please enter your phone number';
-                            }
-                            return null;
-                          },
-                        ),
-                        InputField(
-                          labelAboveField: false,
-                          label: null, // No label inside the field
-                          hintText: "Enter your phone number",
-                          controller: _phoneController,
-                          keyboardType: TextInputType.phone,
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
+                          validator: (phone) {
+                            if (phone == null) {
                               return 'Please enter your phone number';
                             }
                             return null;
