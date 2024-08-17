@@ -1,0 +1,17 @@
+{
+    "welcome": "مرحبًا بك",
+    "tell_us_about_yourself": "أخبرنا عن نفسك",
+    "what_is_your_name": "ما اسمك؟",
+    "enter_first_name": "أدخل اسمك الأول",
+    "enter_last_name": "أدخل اسمك الأخير",
+    "what_is_your_phone_number": "ما هو رقم هاتفك؟",
+    "enter_phone_number": "أدخل رقم هاتفك",
+    "what_is_your_business_name": "ما هو اسم عملك؟",
+    "enter_business_name": "أدخل اسم عملك",
+    "what_is_your_country": "ما هي دولتك؟",
+    "select_your_country": "اختر دولتك",
+    "submit": "إرسال",
+    "app_name": "Naya Name",
+    "tagline": "أنشئ قائمتك الخاصة!",
+    "sign_in_button": "تسجيل الدخول للبدء"
+}
