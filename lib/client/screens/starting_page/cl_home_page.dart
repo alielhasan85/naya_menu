@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:naya_menu/client/screens/login/cl_auth_page.dart';
 import 'package:naya_menu/client/widgets/language_menu.dart';
 import 'package:naya_menu/service/lang/localization.dart';
-import 'package:naya_menu/service/providers/lang_provider.dart';
 import 'package:naya_menu/theme/app_theme.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -11,9 +10,6 @@ class GetStartedPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final currentLanguage =
-        ref.watch(languageProvider); // Watch the selected language
-
     return Scaffold(
       appBar: AppBar(
         title: const Text('Naya Menu'),
@@ -44,7 +40,8 @@ class GetStartedPage extends ConsumerWidget {
                   AppLocalizations.of(context)!.translate('tagline'),
                   style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                         fontWeight: FontWeight.bold,
-                        color: AppTheme.lightText,
+                        color: AppTheme
+                            .textPrimary, // Updated to dark blue text color
                       ),
                   textAlign: TextAlign.center,
                 ),
@@ -55,12 +52,13 @@ class GetStartedPage extends ConsumerWidget {
                   ),
                   child: TextButton.icon(
                     style: TextButton.styleFrom(
-                      foregroundColor: AppTheme.white,
-                      backgroundColor: AppTheme.grey,
+                      foregroundColor: AppTheme.white, // White text
+                      backgroundColor:
+                          AppTheme.accentColor, // Orange background color
                       textStyle:
                           Theme.of(context).textTheme.titleLarge?.copyWith(
                                 fontSize: 18,
-                                color: AppTheme.white,
+                                color: AppTheme.white, // White text
                               ),
                     ),
                     onPressed: () {

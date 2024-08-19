@@ -12,8 +12,8 @@ class ClSignUpUserData extends StatefulWidget {
   final String userId;
   final String email; // Email passed from the authentication page
 
-  const ClSignUpUserData({required this.userId, required this.email, Key? key})
-      : super(key: key);
+  const ClSignUpUserData(
+      {required this.userId, required this.email, super.key});
 
   @override
   _ClSignUpUserDataState createState() => _ClSignUpUserDataState();
