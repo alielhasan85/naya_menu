@@ -3,22 +3,21 @@ import 'package:hexcolor/hexcolor.dart';
 import 'package:naya_menu/client/screens/login/cl_login_form.dart';
 import 'package:naya_menu/client/screens/login/cl_signup_form.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:naya_menu/client/widgets/language_menu.dart';
+import 'package:naya_menu/service/lang/localization.dart';
 
 final authFormProvider = StateProvider<AuthForm>((ref) => AuthForm.login);
 
 enum AuthForm { login, signUp }
 
 class LoginPage extends ConsumerStatefulWidget {
-  // Extending ConsumerStatefulWidget
   const LoginPage({super.key});
 
   @override
-  ConsumerState<LoginPage> createState() =>
-      _LoginPageState(); // Correct return type
+  ConsumerState<LoginPage> createState() => _LoginPageState();
 }
 
 class _LoginPageState extends ConsumerState<LoginPage> {
-  // Extending ConsumerState<LoginPage>
   final _formKey = GlobalKey<FormState>();
   final _emailEditorController = TextEditingController();
   final _passwordEditorController = TextEditingController();
@@ -34,7 +33,6 @@ class _LoginPageState extends ConsumerState<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    // Implementing the build method
     return _buildFormContent(context, ref);
   }
 
@@ -51,8 +49,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
           SizedBox(
             width: 500,
             child: Padding(
-              padding: const EdgeInsets.symmetric(
-                  horizontal: 20.0), // Padding around the Card
+              padding: const EdgeInsets.symmetric(horizontal: 20.0),
               child: Card(
                 elevation: 8,
                 shape: RoundedRectangleBorder(
@@ -73,8 +70,8 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                         ),
                       )
                     : Padding(
-                        padding:
-                            EdgeInsets.symmetric(vertical: 20, horizontal: 30),
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 20, horizontal: 30),
                         child: SignUpForm(
                           formKey: _formKey,
                           emailController: _emailEditorController,
@@ -113,8 +110,7 @@ class TopDecoration extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Container(
         width: double.infinity,
-        padding: const EdgeInsets.symmetric(
-            vertical: 20.0), // Add padding to the sides
+        padding: const EdgeInsets.symmetric(vertical: 20.0),
         decoration: BoxDecoration(
           color: Colors.yellow[600],
           borderRadius: const BorderRadius.only(
@@ -122,41 +118,49 @@ class TopDecoration extends StatelessWidget {
             bottomLeft: Radius.circular(40),
           ),
         ),
-        child: const Align(
+        child: Align(
           alignment: Alignment.center,
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
-              CircleAvatar(
+              const CircleAvatar(
                 backgroundColor: Colors.black87,
                 backgroundImage: NetworkImage(
                   'https://images.pexels.com/photos/1537635/pexels-photo-1537635.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
                 ),
                 radius: 50.0,
               ),
-              SizedBox(height: 10.0),
-              Text("Let's get you set up",
-                  style: TextStyle(
-                    fontSize: 30.0,
-                    fontWeight: FontWeight.w900,
-                  ),
-                  textAlign: TextAlign.center),
-              SizedBox(height: 5.0),
+              const SizedBox(height: 10.0),
               Text(
-                "It should only take a couple of minutes to pair with your watch",
-                style: TextStyle(
+                AppLocalizations.of(context)!.translate('login_page_title'),
+                style: const TextStyle(
+                  fontSize: 30.0,
+                  fontWeight: FontWeight.w900,
+                ),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 5.0),
+              Text(
+                AppLocalizations.of(context)!.translate('login_page_subtitle'),
+                style: const TextStyle(
                   fontSize: 18.0,
                 ),
                 textAlign: TextAlign.center,
               ),
-              SizedBox(height: 10.0),
-              CircleAvatar(
+              const SizedBox(height: 10.0),
+              const CircleAvatar(
                 backgroundColor: Colors.black87,
                 child: Text(
                   ">",
                   style: TextStyle(color: Colors.yellow),
                 ),
               ),
+              LanguageMenu(
+                languages: [
+                  'English',
+                  'Arabic'
+                ], // Provide the list of available languages
+              )
             ],
           ),
         ),

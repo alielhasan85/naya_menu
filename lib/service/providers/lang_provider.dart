@@ -1,7 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class LanguageNotifier extends StateNotifier<String> {
-  LanguageNotifier() : super('en'); // Default to English
+  LanguageNotifier() : super('English'); // Default to English
 
   void setLanguage(String language) {
     state = language;

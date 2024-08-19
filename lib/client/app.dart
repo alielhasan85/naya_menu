@@ -1,20 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:naya_menu/client/screens/login/cl_signup_user_data.dart';
 import 'package:naya_menu/client/screens/starting_page/cl_home_page.dart';
-import 'package:naya_menu/client/screens/platform/cl_main_page.dart';
 import 'package:naya_menu/service/lang/localization.dart';
-import 'package:naya_menu/theme/app_theme.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:naya_menu/service/providers/lang_provider.dart';
 
-class MyApp extends StatelessWidget {
+class MyApp extends ConsumerWidget {
   const MyApp({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final currentLanguage =
+        ref.watch(languageProvider); // Watch the selected language
+
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Client Interface',
-      theme: AppTheme.themeData(context), // Use your custom theme here
+      theme: ThemeData(primarySwatch: Colors.blue),
       supportedLocales: const [
         Locale('en', ''), // English
         Locale('ar', ''), // Arabic
@@ -25,36 +27,18 @@ class MyApp extends StatelessWidget {
         GlobalWidgetsLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,
       ],
-      localeResolutionCallback: (locale, supportedLocales) {
-        if (locale == null) {
-          return supportedLocales.first;
-        }
-        for (var supportedLocale in supportedLocales) {
-          if (supportedLocale.languageCode == locale.languageCode) {
-            return supportedLocale;
-          }
-        }
-        return supportedLocales.first;
-      },
-      locale: const Locale('en'), // Set default locale
-      home: const GetStartedPage(),
+      locale: Locale(currentLanguage == 'English'
+          ? 'en'
+          : 'ar'), // Set the locale based on the selected language
       builder: (context, child) {
-        // Apply the text direction based on the selected locale
         return Directionality(
-          textDirection: _getTextDirection(
-              AppLocalizations.of(context)?.locale.languageCode),
+          textDirection: currentLanguage == 'Arabic'
+              ? TextDirection.rtl
+              : TextDirection.ltr,
           child: child!,
         );
       },
+      home: const GetStartedPage(),
     );
-  }
-
-  // Helper method to determine text direction
-  TextDirection _getTextDirection(String? languageCode) {
-    if (languageCode == 'ar') {
-      return TextDirection.rtl; // Right-to-left for Arabic
-    } else {
-      return TextDirection.ltr; // Left-to-right for other languages
-    }
   }
 }

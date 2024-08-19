@@ -3,6 +3,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:naya_menu/client/screens/login/cl_signup_user_data.dart';
 import 'package:naya_menu/client/widgets/input_fields.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:naya_menu/service/lang/localization.dart';
 
 class SignUpForm extends StatefulWidget {
   final GlobalKey<FormState> formKey;
@@ -25,34 +26,30 @@ class SignUpForm extends StatefulWidget {
 }
 
 class _SignUpFormState extends State<SignUpForm> {
-  bool _showConfirmPassword =
-      false; // Flag to toggle the confirm password field
-  bool _isLoading = false; // Flag to indicate loading state during sign-up
+  bool _showConfirmPassword = false;
+  bool _isLoading = false;
 
-  // Method to validate email input
   String? _validateEmail(String? value) {
     if (value == null || value.isEmpty) {
-      return 'Please enter an email address';
+      return AppLocalizations.of(context)!.translate('email_hint');
     }
     final regex = RegExp(r'^[^@]+@[^@]+\.[^@]+');
     if (!regex.hasMatch(value)) {
-      return 'Please enter a valid email address';
+      return AppLocalizations.of(context)!.translate('email_hint');
     }
     return null;
   }
 
-  // Method to validate password input
   String? _validatePassword(String? value) {
     if (value == null || value.isEmpty) {
-      return 'Please enter a password';
+      return AppLocalizations.of(context)!.translate('password_hint');
     }
     if (value.length < 6) {
-      return 'Password must be at least 6 characters';
+      return AppLocalizations.of(context)!.translate('password_hint');
     }
     return null;
   }
 
-  // Check if the email and password fields are valid before showing the confirm password field
   void _checkFields() {
     final isEmailValid = _validateEmail(widget.emailController.text) == null;
     final isPasswordValid =
@@ -63,23 +60,20 @@ class _SignUpFormState extends State<SignUpForm> {
     });
   }
 
-  // Method to handle sign-up process with Firebase authentication
   Future<void> _signUp() async {
     if (!widget.formKey.currentState!.validate()) return;
 
     setState(() {
-      _isLoading = true; // Show loading indicator
+      _isLoading = true;
     });
 
     try {
-      // Create a new user with FirebaseAuth
       UserCredential userCredential =
           await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: widget.emailController.text,
         password: widget.passwordController.text,
       );
 
-      // Navigate to ClSignUpUserData to collect additional user data
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
@@ -90,15 +84,16 @@ class _SignUpFormState extends State<SignUpForm> {
         ),
       );
     } on FirebaseAuthException catch (e) {
-      // Handle errors during sign-up
       String errorMessage;
 
       if (e.code == 'weak-password') {
-        errorMessage = 'The password provided is too weak.';
+        errorMessage =
+            AppLocalizations.of(context)!.translate('weak_password_error');
       } else if (e.code == 'email-already-in-use') {
-        errorMessage = 'An account already exists for that email.';
+        errorMessage =
+            AppLocalizations.of(context)!.translate('email_in_use_error');
       } else {
-        errorMessage = 'An error occurred. Please try again.';
+        errorMessage = AppLocalizations.of(context)!.translate('generic_error');
       }
 
       ScaffoldMessenger.of(context).showSnackBar(
@@ -106,84 +101,83 @@ class _SignUpFormState extends State<SignUpForm> {
       );
     } finally {
       setState(() {
-        _isLoading = false; // Hide loading indicator
+        _isLoading = false;
       });
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    // double screenWidth = MediaQuery.of(context).size.width;
-    // double titleFontSize =
-    //     screenWidth < 600 ? 20.0 : 30.0; // Responsive font size
-
     return Form(
-      key: widget.formKey, // Form key for validation
+      key: widget.formKey,
       child: Column(
-        mainAxisSize: MainAxisSize.min, // Adjusts to the size of its children
-        crossAxisAlignment:
-            CrossAxisAlignment.center, // Center-align the content
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
-          const Text(
-            'Create Your Free Account',
-            style: TextStyle(
+          Text(
+            AppLocalizations.of(context)!.translate('sign_up_page_title'),
+            style: const TextStyle(
               fontSize: 25,
-              fontWeight: FontWeight.w900, // Bold text
+              fontWeight: FontWeight.w900,
             ),
           ),
           const SizedBox(height: 15.0),
-          const Text(
-            'No Credit Card required.',
-            style: TextStyle(
+          Text(
+            AppLocalizations.of(context)!.translate('no_credit_card_required'),
+            style: const TextStyle(
               fontSize: 14,
-              fontStyle: FontStyle.italic, // Italicized text
+              fontStyle: FontStyle.italic,
             ),
           ),
           const SizedBox(height: 20.0),
           InputField(
-            label: "Email",
-            hintText: "Enter your email",
+            label: AppLocalizations.of(context)!.translate('email_label'),
+            hintText: AppLocalizations.of(context)!.translate('email_hint'),
             controller: widget.emailController,
             validator: _validateEmail,
-            onChanged: (value) => _checkFields(), // Check fields on change
+            onChanged: (value) => _checkFields(),
           ),
           const SizedBox(height: 20.0),
           InputField(
-            label: "Password",
-            hintText: "Enter your password",
+            label: AppLocalizations.of(context)!.translate('password_label'),
+            hintText: AppLocalizations.of(context)!.translate('password_hint'),
             controller: widget.passwordController,
             validator: _validatePassword,
-            onChanged: (value) => _checkFields(), // Check fields on change
-            obscureText: true, // Hide password input
+            onChanged: (value) => _checkFields(),
+            obscureText: true,
           ),
           if (_showConfirmPassword) const SizedBox(height: 20.0),
           if (_showConfirmPassword)
             InputField(
-              label: "Confirm Password",
-              hintText: "Confirm your password",
+              label: AppLocalizations.of(context)!
+                  .translate('confirm_password_label'),
+              hintText: AppLocalizations.of(context)!
+                  .translate('confirm_password_hint'),
               controller: widget.confirmPasswordController,
               validator: (value) {
                 if (value != widget.passwordController.text) {
-                  return 'Passwords do not match';
+                  return AppLocalizations.of(context)!
+                      .translate('passwords_do_not_match');
                 }
                 return null;
               },
-              obscureText: true, // Hide confirm password input
+              obscureText: true,
             ),
           const SizedBox(height: 20.0),
           SizedBox(
             width: 400,
             child: ElevatedButton(
-              onPressed:
-                  _isLoading ? null : _signUp, // Disable button if loading
+              onPressed: _isLoading ? null : _signUp,
               child: _isLoading
-                  ? CircularProgressIndicator() // Show loading indicator if in progress
-                  : const Text('Create Account'),
+                  ? const CircularProgressIndicator()
+                  : Text(AppLocalizations.of(context)!
+                      .translate('sign_up_button')),
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.greenAccent, // Button background color
-                foregroundColor: Colors.white, // Button text color
-                padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 15.0),
-                textStyle: TextStyle(fontSize: 16.0),
+                backgroundColor: Colors.greenAccent,
+                foregroundColor: Colors.white,
+                padding: const EdgeInsets.symmetric(
+                    horizontal: 20.0, vertical: 15.0),
+                textStyle: const TextStyle(fontSize: 16.0),
               ),
             ),
           ),
@@ -211,31 +205,33 @@ class _SignUpFormState extends State<SignUpForm> {
                 color: Colors.red,
                 size: 16,
               ),
-              label: const Text('Sign Up with Google'),
+              label: Text(AppLocalizations.of(context)!
+                  .translate('sign_up_with_google')),
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.white, // Button background color
-                foregroundColor: Colors.black, // Button text color
-                padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 15.0),
-                textStyle: TextStyle(fontSize: 16.0),
+                backgroundColor: Colors.white,
+                foregroundColor: Colors.black,
+                padding: const EdgeInsets.symmetric(
+                    horizontal: 20.0, vertical: 15.0),
+                textStyle: const TextStyle(fontSize: 16.0),
               ),
             ),
           ),
           const SizedBox(height: 20.0),
-          // Toggle to login form if the user already has an account
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Flexible(
                 child: Text(
-                  "Already have an account? ",
+                  AppLocalizations.of(context)!
+                      .translate('already_have_an_account'),
                   overflow: TextOverflow.ellipsis,
                 ),
               ),
               TextButton(
-                onPressed: widget.onToggle, // Trigger form toggle
-                child: const Text(
-                  "Log in",
-                  style: TextStyle(color: Colors.blue),
+                onPressed: widget.onToggle,
+                child: Text(
+                  AppLocalizations.of(context)!.translate('log_in_button'),
+                  style: const TextStyle(color: Colors.blue),
                 ),
               ),
             ],

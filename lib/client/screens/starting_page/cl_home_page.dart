@@ -3,7 +3,7 @@ import 'package:naya_menu/client/screens/login/cl_auth_page.dart';
 import 'package:naya_menu/client/widgets/language_menu.dart';
 import 'package:naya_menu/service/lang/localization.dart';
 import 'package:naya_menu/service/providers/lang_provider.dart';
-import 'package:naya_menu/theme/app_theme.dart'; // Import your AppTheme
+import 'package:naya_menu/theme/app_theme.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class GetStartedPage extends ConsumerWidget {
@@ -11,14 +11,18 @@ class GetStartedPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final currentLanguage = ref.watch(languageProvider);
+    final currentLanguage =
+        ref.watch(languageProvider); // Watch the selected language
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Naya Menu'),
+        title: const Text('Naya Menu'),
         actions: [
           LanguageMenu(
-            languages: ['English', 'Arabic'],
+            languages: [
+              'English',
+              'Arabic'
+            ], // Provide the list of available languages
           ),
         ],
       ),
@@ -35,9 +39,7 @@ class GetStartedPage extends ConsumerWidget {
                   style: Theme.of(context).textTheme.headlineMedium,
                   textAlign: TextAlign.center,
                 ),
-                const SizedBox(
-                  height: 15,
-                ),
+                const SizedBox(height: 15),
                 Text(
                   AppLocalizations.of(context)!.translate('tagline'),
                   style: Theme.of(context).textTheme.headlineSmall?.copyWith(
@@ -46,11 +48,9 @@ class GetStartedPage extends ConsumerWidget {
                       ),
                   textAlign: TextAlign.center,
                 ),
-                const SizedBox(
-                  height: 50,
-                ),
+                const SizedBox(height: 50),
                 ConstrainedBox(
-                  constraints: BoxConstraints(
+                  constraints: const BoxConstraints(
                     maxWidth: 300, // Limit width to avoid overflow
                   ),
                   child: TextButton.icon(

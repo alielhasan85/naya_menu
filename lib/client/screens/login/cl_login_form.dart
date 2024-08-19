@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:naya_menu/client/screens/platform/cl_main_page.dart';
 import 'package:naya_menu/client/widgets/input_fields.dart';
+import 'package:naya_menu/service/lang/localization.dart';
 
 class LoginForm extends StatefulWidget {
   final GlobalKey<FormState> formKey;
@@ -27,11 +28,11 @@ class _LoginFormState extends State<LoginForm> {
   // Validate email input
   String? _validateEmail(String? value) {
     if (value == null || value.isEmpty) {
-      return 'Please enter an email address';
+      return AppLocalizations.of(context)!.translate('email_hint');
     }
     final regex = RegExp(r'^[^@]+@[^@]+\.[^@]+');
     if (!regex.hasMatch(value)) {
-      return 'Please enter a valid email address';
+      return AppLocalizations.of(context)!.translate('email_hint');
     }
     return null;
   }
@@ -39,10 +40,10 @@ class _LoginFormState extends State<LoginForm> {
   // Validate password input
   String? _validatePassword(String? value) {
     if (value == null || value.isEmpty) {
-      return 'Please enter a password';
+      return AppLocalizations.of(context)!.translate('password_hint');
     }
     if (value.length < 6) {
-      return 'Password must be at least 6 characters';
+      return AppLocalizations.of(context)!.translate('password_hint');
     }
     return null;
   }
@@ -88,31 +89,31 @@ class _LoginFormState extends State<LoginForm> {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
           Text(
-            'Log In to Your Account',
+            AppLocalizations.of(context)!.translate('log_in_to_your_account'),
             style: TextStyle(
               fontSize: titleFontSize,
               fontWeight: FontWeight.w900,
             ),
           ),
           const SizedBox(height: 15.0),
-          const Text(
-            'Welcome back!',
-            style: TextStyle(
+          Text(
+            AppLocalizations.of(context)!.translate('welcome_back'),
+            style: const TextStyle(
               fontSize: 14,
               fontStyle: FontStyle.italic,
             ),
           ),
           const SizedBox(height: 20.0),
           InputField(
-            label: "Email",
-            hintText: "Enter your email",
+            label: AppLocalizations.of(context)!.translate('email_label'),
+            hintText: AppLocalizations.of(context)!.translate('email_hint'),
             controller: widget.emailController,
             validator: _validateEmail,
           ),
           const SizedBox(height: 20.0),
           InputField(
-            label: "Password",
-            hintText: "Enter your password",
+            label: AppLocalizations.of(context)!.translate('password_label'),
+            hintText: AppLocalizations.of(context)!.translate('password_hint'),
             controller: widget.passwordController,
             validator: _validatePassword,
             obscureText: true,
@@ -131,7 +132,8 @@ class _LoginFormState extends State<LoginForm> {
               ),
               child: _isLoading
                   ? const CircularProgressIndicator()
-                  : const Text('Log In'),
+                  : Text(
+                      AppLocalizations.of(context)!.translate('log_in_button')),
             ),
           ),
           const SizedBox(height: 20.0),
@@ -139,13 +141,13 @@ class _LoginFormState extends State<LoginForm> {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Text("Don't have an account? "),
+              Text(AppLocalizations.of(context)!
+                  .translate('dont_have_an_account')),
               TextButton(
-                onPressed:
-                    widget.onToggle, // Trigger form toggle using Riverpod
-                child: const Text(
-                  "Sign Up",
-                  style: TextStyle(color: Colors.blue),
+                onPressed: widget.onToggle,
+                child: Text(
+                  AppLocalizations.of(context)!.translate('sign_up'),
+                  style: const TextStyle(color: Colors.blue),
                 ),
               ),
             ],
