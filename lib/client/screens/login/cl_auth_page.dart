@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:hexcolor/hexcolor.dart';
 import 'package:naya_menu/client/screens/login/cl_login_form.dart';
 import 'package:naya_menu/client/screens/login/cl_signup_form.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:naya_menu/client/widgets/language_menu.dart';
 import 'package:naya_menu/service/lang/localization.dart';
+import 'package:naya_menu/theme/app_theme.dart';
 
 final authFormProvider = StateProvider<AuthForm>((ref) => AuthForm.login);
 
@@ -40,6 +40,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
     final authForm = ref.watch(authFormProvider);
 
     return Material(
+      color: AppTheme.background, // Set background color to the light beige
       child: Column(
         children: [
           const TopDecoration(),
@@ -51,6 +52,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20.0),
               child: Card(
+                color: AppTheme.white, // White background for the card
                 elevation: 8,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(20),
@@ -92,7 +94,8 @@ class _LoginPageState extends ConsumerState<LoginPage> {
           Expanded(
             flex: 1,
             child: Container(
-              color: HexColor('#b9c2d1'),
+              color: AppTheme
+                  .lightGreen, // Dark teal color for the bottom container
             ),
           ),
         ],
@@ -112,7 +115,7 @@ class TopDecoration extends StatelessWidget {
         width: double.infinity,
         padding: const EdgeInsets.symmetric(vertical: 20.0),
         decoration: BoxDecoration(
-          color: Colors.yellow[600],
+          color: AppTheme.lightPeach, // Orange color for top decoration
           borderRadius: const BorderRadius.only(
             bottomRight: Radius.circular(40),
             bottomLeft: Radius.circular(40),
@@ -133,18 +136,18 @@ class TopDecoration extends StatelessWidget {
               const SizedBox(height: 10.0),
               Text(
                 AppLocalizations.of(context)!.translate('login_page_title'),
-                style: const TextStyle(
-                  fontSize: 30.0,
-                  fontWeight: FontWeight.w900,
-                ),
+                style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                      color: AppTheme.textPrimary, //
+                      fontWeight: FontWeight.w900,
+                    ),
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 5.0),
               Text(
                 AppLocalizations.of(context)!.translate('login_page_subtitle'),
-                style: const TextStyle(
-                  fontSize: 18.0,
-                ),
+                style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                      color: AppTheme.white, // White text on orange background
+                    ),
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 10.0),

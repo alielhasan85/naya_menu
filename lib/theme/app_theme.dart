@@ -179,6 +179,39 @@
 //     );
 //   }
 // }
+
+/*
+
+
+Color Palette Extraction:
+Background Color:
+
+Hex Code: #F9F4F1 (light beige)
+Primary Text Color (Dark Blue Text):
+
+Hex Code: #223843
+Accent Text Color (Orange "Delicious" Text):
+
+Hex Code: #FF5C00
+Button Background Color (Login Button):
+
+Hex Code: #FF5C00 (Same as the orange accent)
+Button Text Color:
+
+Hex Code: #FFFFFF (white)
+Secondary Background Color (Header, Buttons Background):
+
+Hex Code: #3D5365 (dark teal)
+Secondary Accent Color (Green Box):
+
+Hex Code: #D5E6BC (light green)
+Outline and Divider Colors:
+
+Hex Code: #E3E3E3 (light grey)
+Additional Accent Color (Light Peach Box):
+
+Hex Code: #FBD6C6 (light peach)*/
+
 import 'package:flutter/material.dart';
 
 class AppTheme {
