@@ -4,9 +4,17 @@ import 'package:naya_menu/models/venue/venue_index.dart';
 class FirestoreVenueService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  // Add a new venue
-  Future<void> addVenue(Venue venue) async {
-    await _firestore.collection('restaurants').doc(venue.id).set(venue.toMap());
+  // Add a new venue and let Firestore generate the ID
+  Future<String> addVenue(Venue venue) async {
+    DocumentReference docRef = _firestore
+        .collection('restaurants')
+        .doc(); // Generate the document reference with a unique ID
+    venue.id = docRef.id; // Set the generated ID to the venue object
+
+    await docRef
+        .set(venue.toMap()); // Save the venue data with the generated ID
+
+    return docRef.id; // Return the generated ID for further use if needed
   }
 
   // Set venue information for the venue
