@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:naya_menu/models/users.dart';
+import 'package:naya_menu/models/client/users.dart';
 
 class FirestoreUser {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;

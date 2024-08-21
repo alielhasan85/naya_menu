@@ -3,7 +3,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:naya_menu/client/screens/starting_page/cl_home_page.dart';
 import 'package:naya_menu/service/lang/localization.dart'; // Import your localization
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:naya_menu/service/providers/lang_provider.dart'; // Import language provider
+import 'package:naya_menu/service/lang/lang_provider.dart'; // Import language provider
 
 class MyApp extends ConsumerWidget {
   const MyApp({super.key});

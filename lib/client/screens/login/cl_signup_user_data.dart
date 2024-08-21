@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:naya_menu/client/widgets/input_fields.dart';
 import 'package:naya_menu/client/widgets/phone_number.dart';
-import 'package:naya_menu/models/users.dart';
+import 'package:naya_menu/models/client/users.dart';
 import 'package:naya_menu/service/firebase/firestore_user.dart';
 import 'package:naya_menu/client/screens/platform/cl_main_page.dart';
 import 'package:naya_menu/service/firebase/firestore_venue.dart';

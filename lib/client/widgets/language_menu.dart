@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:naya_menu/service/providers/lang_provider.dart';
+import 'package:naya_menu/service/lang/lang_provider.dart';
 
 class LanguageMenu extends ConsumerStatefulWidget {
   final List<String> languages;

@@ -4,6 +4,9 @@ import 'package:naya_menu/client/screens/platform/cl_main_page.dart';
 import 'package:naya_menu/client/widgets/input_fields.dart';
 import 'package:naya_menu/service/lang/localization.dart';
 
+import '../../../models/old/custom_progress_indicator.dart';
+import '../image/meal_create.dart';
+
 class LoginForm extends StatefulWidget {
   final GlobalKey<FormState> formKey;
   final TextEditingController emailController;
@@ -64,9 +67,15 @@ class _LoginFormState extends State<LoginForm> {
 
       // Navigate to MainPage on successful login
       Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => const MainPage()),
-      );
+          context,
+          MaterialPageRoute(
+            builder: (context) => const MealCreatePage(
+              restaurantId: '6OpcPgtI7NHXLlfsNiEU',
+            ),
+          )
+
+          //MainPage()),
+          );
     } on FirebaseAuthException catch (e) {
       // Handle error (e.g., show a dialog or Snackbar)
       print(e.message);
@@ -131,7 +140,7 @@ class _LoginFormState extends State<LoginForm> {
                 textStyle: const TextStyle(fontSize: 16.0),
               ),
               child: _isLoading
-                  ? const CircularProgressIndicator()
+                  ? CustomProgressIndicator()
                   : Text(
                       AppLocalizations.of(context)!.translate('log_in_button')),
             ),
