@@ -18,8 +18,8 @@ class SignUpForm extends StatefulWidget {
     required this.passwordController,
     required this.confirmPasswordController,
     required this.onToggle,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   _SignUpFormState createState() => _SignUpFormState();

@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:naya_menu/client/screens/image/meal_create.dart';
 import 'package:naya_menu/client/screens/starting_page/cl_home_page.dart';
 import 'package:naya_menu/service/lang/localization.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:naya_menu/service/lang/lang_provider.dart';
+
+import 'screens/menu_management/meal_create.dart';
 
 class MyApp extends ConsumerWidget {
   const MyApp({super.key});
@@ -39,7 +40,9 @@ class MyApp extends ConsumerWidget {
           child: child!,
         );
       },
-      home: const GetStartedPage(),
+      home: MealCreatePage(
+        restaurantId: '6OpcPgtI7NHXLlfsNiEU',
+      ),
     );
   }
 }

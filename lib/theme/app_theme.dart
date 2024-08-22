@@ -345,22 +345,23 @@ class AppTheme {
         AppTheme.chipBackground, // Can be updated to lightGreen or lightPeach
     border: OutlineInputBorder(
       borderRadius: BorderRadius.circular(8),
-      borderSide: BorderSide(color: AppTheme.grey), // Light grey
+      borderSide: const BorderSide(color: AppTheme.grey), // Light grey
     ),
     enabledBorder: OutlineInputBorder(
       borderRadius: BorderRadius.circular(8),
-      borderSide: BorderSide(color: AppTheme.grey), // Light grey
+      borderSide: const BorderSide(color: AppTheme.grey), // Light grey
     ),
     focusedBorder: OutlineInputBorder(
       borderRadius: BorderRadius.circular(8),
-      borderSide: BorderSide(color: AppTheme.darkText), // Dark blue text color
+      borderSide:
+          const BorderSide(color: AppTheme.darkText), // Dark blue text color
     ),
-    labelStyle: TextStyle(
+    labelStyle: const TextStyle(
       fontFamily: fontName,
       color: AppTheme.darkText,
       fontSize: 16,
     ),
-    hintStyle: TextStyle(
+    hintStyle: const TextStyle(
       fontFamily: fontName,
       color: AppTheme.lightText, // Keep the same for less emphasis
       fontSize: 14,
@@ -368,7 +369,7 @@ class AppTheme {
   );
 
   // AppBar theme
-  static final AppBarTheme appBarTheme = AppBarTheme(
+  static AppBarTheme appBarTheme = const AppBarTheme(
     backgroundColor: AppTheme.background, // Light beige
     elevation: 0,
     iconTheme: IconThemeData(color: AppTheme.darkText), // Dark blue text color
@@ -381,7 +382,7 @@ class AppTheme {
   );
 
   // Icon theme
-  static final IconThemeData iconTheme = IconThemeData(
+  static IconThemeData iconTheme = const IconThemeData(
     color: AppTheme.darkText, // Dark blue text color
     size: 24,
   );

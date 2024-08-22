@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:naya_menu/client/screens/platform/cl_main_page.dart';
 import 'package:naya_menu/client/widgets/input_fields.dart';
 import 'package:naya_menu/service/lang/localization.dart';
 
 import '../../../models/old/custom_progress_indicator.dart';
-import '../image/meal_create.dart';
+import '../menu_management/meal_create.dart';
 
 class LoginForm extends StatefulWidget {
   final GlobalKey<FormState> formKey;
@@ -18,8 +17,8 @@ class LoginForm extends StatefulWidget {
     required this.emailController,
     required this.passwordController,
     required this.onToggle,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   _LoginFormState createState() => _LoginFormState();
@@ -69,6 +68,7 @@ class _LoginFormState extends State<LoginForm> {
       Navigator.pushReplacement(
           context,
           MaterialPageRoute(
+            /// TODO:  remove meal contact page
             builder: (context) => const MealCreatePage(
               restaurantId: '6OpcPgtI7NHXLlfsNiEU',
             ),

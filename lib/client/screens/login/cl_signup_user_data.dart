@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:naya_menu/client/widgets/input_fields.dart';
 import 'package:naya_menu/client/widgets/phone_number.dart';
@@ -49,7 +48,7 @@ class _ClSignUpUserDataState extends State<ClSignUpUserData> {
 
         if (phoneExists) {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
+            const SnackBar(
                 content: Text(
                     'This phone number is already associated with an account. Please use a different phone number.')),
           );
@@ -96,7 +95,7 @@ class _ClSignUpUserDataState extends State<ClSignUpUserData> {
       } catch (e) {
         print('Error during submission: $e');
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
+          const SnackBar(
               content:
                   Text('Failed to save user information. Please try again.')),
         );

@@ -1,7 +1,7 @@
+// import 'dart:typed_data';
 import 'dart:typed_data';
-import 'package:flutter/foundation.dart' show kIsWeb;
+
 import 'package:flutter/material.dart';
-import 'package:file_picker/file_picker.dart';
 import 'package:naya_menu/service/firebase/old/firebase_storage_service.dart';
 import 'package:universal_io/io.dart' as uio;
 import 'package:firebase_auth/firebase_auth.dart';
@@ -11,6 +11,8 @@ import '../../../models/old/custom_progress_indicator.dart';
 import '../../../models/old/meal.dart';
 import '../../../service/firebase/old/firestore_category_service.dart';
 import '../../../service/firebase/old/firestore_meal_service.dart';
+import '../../widgets/input_fields.dart';
+import '../image/image_upload_popup.dart';
 
 class MealCreatePage extends StatefulWidget {
   final String restaurantId;
@@ -53,44 +55,34 @@ class _MealCreatePageState extends State<MealCreatePage> {
   @override
   void initState() {
     super.initState();
-    _loadCategories();
+    // _loadCategories();
   }
 
-  Future<void> _loadCategories() async {
-    try {
-      List<Category> categories =
-          await _firestoreCategoryService.getCategories(widget.restaurantId);
-      setState(() {
-        _categories = categories;
-      });
-    } catch (e) {
-      print('Error loading categories: $e');
-    }
-  }
+  // Future<void> _loadCategories() async {
+  //   try {
+  //     List<Category> categories =
+  //         await _firestoreCategoryService.getCategories(widget.restaurantId);
+  //     setState(() {
+  //       _categories = categories;
+  //     });
+  //   } catch (e) {
+  //     print('Error loading categories: $e');
+  //   }
+  // }
 
-  Future<void> _pickImage() async {
-    try {
-      FilePickerResult? result =
-          await FilePicker.platform.pickFiles(type: FileType.image);
-
-      if (result != null) {
-        setState(() {
-          if (kIsWeb) {
-            _imageBytes = result.files.first.bytes;
-            _imageFile = null;
-          } else {
-            _imageFile = uio.File(result.files.single.path!);
-            _imageBytes = null;
-          }
-        });
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('No image selected.')),
-        );
-      }
-    } catch (e) {
-      print('Error picking image: $e');
-    }
+  void _openImageUploadPopup() {
+    showDialog(
+      context: context,
+      builder: (context) => ImageUploadPopup(
+        onImageUploaded: (String? downloadUrl) {
+          setState(() {
+            if (downloadUrl != null) {
+              _downloadUrl = downloadUrl;
+            }
+          });
+        },
+      ),
+    );
   }
 
   Future<void> _uploadImage() async {
@@ -212,16 +204,16 @@ class _MealCreatePageState extends State<MealCreatePage> {
 
   @override
   Widget build(BuildContext context) {
-    final user = FirebaseAuth.instance.currentUser;
+    // final user = FirebaseAuth.instance.currentUser;
 
-    if (user == null) {
-      return Scaffold(
-        appBar: AppBar(title: Text('Create Meal')),
-        body: Center(
-          child: Text('You are not signed in.'),
-        ),
-      );
-    }
+    // if (user == null) {
+    //   return Scaffold(
+    //     appBar: AppBar(title: Text('Create Meal')),
+    //     body: Center(
+    //       child: Text('You are not signed in.'),
+    //     ),
+    //   );
+    // }
 
     return SingleChildScrollView(
       padding: EdgeInsets.all(16.0),
@@ -237,17 +229,22 @@ class _MealCreatePageState extends State<MealCreatePage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  if (_imageFile != null)
-                    Image.file(_imageFile!, height: 200)
-                  else if (_imageBytes != null)
-                    Image.memory(_imageBytes!, height: 200)
-                  else
-                    Text('No image selected.'),
-                  SizedBox(height: 20),
-                  ElevatedButton.icon(
-                    onPressed: _pickImage,
-                    icon: Icon(Icons.image),
-                    label: Text('Select Image'),
+                  Container(
+                    height: 200,
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Colors.grey),
+                    ),
+                    child: GestureDetector(
+                      onTap: _openImageUploadPopup,
+                      child: _imageFile != null
+                          ? Image.file(_imageFile!,
+                              height: 200, fit: BoxFit.cover)
+                          : _imageBytes != null
+                              ? Image.memory(_imageBytes!,
+                                  height: 200, fit: BoxFit.cover)
+                              : Center(child: Text('Tap to select image')),
+                    ),
                   ),
                   SizedBox(height: 20),
                   _isUploading
@@ -257,23 +254,20 @@ class _MealCreatePageState extends State<MealCreatePage> {
                           icon: Icon(Icons.upload_file),
                           label: Text('Upload Image'),
                         ),
-                  SizedBox(height: 20),
-                  TextField(
+                  const SizedBox(height: 20),
+                  InputField(
+                    label: 'Meal Title',
+                    hintText: 'Enter meal name',
                     controller: _mealTitleController,
-                    decoration: InputDecoration(
-                      labelText: 'Meal Title',
-                      border: OutlineInputBorder(),
-                      prefixIcon: Icon(Icons.title),
-                    ),
+                    textCapitalization: TextCapitalization.words,
+                    labelAboveField: true,
                   ),
                   SizedBox(height: 20),
-                  TextField(
+                  InputField(
+                    label: 'Meal Description (optional)',
+                    hintText: 'Enter meal description',
                     controller: _mealDescriptionController,
-                    decoration: InputDecoration(
-                      labelText: 'Meal Description (optional)',
-                      border: OutlineInputBorder(),
-                      prefixIcon: Icon(Icons.description),
-                    ),
+                    textCapitalization: TextCapitalization.sentences,
                   ),
                   SizedBox(height: 20),
                   TextField(
