@@ -10,6 +10,11 @@ import 'package:dropdown_search/dropdown_search.dart';
 import 'package:naya_menu/theme/country_list.dart';
 import 'package:naya_menu/models/venue/venue_index.dart';
 
+import '../../widgets/custom_progress_indicator.dart';
+
+import 'package:flutter/material.dart';
+import 'package:dropdown_search/dropdown_search.dart';
+
 class ClSignUpUserData extends StatefulWidget {
   final String userId;
   final String email; // Email passed from the authentication page
@@ -22,11 +27,10 @@ class ClSignUpUserData extends StatefulWidget {
 }
 
 class _ClSignUpUserDataState extends State<ClSignUpUserData> {
-  final TextEditingController _firstNameController = TextEditingController();
-  final TextEditingController _lastNameController = TextEditingController();
+  final TextEditingController _nameController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
-  final TextEditingController _countryController = TextEditingController();
   final TextEditingController _businessController = TextEditingController();
+  final TextEditingController _countryCodeController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   bool _isLoading = false;
 
@@ -40,10 +44,14 @@ class _ClSignUpUserDataState extends State<ClSignUpUserData> {
       });
 
       try {
+        // Combine country code and phone number
+        String fullPhoneNumber =
+            _countryCodeController.text.trim() + _phoneController.text.trim();
+
         // Check if the phone number already exists
         bool phoneExists = await _firestoreUser.checkIfUserExists(
           email: widget.email,
-          phoneNumber: _phoneController.text.trim(),
+          phoneNumber: fullPhoneNumber,
         );
 
         if (phoneExists) {
@@ -61,11 +69,10 @@ class _ClSignUpUserDataState extends State<ClSignUpUserData> {
         // Create UserModel with the provided information
         UserModel user = UserModel(
           id: widget.userId,
-          firstName: _firstNameController.text,
-          lastName: _lastNameController.text,
+          name: _nameController.text,
           email: widget.email,
-          phoneNumber: _phoneController.text.trim(),
-          country: _countryController.text.trim(),
+          phoneNumber: fullPhoneNumber,
+          country: _countryCodeController.text.trim(),
           businessName: _businessController.text.trim(),
           emailNotification: true,
           smsNotification: true,
@@ -107,6 +114,16 @@ class _ClSignUpUserDataState extends State<ClSignUpUserData> {
     }
   }
 
+  void _onCountrySelected(String? country) {
+    setState(() {
+      _countryCodeController.text = countryToCode[country] ?? '';
+      _phoneController.text = '${_countryCodeController.text} ';
+      _phoneController.selection = TextSelection.fromPosition(
+        TextPosition(offset: _phoneController.text.length),
+      );
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -114,8 +131,8 @@ class _ClSignUpUserDataState extends State<ClSignUpUserData> {
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            CircleAvatar(
-              backgroundColor: Colors.black87,
+            const CircleAvatar(
+              backgroundColor: AppTheme.primaryColor,
               backgroundImage: NetworkImage(
                 'https://images.pexels.com/photos/1537635/pexels-photo-1537635.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
               ),
@@ -124,7 +141,7 @@ class _ClSignUpUserDataState extends State<ClSignUpUserData> {
             LanguageDropdown()
           ],
         ),
-        backgroundColor: Colors.transparent,
+        backgroundColor: AppTheme.background,
         elevation: 0,
       ),
       body: Center(
@@ -136,23 +153,25 @@ class _ClSignUpUserDataState extends State<ClSignUpUserData> {
             ),
             child: Container(
               padding: const EdgeInsets.all(20),
-              width: 500,
+              width: 450,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisSize: MainAxisSize.min,
+                mainAxisSize:
+                    MainAxisSize.min, // Adjusted to use MainAxisSize.min
                 children: <Widget>[
                   Text(
                     'Welcome to Naya Menu!',
-                    style: Theme.of(context)
-                        .textTheme
-                        .headlineSmall!
-                        .copyWith(color: Colors.indigo),
+                    style: Theme.of(context).textTheme.headlineMedium!.copyWith(
+                        color: AppTheme.textPrimary,
+                        fontWeight: FontWeight.w700),
                   ),
                   const SizedBox(height: 10.0),
                   Text(
                     'Tell us about yourself',
-                    style: Theme.of(context).textTheme.titleLarge!.copyWith(
-                        color: const Color.fromARGB(255, 181, 63, 161)),
+                    style: Theme.of(context)
+                        .textTheme
+                        .titleLarge!
+                        .copyWith(color: AppTheme.accentColor),
                   ),
                   const SizedBox(height: 20.0),
                   Form(
@@ -168,72 +187,13 @@ class _ClSignUpUserDataState extends State<ClSignUpUserData> {
                               ?.copyWith(fontSize: 16),
                         ),
                         const SizedBox(height: 5.0),
-                        Row(
-                          children: [
-                            Expanded(
-                              child: InputField(
-                                labelAboveField: false,
-                                label: null, // No label inside the field
-                                hintText: "Enter your first name",
-                                controller: _firstNameController,
-                                validator: (value) {
-                                  if (value == null || value.isEmpty) {
-                                    return 'Please enter your first name';
-                                  }
-                                  return null;
-                                },
-                              ),
-                            ),
-                            const SizedBox(width: 10.0),
-                            Expanded(
-                              child: InputField(
-                                labelAboveField: false,
-                                label: null, // No label inside the field
-                                hintText: "Enter your last name",
-                                controller: _lastNameController,
-                                validator: (value) {
-                                  if (value == null || value.isEmpty) {
-                                    return 'Please enter your last name';
-                                  }
-                                  return null;
-                                },
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 20.0),
-                        Text(
-                          "What is your phone number?",
-                          style: Theme.of(context)
-                              .textTheme
-                              .titleSmall
-                              ?.copyWith(fontSize: 16),
-                        ),
-                        PhoneNumberInput(
-                          controller: _phoneController,
-                          validator: (phone) {
-                            if (phone == null) {
-                              return 'Please enter your phone number';
-                            }
-                            return null;
-                          },
-                        ),
-                        const SizedBox(height: 20.0),
-                        Text(
-                          "What is your business name?",
-                          style: Theme.of(context)
-                              .textTheme
-                              .titleSmall
-                              ?.copyWith(fontSize: 16),
-                        ),
                         InputField(
                           labelAboveField: false,
                           label: null, // No label inside the field
-                          hintText: "Enter your business name",
-                          controller: _businessController,
+                          controller: _nameController,
                           validator: (value) {
                             if (value == null || value.isEmpty) {
-                              return 'Please enter your business name';
+                              return 'Please enter your name';
                             }
                             return null;
                           },
@@ -248,9 +208,7 @@ class _ClSignUpUserDataState extends State<ClSignUpUserData> {
                         ),
                         DropdownSearch<String>(
                           items: countries, // Use the list of countries here
-                          selectedItem: _countryController.text.isNotEmpty
-                              ? _countryController.text
-                              : null,
+                          selectedItem: null,
                           dropdownDecoratorProps: DropDownDecoratorProps(
                             dropdownSearchDecoration: InputDecoration(
                               filled: AppTheme.inputDecorationTheme.filled,
@@ -267,9 +225,7 @@ class _ClSignUpUserDataState extends State<ClSignUpUserData> {
                                   AppTheme.inputDecorationTheme.hintStyle,
                             ),
                           ),
-                          onChanged: (String? newValue) {
-                            _countryController.text = newValue ?? '';
-                          },
+                          onChanged: _onCountrySelected,
                           validator: (value) {
                             if (value == null || value.isEmpty) {
                               return 'Please select your country';
@@ -289,20 +245,59 @@ class _ClSignUpUserDataState extends State<ClSignUpUserData> {
                                 focusedBorder:
                                     AppTheme.inputDecorationTheme.focusedBorder,
                                 contentPadding: const EdgeInsets.all(10.0),
-                                hintText: "Search your country",
+                                // hintText: "Search your country",
                                 hintStyle:
                                     AppTheme.inputDecorationTheme.hintStyle,
                               ),
                             ),
                           ),
                         ),
+                        const SizedBox(height: 20.0),
+                        Text(
+                          "What is your business name?",
+                          style: Theme.of(context)
+                              .textTheme
+                              .titleSmall
+                              ?.copyWith(fontSize: 16),
+                        ),
+                        InputField(
+                          labelAboveField: false,
+                          label: null, // No label inside the field
+                          controller: _businessController,
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter your business name';
+                            }
+                            return null;
+                          },
+                        ),
+                        const SizedBox(height: 20.0),
+                        Text(
+                          "What is your phone number?",
+                          style: Theme.of(context)
+                              .textTheme
+                              .titleSmall
+                              ?.copyWith(fontSize: 16),
+                        ),
+                        PhoneNumberInput(
+                          controller: _phoneController,
+                          countryCodeController: _countryCodeController,
+                          validator: (phone) {
+                            if (phone == null || phone.isEmpty) {
+                              return 'Please enter your phone number';
+                            }
+                            return null;
+                          },
+                        ),
                         const SizedBox(height: 30.0),
                         Center(
                           child: ElevatedButton(
                             onPressed: _isLoading ? null : _submitInfo,
+                            style:
+                                AppTheme.buttonStyle, // Consistent button style
                             child: _isLoading
-                                ? CircularProgressIndicator()
-                                : const Text('Submit'),
+                                ? CustomProgressIndicator()
+                                : const Text('Start Your Free Trial'),
                           ),
                         ),
                       ],
@@ -314,7 +309,7 @@ class _ClSignUpUserDataState extends State<ClSignUpUserData> {
           ),
         ),
       ),
-      backgroundColor: Colors.white, // Customize background color here
+      backgroundColor: AppTheme.background, // Consistent background color
     );
   }
 }

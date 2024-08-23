@@ -114,7 +114,7 @@ class TopDecoration extends StatelessWidget {
       child: Container(
         width: double.infinity,
         padding: const EdgeInsets.symmetric(vertical: 20.0),
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           color: AppTheme.lightPeach, // Orange color for top decoration
           borderRadius: const BorderRadius.only(
             bottomRight: Radius.circular(40),
@@ -158,7 +158,7 @@ class TopDecoration extends StatelessWidget {
                   style: TextStyle(color: Colors.yellow),
                 ),
               ),
-              LanguageMenu(
+              const LanguageMenu(
                 languages: [
                   'English',
                   'Arabic'

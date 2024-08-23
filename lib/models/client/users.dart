@@ -18,10 +18,12 @@ the user will have this data:
 
 
 */
+
+//part of user profile setting
 class UserModel {
   final String id; // Firebase UID
-  final String firstName; // Required
-  final String lastName; // Required
+  final String name; // Required
+
   final String email; // Retrieved from FirebaseAuth
   final String phoneNumber; // Required
   final String country;
@@ -32,8 +34,7 @@ class UserModel {
 
   UserModel({
     required this.id,
-    required this.firstName,
-    required this.lastName,
+    required this.name,
     required this.email,
     required this.phoneNumber,
     required this.country,
@@ -47,8 +48,7 @@ class UserModel {
   Map<String, dynamic> toMap() {
     return {
       'id': id,
-      'firstName': firstName,
-      'lastName': lastName,
+      'name': name,
       'email': email,
       'phoneNumber': phoneNumber,
       'country': country,
@@ -63,8 +63,7 @@ class UserModel {
   factory UserModel.fromMap(Map<String, dynamic> map, String id) {
     return UserModel(
       id: id,
-      firstName: map['firstName'],
-      lastName: map['lastName'],
+      name: map['name'],
       email: map['email'],
       phoneNumber: map['phoneNumber'],
       country: map['country'],

@@ -13,7 +13,7 @@ class GetStartedPage extends ConsumerWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Naya Menu'),
-        actions: [
+        actions: const [
           LanguageMenu(
             languages: [
               'English',

@@ -2,34 +2,32 @@ import 'package:flutter/material.dart';
 import 'package:country_picker/country_picker.dart';
 import 'package:naya_menu/theme/app_theme.dart'; // Your custom theme
 
+import 'package:flutter/material.dart';
+
+import 'package:flutter/material.dart';
+
 class PhoneNumberInput extends StatefulWidget {
   final TextEditingController controller;
+  final TextEditingController countryCodeController;
   final String? Function(String?)? validator;
 
-  const PhoneNumberInput({required this.controller, this.validator, Key? key})
-      : super(key: key);
+  const PhoneNumberInput({
+    required this.controller,
+    required this.countryCodeController,
+    this.validator,
+    Key? key,
+  }) : super(key: key);
 
   @override
   _PhoneNumberInputState createState() => _PhoneNumberInputState();
 }
 
 class _PhoneNumberInputState extends State<PhoneNumberInput> {
-  String selectedCountryCode = '+1'; // Default to US
-  String selectedFlagEmoji = '🇺🇸'; // Default to US flag
-
-  void _openCountryPickerDialog(BuildContext context) {
-    showCountryPicker(
-      context: context,
-      showPhoneCode: true, // Show phone code alongside country name
-      onSelect: (Country country) {
-        setState(() {
-          selectedCountryCode = '+${country.phoneCode}';
-          selectedFlagEmoji = country.flagEmoji; // Set the selected flag emoji
-        });
-        widget.controller.text =
-            '$selectedCountryCode '; // Initialize with country code
-      },
-    );
+  @override
+  void initState() {
+    super.initState();
+    // Initialize the phone number field with the country code
+    widget.controller.text = '${widget.countryCodeController.text} ';
   }
 
   @override
@@ -47,42 +45,24 @@ class _PhoneNumberInputState extends State<PhoneNumberInput> {
       fillColor: AppTheme.inputDecorationTheme.fillColor ?? Colors.blue.shade50,
     );
 
-    return Row(
-      children: [
-        GestureDetector(
-          onTap: () => _openCountryPickerDialog(context),
-          child: Container(
-            padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-            decoration: BoxDecoration(
-              border: Border.all(
-                color: AppTheme.inputDecorationTheme.border!.borderSide.color,
-                width: AppTheme.inputDecorationTheme.border!.borderSide.width,
-              ),
-              borderRadius: BorderRadius.circular(12),
-              color: AppTheme.inputDecorationTheme.fillColor ??
-                  Colors.blue.shade50,
+    return TextFormField(
+      controller: widget.controller,
+      keyboardType: TextInputType.phone,
+      decoration: inputDecoration,
+      validator: widget.validator,
+      onChanged: (value) {
+        // Ensure the country code stays at the beginning without repetition
+        if (!value.startsWith(widget.countryCodeController.text)) {
+          final newText =
+              '${widget.countryCodeController.text} ${value.replaceAll(widget.countryCodeController.text, '').trim()}';
+          widget.controller.value = TextEditingValue(
+            text: newText,
+            selection: TextSelection.fromPosition(
+              TextPosition(offset: newText.length),
             ),
-            child: Row(
-              children: [
-                Text(
-                  '$selectedFlagEmoji $selectedCountryCode',
-                  style: TextStyle(fontSize: 16),
-                ),
-                Icon(Icons.arrow_drop_down),
-              ],
-            ),
-          ),
-        ),
-        const SizedBox(width: 10),
-        Expanded(
-          child: TextFormField(
-            controller: widget.controller,
-            keyboardType: TextInputType.phone,
-            decoration: inputDecoration,
-            validator: widget.validator,
-          ),
-        ),
-      ],
+          );
+        }
+      },
     );
   }
 }

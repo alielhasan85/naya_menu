@@ -44,7 +44,7 @@ class MainPage extends ConsumerWidget {
               onChange: (index) {
                 print(index);
               },
-              icons: [
+              icons: const [
                 Icon(Icons.person),
                 Icon(Icons.settings),
                 Icon(Icons.credit_card),

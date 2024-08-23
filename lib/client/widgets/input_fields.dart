@@ -5,7 +5,7 @@ import 'package:naya_menu/theme/app_theme.dart'; // Import your AppTheme
 
 class InputField extends StatelessWidget {
   final String? label; // Made label optional
-  final String hintText;
+  final String? hintText;
   final TextEditingController controller;
   final String? Function(String?)? validator;
   final void Function(String)? onChanged;
@@ -16,7 +16,7 @@ class InputField extends StatelessWidget {
 
   InputField({
     this.label, // Label is now optional
-    required this.hintText,
+    this.hintText,
     required this.controller,
     this.validator,
     this.onChanged,

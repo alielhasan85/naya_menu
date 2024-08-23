@@ -3,8 +3,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:naya_menu/client/widgets/input_fields.dart';
 import 'package:naya_menu/service/lang/localization.dart';
 
-import '../../../models/old/custom_progress_indicator.dart';
-import '../menu_management/meal_create.dart';
+import '../../widgets/custom_progress_indicator.dart';
+import '../platform/cl_main_page.dart';
 
 class LoginForm extends StatefulWidget {
   final GlobalKey<FormState> formKey;
@@ -66,16 +66,9 @@ class _LoginFormState extends State<LoginForm> {
 
       // Navigate to MainPage on successful login
       Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-            /// TODO:  remove meal contact page
-            builder: (context) => const MealCreatePage(
-              restaurantId: '6OpcPgtI7NHXLlfsNiEU',
-            ),
-          )
-
-          //MainPage()),
-          );
+        context,
+        MaterialPageRoute(builder: (context) => const MainPage()),
+      );
     } on FirebaseAuthException catch (e) {
       // Handle error (e.g., show a dialog or Snackbar)
       print(e.message);

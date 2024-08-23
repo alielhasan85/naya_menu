@@ -354,7 +354,7 @@ class AppTheme {
     focusedBorder: OutlineInputBorder(
       borderRadius: BorderRadius.circular(8),
       borderSide:
-          const BorderSide(color: AppTheme.darkText), // Dark blue text color
+          const BorderSide(color: AppTheme.accentColor), // Dark blue text color
     ),
     labelStyle: const TextStyle(
       fontFamily: fontName,

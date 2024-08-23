@@ -7,7 +7,7 @@ import 'package:universal_io/io.dart' as uio;
 import 'package:firebase_auth/firebase_auth.dart';
 
 import '../../../models/old/category.dart';
-import '../../../models/old/custom_progress_indicator.dart';
+import '../../widgets/custom_progress_indicator.dart';
 import '../../../models/old/meal.dart';
 import '../../../service/firebase/old/firestore_category_service.dart';
 import '../../../service/firebase/old/firestore_meal_service.dart';
