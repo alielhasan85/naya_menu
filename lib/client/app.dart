@@ -41,10 +41,7 @@ class MyApp extends ConsumerWidget {
           child: child!,
         );
       },
-      home: ClSignUpUserData(
-        userId: 'jLmF8w4ioYNvGpafFVkeW24lEuV2',
-        email: 'test@test.com',
-      ),
+      home: const GetStartedPage(),
     );
   }
 }

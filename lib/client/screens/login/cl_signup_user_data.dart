@@ -37,6 +37,19 @@ class _ClSignUpUserDataState extends State<ClSignUpUserData> {
   final FirestoreUser _firestoreUser =
       FirestoreUser(); // Instance of FirestoreUser
 
+  String country = '';
+
+  void _onCountrySelected(String? selectedCountry) {
+    country = selectedCountry ?? '';
+    setState(() {
+      _countryCodeController.text = countryToCode[country] ?? '';
+      _phoneController.text = '${_countryCodeController.text} ';
+      _phoneController.selection = TextSelection.fromPosition(
+        TextPosition(offset: _phoneController.text.length),
+      );
+    });
+  }
+
   Future<void> _submitInfo() async {
     if (_formKey.currentState!.validate()) {
       setState(() {
@@ -44,9 +57,17 @@ class _ClSignUpUserDataState extends State<ClSignUpUserData> {
       });
 
       try {
-        // Combine country code and phone number
-        String fullPhoneNumber =
-            _countryCodeController.text.trim() + _phoneController.text.trim();
+        // Extract and format phone number correctly
+        String countryCode = _countryCodeController.text.trim();
+        String phoneNumber = _phoneController.text.trim();
+
+        // Remove any existing country code from the phone number
+        if (phoneNumber.startsWith(countryCode)) {
+          phoneNumber = phoneNumber.substring(countryCode.length).trim();
+        }
+
+        // Combine the final country code and phone number
+        String fullPhoneNumber = '$countryCode $phoneNumber';
 
         // Check if the phone number already exists
         bool phoneExists = await _firestoreUser.checkIfUserExists(
@@ -71,8 +92,8 @@ class _ClSignUpUserDataState extends State<ClSignUpUserData> {
           id: widget.userId,
           name: _nameController.text,
           email: widget.email,
-          phoneNumber: fullPhoneNumber,
-          country: _countryCodeController.text.trim(),
+          phoneNumber: fullPhoneNumber, // Correctly formatted phone number
+          country: country, // Save the country name
           businessName: _businessController.text.trim(),
           emailNotification: true,
           smsNotification: true,
@@ -112,16 +133,6 @@ class _ClSignUpUserDataState extends State<ClSignUpUserData> {
         });
       }
     }
-  }
-
-  void _onCountrySelected(String? country) {
-    setState(() {
-      _countryCodeController.text = countryToCode[country] ?? '';
-      _phoneController.text = '${_countryCodeController.text} ';
-      _phoneController.selection = TextSelection.fromPosition(
-        TextPosition(offset: _phoneController.text.length),
-      );
-    });
   }
 
   @override
