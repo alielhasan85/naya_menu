@@ -8,7 +8,7 @@ import 'package:naya_menu/service/firebase/firestore_venue.dart';
 import 'package:naya_menu/theme/app_theme.dart'; // Import your AppTheme
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:naya_menu/theme/country_list.dart';
-import 'package:naya_menu/models/venue/venue_index.dart';
+import 'package:naya_menu/models/venue/check/venue_index.dart';
 
 import '../../widgets/custom_progress_indicator.dart';
 
@@ -112,7 +112,7 @@ class _ClSignUpUserDataState extends State<ClSignUpUserData> {
         );
 
         // Add the venue using the service
-        String venueId = await venueService.addVenue(venue);
+        String venueId = await venueService.addVenue(widget.userId, venue);
 
         print('Venue created successfully with ID: $venueId');
 

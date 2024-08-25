@@ -79,11 +79,11 @@ class FirestoreUser {
         .toList();
   }
 
-  // Search for users by their first name or email using the [query] provided.
+  // Search for users by their name or email using the [query] provided.
   Future<List<UserModel>> searchUsers(String query) async {
     final querySnapshot = await _usersCollection
-        .where('firstName', isGreaterThanOrEqualTo: query)
-        .where('firstName', isLessThanOrEqualTo: query + '\uf8ff')
+        .where('name', isGreaterThanOrEqualTo: query)
+        .where('name', isLessThanOrEqualTo: query + '\uf8ff')
         .get();
     return querySnapshot.docs
         .map((doc) =>
@@ -92,14 +92,16 @@ class FirestoreUser {
   }
 
   /// Log user activity by appending the [activity] to the user's `recentActivities` field.
+  /// This can be used for tracking user interactions and generating analytics.
   Future<void> logUserActivity(String userId, String activity) async {
     await _usersCollection.doc(userId).update({
-      'lastActivity': DateTime.now(),
+      'lastLogin': DateTime.now().toIso8601String(),
       'recentActivities': FieldValue.arrayUnion([activity]),
     });
   }
 
   /// Set the role of a user by their [userId] with the [role] provided.
+  /// This can be useful if you plan to have different roles within your application.
   Future<void> setUserRole(String userId, String role) async {
     await _usersCollection.doc(userId).update({'role': role});
   }
@@ -125,7 +127,7 @@ class FirestoreUser {
       String userId, String subscriptionType) async {
     await _usersCollection
         .doc(userId)
-        .update({'subscription': subscriptionType});
+        .update({'subscriptionType': subscriptionType});
   }
 
   /// Update the notification preferences of a user by their [userId] with the options for [emailNotification] and [smsNotification].
@@ -137,5 +139,32 @@ class FirestoreUser {
     if (smsNotification != null) updates['smsNotification'] = smsNotification;
 
     await _usersCollection.doc(userId).update(updates);
+  }
+
+  /// Increment the login count for a user by their [userId].
+  /// This is useful for tracking user engagement over time.
+  Future<void> incrementLoginCount(String userId) async {
+    await _usersCollection.doc(userId).update({
+      'loginCount': FieldValue.increment(1),
+      'lastLogin': DateTime.now().toIso8601String(),
+    });
+  }
+
+  /// Record a payment made by the user. This can be useful for financial tracking and analytics.
+  Future<void> recordPayment(
+      String userId, Map<String, dynamic> payment) async {
+    await _usersCollection.doc(userId).update({
+      'totalPaid': FieldValue.increment(payment['amount']),
+      'paymentHistory': FieldValue.arrayUnion([payment]),
+    });
+  }
+
+  /// Update user settings by their [userId] with the [settings] provided.
+  /// This allows customization and personalization for the user's experience.
+  Future<void> updateUserSettings(
+      String userId, Map<String, dynamic> settings) async {
+    await _usersCollection.doc(userId).update({
+      'userSettings': settings,
+    });
   }
 }

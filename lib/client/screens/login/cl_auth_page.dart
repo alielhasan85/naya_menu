@@ -40,65 +40,65 @@ class _LoginPageState extends ConsumerState<LoginPage> {
     final authForm = ref.watch(authFormProvider);
 
     return Material(
-      color: AppTheme.background, // Set background color to the light beige
-      child: Column(
-        children: [
-          const TopDecoration(),
-          const SizedBox(
-            height: 12,
-          ),
-          SizedBox(
-            width: 500,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20.0),
-              child: Card(
-                color: AppTheme.white, // White background for the card
-                elevation: 8,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20),
+      color: AppTheme.background,
+      child: SingleChildScrollView(
+        child: Column(
+          children: [
+            const TopDecoration(),
+            const SizedBox(
+              height: 12,
+            ),
+            SizedBox(
+              width: 500,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                child: Card(
+                  color: AppTheme.white,
+                  elevation: 8,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: authForm == AuthForm.login
+                      ? Padding(
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 20, horizontal: 30),
+                          child: LoginForm(
+                            formKey: _formKey,
+                            emailController: _emailEditorController,
+                            passwordController: _passwordEditorController,
+                            onToggle: () {
+                              ref.read(authFormProvider.notifier).state =
+                                  AuthForm.signUp;
+                            },
+                          ),
+                        )
+                      : Padding(
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 20, horizontal: 30),
+                          child: SignUpForm(
+                            formKey: _formKey,
+                            emailController: _emailEditorController,
+                            passwordController: _passwordEditorController,
+                            confirmPasswordController:
+                                _confirmPasswordController,
+                            onToggle: () {
+                              ref.read(authFormProvider.notifier).state =
+                                  AuthForm.login;
+                            },
+                          ),
+                        ),
                 ),
-                child: authForm == AuthForm.login
-                    ? Padding(
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 20, horizontal: 30),
-                        child: LoginForm(
-                          formKey: _formKey,
-                          emailController: _emailEditorController,
-                          passwordController: _passwordEditorController,
-                          onToggle: () {
-                            ref.read(authFormProvider.notifier).state =
-                                AuthForm.signUp;
-                          },
-                        ),
-                      )
-                    : Padding(
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 20, horizontal: 30),
-                        child: SignUpForm(
-                          formKey: _formKey,
-                          emailController: _emailEditorController,
-                          passwordController: _passwordEditorController,
-                          confirmPasswordController: _confirmPasswordController,
-                          onToggle: () {
-                            ref.read(authFormProvider.notifier).state =
-                                AuthForm.login;
-                          },
-                        ),
-                      ),
               ),
             ),
-          ),
-          const SizedBox(
-            height: 12,
-          ),
-          Expanded(
-            flex: 1,
-            child: Container(
-              color: AppTheme
-                  .lightGreen, // Dark teal color for the bottom container
+            const SizedBox(
+              height: 12,
             ),
-          ),
-        ],
+            Container(
+              height: 100, // Set a fixed height if needed
+              color: AppTheme.lightGreen,
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -115,8 +115,8 @@ class TopDecoration extends StatelessWidget {
         width: double.infinity,
         padding: const EdgeInsets.symmetric(vertical: 20.0),
         decoration: const BoxDecoration(
-          color: AppTheme.lightPeach, // Orange color for top decoration
-          borderRadius: const BorderRadius.only(
+          color: AppTheme.lightPeach,
+          borderRadius: BorderRadius.only(
             bottomRight: Radius.circular(40),
             bottomLeft: Radius.circular(40),
           ),
@@ -137,7 +137,7 @@ class TopDecoration extends StatelessWidget {
               Text(
                 AppLocalizations.of(context)!.translate('login_page_title'),
                 style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                      color: AppTheme.textPrimary, //
+                      color: AppTheme.textPrimary,
                       fontWeight: FontWeight.w900,
                     ),
                 textAlign: TextAlign.center,
@@ -146,7 +146,7 @@ class TopDecoration extends StatelessWidget {
               Text(
                 AppLocalizations.of(context)!.translate('login_page_subtitle'),
                 style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                      color: AppTheme.white, // White text on orange background
+                      color: AppTheme.white,
                     ),
                 textAlign: TextAlign.center,
               ),
@@ -159,10 +159,7 @@ class TopDecoration extends StatelessWidget {
                 ),
               ),
               const LanguageMenu(
-                languages: [
-                  'English',
-                  'Arabic'
-                ], // Provide the list of available languages
+                languages: ['English', 'Arabic'],
               )
             ],
           ),

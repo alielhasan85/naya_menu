@@ -1,7 +1,6 @@
 // models/index.dart
-export 'venue.dart';
+export '../venue.dart';
 export 'venue_info.dart';
-export 'contact_info.dart';
 export 'language_options.dart';
 export 'social_accounts.dart';
 export 'operations.dart';
