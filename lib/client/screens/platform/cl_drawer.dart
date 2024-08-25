@@ -11,9 +11,11 @@ class ClDrawer extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isDrawerExpanded = ref.watch(isDrawerExpandedProvider);
+    final selectedSection = ref.watch(selectedSectionProvider);
+    final isSettingsExpanded = selectedSection.startsWith('Settings');
 
     return Drawer(
-      width: isDrawerExpanded ? 250 : 80, // Adjust the width of the drawer
+      width: isDrawerExpanded ? 250 : 80,
       child: Column(
         children: <Widget>[
           DrawerHeader(
@@ -47,14 +49,14 @@ class ClDrawer extends ConsumerWidget {
               padding: EdgeInsets.zero,
               children: [
                 _createDrawerItem(
-                    icon: Icons.dashboard,
-                    text: 'Dashboard',
-                    onTap: () => ref
-                        .read(selectedSectionProvider.notifier)
-                        .state = 'Dashboard',
-                    isSelected:
-                        ref.watch(selectedSectionProvider) == 'Dashboard',
-                    isTextVisible: isDrawerExpanded),
+                  icon: Icons.dashboard,
+                  text: 'Dashboard',
+                  onTap: () => ref
+                      .read(selectedSectionProvider.notifier)
+                      .state = 'Dashboard',
+                  isSelected: selectedSection == 'Dashboard',
+                  isTextVisible: isDrawerExpanded,
+                ),
                 _createDrawerItem(
                     icon: Icons.report,
                     text: 'Report',
@@ -134,15 +136,52 @@ class ClDrawer extends ConsumerWidget {
                     isSelected:
                         ref.watch(selectedSectionProvider) == 'Marketplace',
                     isTextVisible: isDrawerExpanded),
+
+                // Settings item with expansion
                 _createDrawerItem(
-                    icon: Icons.settings,
-                    text: 'Settings',
+                  icon: Icons.settings,
+                  text: 'Settings',
+                  onTap: () {
+                    if (isSettingsExpanded) {
+                      ref.read(selectedSectionProvider.notifier).state = '';
+                    } else {
+                      ref.read(selectedSectionProvider.notifier).state =
+                          'Settings';
+                    }
+                  },
+                  isSelected: isSettingsExpanded,
+                  isTextVisible: isDrawerExpanded,
+                ),
+                if (isSettingsExpanded) ...[
+                  _createDrawerItem(
+                    icon: Icons.info,
+                    text: 'Venue Information',
                     onTap: () => ref
                         .read(selectedSectionProvider.notifier)
-                        .state = 'Settings',
+                        .state = 'Settings/Venue Information',
+                    isSelected: selectedSection == 'Settings/Venue Information',
+                    isTextVisible: isDrawerExpanded,
+                  ),
+                  _createDrawerItem(
+                    icon: Icons.design_services,
+                    text: 'Design and Display',
+                    onTap: () => ref
+                        .read(selectedSectionProvider.notifier)
+                        .state = 'Settings/Design and Display',
                     isSelected:
-                        ref.watch(selectedSectionProvider) == 'Settings',
-                    isTextVisible: isDrawerExpanded),
+                        selectedSection == 'Settings/Design and Display',
+                    isTextVisible: isDrawerExpanded,
+                  ),
+                  _createDrawerItem(
+                    icon: Icons.build,
+                    text: 'Operations',
+                    onTap: () => ref
+                        .read(selectedSectionProvider.notifier)
+                        .state = 'Settings/Operations',
+                    isSelected: selectedSection == 'Settings/Operations',
+                    isTextVisible: isDrawerExpanded,
+                  ),
+                ],
               ],
             ),
           ),
@@ -151,12 +190,13 @@ class ClDrawer extends ConsumerWidget {
     );
   }
 
-  Widget _createDrawerItem(
-      {required IconData icon,
-      required String text,
-      required VoidCallback onTap,
-      required bool isSelected,
-      required bool isTextVisible}) {
+  Widget _createDrawerItem({
+    required IconData icon,
+    required String text,
+    required VoidCallback onTap,
+    required bool isSelected,
+    required bool isTextVisible,
+  }) {
     return ListTile(
       selected: isSelected,
       leading: Icon(icon, color: isSelected ? Colors.blue : null),

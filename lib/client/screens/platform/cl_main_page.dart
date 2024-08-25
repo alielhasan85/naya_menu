@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:naya_menu/client/screens/platform/cl-venueinfo.dart';
 import 'package:naya_menu/client/screens/platform/cl_drawer.dart';
 import 'package:naya_menu/client/widgets/account_menu.dart';
 import 'package:naya_menu/client/widgets/input_fields.dart';
@@ -72,7 +73,6 @@ class MainPage extends ConsumerWidget {
   }
 }
 
-// SectionContent widget remains the same
 class SectionContent extends StatelessWidget {
   final String selectedSection;
 
@@ -81,31 +81,31 @@ class SectionContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (selectedSection.startsWith('Settings')) {
+      return _buildSettingsContent();
+    }
+
     switch (selectedSection) {
       case 'Dashboard':
         return Center(child: Text('Dashboard Content'));
       case 'Report':
         return Center(child: Text('Report Content'));
-      case 'Recommendation':
-        return Center(child: Text('Recommendation Content'));
-      case 'Orders':
-        return Center(child: Text('Orders Content'));
-      case 'Reservation':
-        return Center(child: Text('Reservation Content'));
-      case 'Engagement':
-        return Center(child: Text('Engagement Content'));
-      case 'Menu Management':
-        return Center(child: Text('Menu Management Content'));
-      case 'Feedback':
-        return Center(child: Text('Feedback Content'));
-      case 'Translation Center':
-        return Center(child: Text('Translation Center Content'));
-      case 'Marketplace':
-        return Center(child: Text('Marketplace Content'));
-      case 'Settings':
-        return Center(child: Text('Settings Content'));
+      // Other cases...
       default:
         return Center(child: Text('Unknown Section'));
+    }
+  }
+
+  Widget _buildSettingsContent() {
+    switch (selectedSection) {
+      case 'Settings/Venue Information':
+        return VenueInformationPage();
+      case 'Settings/Design and Display':
+        return Center(child: Text('Design and Display Content'));
+      case 'Settings/Operations':
+        return Center(child: Text('Operations Content'));
+      default:
+        return Center(child: Text('Select a Setting'));
     }
   }
 }
