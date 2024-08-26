@@ -48,140 +48,99 @@ class ClDrawer extends ConsumerWidget {
             child: ListView(
               padding: EdgeInsets.zero,
               children: [
-                _createDrawerItem(
+                DrawerItem(
                   icon: Icons.dashboard,
                   text: 'Dashboard',
-                  onTap: () => ref
-                      .read(selectedSectionProvider.notifier)
-                      .state = 'Dashboard',
-                  isSelected: selectedSection == 'Dashboard',
-                  isTextVisible: isDrawerExpanded,
+                  section: 'Dashboard',
+                  ref: ref,
                 ),
-                _createDrawerItem(
-                    icon: Icons.report,
-                    text: 'Report',
-                    onTap: () => ref
-                        .read(selectedSectionProvider.notifier)
-                        .state = 'Report',
-                    isSelected: ref.watch(selectedSectionProvider) == 'Report',
-                    isTextVisible: isDrawerExpanded),
-                _createDrawerItem(
-                    icon: Icons.recommend,
-                    text: 'Recommendation',
-                    onTap: () => ref
-                        .read(selectedSectionProvider.notifier)
-                        .state = 'Recommendation',
-                    isSelected:
-                        ref.watch(selectedSectionProvider) == 'Recommendation',
-                    isTextVisible: isDrawerExpanded),
-                _createDrawerItem(
-                    icon: Icons.shopping_cart,
-                    text: 'Orders',
-                    onTap: () => ref
-                        .read(selectedSectionProvider.notifier)
-                        .state = 'Orders',
-                    isSelected: ref.watch(selectedSectionProvider) == 'Orders',
-                    isTextVisible: isDrawerExpanded),
-                _createDrawerItem(
-                    icon: Icons.restaurant,
-                    text: 'Reservation',
-                    onTap: () => ref
-                        .read(selectedSectionProvider.notifier)
-                        .state = 'Reservation',
-                    isSelected:
-                        ref.watch(selectedSectionProvider) == 'Reservation',
-                    isTextVisible: isDrawerExpanded),
-                _createDrawerItem(
-                    icon: Icons.group,
-                    text: 'Engagement',
-                    onTap: () => ref
-                        .read(selectedSectionProvider.notifier)
-                        .state = 'Engagement',
-                    isSelected:
-                        ref.watch(selectedSectionProvider) == 'Engagement',
-                    isTextVisible: isDrawerExpanded),
-                _createDrawerItem(
-                    icon: Icons.menu,
-                    text: 'Menu Management',
-                    onTap: () => ref
-                        .read(selectedSectionProvider.notifier)
-                        .state = 'Menu Management',
-                    isSelected:
-                        ref.watch(selectedSectionProvider) == 'Menu Management',
-                    isTextVisible: isDrawerExpanded),
-                _createDrawerItem(
-                    icon: Icons.feedback,
-                    text: 'Feedback',
-                    onTap: () => ref
-                        .read(selectedSectionProvider.notifier)
-                        .state = 'Feedback',
-                    isSelected:
-                        ref.watch(selectedSectionProvider) == 'Feedback',
-                    isTextVisible: isDrawerExpanded),
-                _createDrawerItem(
-                    icon: Icons.translate,
-                    text: 'Translation Center',
-                    onTap: () => ref
-                        .read(selectedSectionProvider.notifier)
-                        .state = 'Translation Center',
-                    isSelected: ref.watch(selectedSectionProvider) ==
-                        'Translation Center',
-                    isTextVisible: isDrawerExpanded),
-                _createDrawerItem(
-                    icon: Icons.store,
-                    text: 'Marketplace',
-                    onTap: () => ref
-                        .read(selectedSectionProvider.notifier)
-                        .state = 'Marketplace',
-                    isSelected:
-                        ref.watch(selectedSectionProvider) == 'Marketplace',
-                    isTextVisible: isDrawerExpanded),
+                DrawerItem(
+                  icon: Icons.report,
+                  text: 'Report',
+                  section: 'Report',
+                  ref: ref,
+                ),
+                DrawerItem(
+                  icon: Icons.recommend,
+                  text: 'Recommendation',
+                  section: 'Recommendation',
+                  ref: ref,
+                ),
+                DrawerItem(
+                  icon: Icons.shopping_cart,
+                  text: 'Orders',
+                  section: 'Orders',
+                  ref: ref,
+                ),
+                DrawerItem(
+                  icon: Icons.restaurant,
+                  text: 'Reservation',
+                  section: 'Reservation',
+                  ref: ref,
+                ),
+                DrawerItem(
+                  icon: Icons.group,
+                  text: 'Engagement',
+                  section: 'Engagement',
+                  ref: ref,
+                ),
+                DrawerItem(
+                  icon: Icons.menu,
+                  text: 'Menu Management',
+                  section: 'Menu Management',
+                  ref: ref,
+                ),
+                DrawerItem(
+                  icon: Icons.feedback,
+                  text: 'Feedback',
+                  section: 'Feedback',
+                  ref: ref,
+                ),
+                DrawerItem(
+                  icon: Icons.translate,
+                  text: 'Translation Center',
+                  section: 'Translation Center',
+                  ref: ref,
+                ),
+                DrawerItem(
+                  icon: Icons.store,
+                  text: 'Marketplace',
+                  section: 'Marketplace',
+                  ref: ref,
+                ),
+                ExpansionTile(
+                  leading: Icon(Icons.settings,
+                      color: isSettingsExpanded ? Colors.blue : null),
+                  title: Text('Settings'),
 
-                // Settings item with expansion
-                _createDrawerItem(
-                  icon: Icons.settings,
-                  text: 'Settings',
-                  onTap: () {
-                    if (isSettingsExpanded) {
+                  //
+                  initiallyExpanded: isSettingsExpanded,
+                  children: [
+                    DrawerItem(
+                      icon: Icons.info,
+                      text: 'Venue Information',
+                      section: 'Settings/Venue Information',
+                      ref: ref,
+                    ),
+                    DrawerItem(
+                      icon: Icons.design_services,
+                      text: 'Design and Display',
+                      section: 'Settings/Design and Display',
+                      ref: ref,
+                    ),
+                    DrawerItem(
+                      icon: Icons.build,
+                      text: 'Operations',
+                      section: 'Settings/Operations',
+                      ref: ref,
+                    ),
+                  ],
+                  onExpansionChanged: (bool expanded) {
+                    if (!expanded && selectedSection.startsWith('Settings')) {
                       ref.read(selectedSectionProvider.notifier).state = '';
-                    } else {
-                      ref.read(selectedSectionProvider.notifier).state =
-                          'Settings';
                     }
                   },
-                  isSelected: isSettingsExpanded,
-                  isTextVisible: isDrawerExpanded,
                 ),
-                if (isSettingsExpanded) ...[
-                  _createDrawerItem(
-                    icon: Icons.info,
-                    text: 'Venue Information',
-                    onTap: () => ref
-                        .read(selectedSectionProvider.notifier)
-                        .state = 'Settings/Venue Information',
-                    isSelected: selectedSection == 'Settings/Venue Information',
-                    isTextVisible: isDrawerExpanded,
-                  ),
-                  _createDrawerItem(
-                    icon: Icons.design_services,
-                    text: 'Design and Display',
-                    onTap: () => ref
-                        .read(selectedSectionProvider.notifier)
-                        .state = 'Settings/Design and Display',
-                    isSelected:
-                        selectedSection == 'Settings/Design and Display',
-                    isTextVisible: isDrawerExpanded,
-                  ),
-                  _createDrawerItem(
-                    icon: Icons.build,
-                    text: 'Operations',
-                    onTap: () => ref
-                        .read(selectedSectionProvider.notifier)
-                        .state = 'Settings/Operations',
-                    isSelected: selectedSection == 'Settings/Operations',
-                    isTextVisible: isDrawerExpanded,
-                  ),
-                ],
               ],
             ),
           ),
@@ -189,19 +148,34 @@ class ClDrawer extends ConsumerWidget {
       ),
     );
   }
+}
 
-  Widget _createDrawerItem({
-    required IconData icon,
-    required String text,
-    required VoidCallback onTap,
-    required bool isSelected,
-    required bool isTextVisible,
-  }) {
+class DrawerItem extends StatelessWidget {
+  final IconData icon;
+  final String text;
+  final String section;
+  final WidgetRef ref;
+
+  const DrawerItem({
+    required this.icon,
+    required this.text,
+    required this.section,
+    required this.ref,
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final isDrawerExpanded = ref.watch(isDrawerExpandedProvider);
+    final isSelected = ref.watch(selectedSectionProvider) == section;
+
     return ListTile(
       selected: isSelected,
       leading: Icon(icon, color: isSelected ? Colors.blue : null),
-      title: isTextVisible ? Text(text) : null,
-      onTap: onTap,
+      title: isDrawerExpanded ? Text(text) : null,
+      onTap: () {
+        ref.read(selectedSectionProvider.notifier).state = section;
+      },
     );
   }
 }

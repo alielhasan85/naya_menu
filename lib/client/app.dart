@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:naya_menu/client/screens/login/cl_signup_user_data.dart';
+import 'package:naya_menu/client/screens/platform/cl_main_page.dart';
 import 'package:naya_menu/client/screens/starting_page/cl_home_page.dart';
 import 'package:naya_menu/service/lang/localization.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -41,7 +42,7 @@ class MyApp extends ConsumerWidget {
           child: child!,
         );
       },
-      home: const GetStartedPage(),
+      home: const MainPage(),
     );
   }
 }
