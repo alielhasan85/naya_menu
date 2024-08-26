@@ -6,13 +6,13 @@ import 'package:naya_menu/service/firebase/old/firebase_storage_service.dart';
 import 'package:universal_io/io.dart' as uio;
 import 'package:firebase_auth/firebase_auth.dart';
 
-import '../../../models/old/category.dart';
-import '../../widgets/custom_progress_indicator.dart';
-import '../../../models/old/meal.dart';
-import '../../../service/firebase/old/firestore_category_service.dart';
-import '../../../service/firebase/old/firestore_meal_service.dart';
-import '../../widgets/input_fields.dart';
-import '../image/image_upload_popup.dart';
+import '../../../../models/old/category.dart';
+import '../../../widgets/custom_progress_indicator.dart';
+import '../../../../models/old/meal.dart';
+import '../../../../service/firebase/old/firestore_category_service.dart';
+import '../../../../service/firebase/old/firestore_meal_service.dart';
+import '../../../widgets/input_fields.dart';
+import '../../image/image_upload_popup.dart';
 
 class MealCreatePage extends StatefulWidget {
   final String restaurantId;

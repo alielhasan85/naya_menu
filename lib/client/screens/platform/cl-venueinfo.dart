@@ -8,28 +8,33 @@ class VenueInformationPage extends StatelessWidget {
     // Basic UI to display venue information and allow updates
     return Padding(
       padding: const EdgeInsets.all(16.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'Venue Information',
-            // style: Theme.of(context).textTheme.headline6,
+      child: Card(
+        child: Padding(
+          padding: EdgeInsets.all(30),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Venue Information',
+                // style: Theme.of(context).textTheme.headline6,
+              ),
+              SizedBox(height: 20),
+              TextField(
+                decoration: InputDecoration(
+                  labelText: 'Venue Name',
+                ),
+              ),
+              // Other fields for address, city, state, etc.
+              SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: () {
+                  // Logic to update venue information in Firestore
+                },
+                child: Text('Save'),
+              ),
+            ],
           ),
-          SizedBox(height: 20),
-          TextField(
-            decoration: InputDecoration(
-              labelText: 'Venue Name',
-            ),
-          ),
-          // Other fields for address, city, state, etc.
-          SizedBox(height: 20),
-          ElevatedButton(
-            onPressed: () {
-              // Logic to update venue information in Firestore
-            },
-            child: Text('Save'),
-          ),
-        ],
+        ),
       ),
     );
   }
