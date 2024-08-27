@@ -118,7 +118,8 @@ class _ClSignUpUserDataState extends State<ClSignUpUserData> {
 
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => const MainPage()),
+          MaterialPageRoute(
+              builder: (context) => MainPage(userId: widget.userId)),
         );
       } catch (e) {
         print('Error during submission: $e');

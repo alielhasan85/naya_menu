@@ -42,7 +42,9 @@ class MyApp extends ConsumerWidget {
           child: child!,
         );
       },
-      home: const MainPage(),
+      home: const MainPage(
+        userId: 'Pt1SYSb4KKOzHLdmQe3WCNO5shy2',
+      ),
     );
   }
 }

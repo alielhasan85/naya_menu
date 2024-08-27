@@ -1,17 +1,14 @@
 import 'package:flutter/material.dart';
-// drop down menu from github nice ux to work on the ui
 
 class SimpleAccountMenu extends StatefulWidget {
-  final List<Icon> icons;
   final BorderRadius? borderRadius;
   final Color backgroundColor;
   final Color iconColor;
   final ValueChanged<int> onChange;
 
   const SimpleAccountMenu({
-    required this.icons,
     this.borderRadius,
-    this.backgroundColor = const Color(0xFFF67C0B9),
+    this.backgroundColor = const Color(0xFF67C0B9),
     this.iconColor = Colors.black,
     required this.onChange,
   });
@@ -29,6 +26,8 @@ class _SimpleAccountMenuState extends State<SimpleAccountMenu>
   OverlayEntry? _overlayEntry;
   late BorderRadius _borderRadius;
   late AnimationController _animationController;
+  int menuItemsCount =
+      5; // Number of menu items (Account Settings, Notifications, etc.)
 
   @override
   void initState() {
@@ -51,6 +50,27 @@ class _SimpleAccountMenuState extends State<SimpleAccountMenu>
     RenderBox renderBox = _key.currentContext!.findRenderObject() as RenderBox;
     buttonSize = renderBox.size;
     buttonPosition = renderBox.localToGlobal(Offset.zero);
+
+    double screenWidth = MediaQuery.of(context).size.width;
+    double screenHeight = MediaQuery.of(context).size.height;
+
+    // Adjust the position if it goes out of screen bounds
+    if (buttonPosition.dx + 200 > screenWidth) {
+      // 200 is the width of the menu
+      buttonPosition = Offset(screenWidth - 200, buttonPosition.dy);
+    }
+
+    // If the dropdown would be below the screen, adjust its position upwards
+    if (buttonPosition.dy +
+            buttonSize.height +
+            (menuItemsCount * buttonSize.height) >
+        screenHeight) {
+      buttonPosition = Offset(
+          buttonPosition.dx,
+          screenHeight -
+              (menuItemsCount * buttonSize.height) -
+              buttonSize.height);
+    }
   }
 
   void closeMenu() {
@@ -96,9 +116,8 @@ class _SimpleAccountMenuState extends State<SimpleAccountMenu>
     return OverlayEntry(
       builder: (context) {
         return Positioned(
-          top: buttonPosition.dy + buttonSize.height,
-          left: buttonPosition.dx,
-          width: buttonSize.width,
+          top: buttonPosition.dy + buttonSize.height, // Position below the icon
+          left: buttonPosition.dx, // Align with the icon's left side
           child: Material(
             color: Colors.transparent,
             child: Stack(
@@ -111,13 +130,16 @@ class _SimpleAccountMenuState extends State<SimpleAccountMenu>
                       width: 17,
                       height: 17,
                       color: widget.backgroundColor,
+                      // Ensure the arrow aligns with the icon
+                      margin:
+                          EdgeInsets.only(left: (buttonSize.width / 2) - 8.5),
                     ),
                   ),
                 ),
                 Padding(
                   padding: const EdgeInsets.only(top: 15.0),
                   child: Container(
-                    height: widget.icons.length * buttonSize.height,
+                    width: 200, // Adjust width for labels
                     decoration: BoxDecoration(
                       color: widget.backgroundColor,
                       borderRadius: _borderRadius,
@@ -130,19 +152,14 @@ class _SimpleAccountMenuState extends State<SimpleAccountMenu>
                       ),
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
-                        children: List.generate(widget.icons.length, (index) {
-                          return GestureDetector(
-                            onTap: () {
-                              widget.onChange(index);
-                              closeMenu();
-                            },
-                            child: Container(
-                              width: buttonSize.width,
-                              height: buttonSize.height,
-                              child: widget.icons[index],
-                            ),
-                          );
-                        }),
+                        children: [
+                          _buildMenuItem(Icons.person, "Account Settings", 0),
+                          _buildMenuItem(
+                              Icons.notifications, "Notifications", 1),
+                          _buildMenuItem(Icons.language, "Change Language", 2),
+                          _buildMenuItem(Icons.help_center, "Help Center", 3),
+                          _buildMenuItem(Icons.exit_to_app, "Sign Out", 4),
+                        ],
                       ),
                     ),
                   ),
@@ -154,6 +171,25 @@ class _SimpleAccountMenuState extends State<SimpleAccountMenu>
       },
     );
   }
+
+  Widget _buildMenuItem(IconData iconData, String label, int index) {
+    return GestureDetector(
+      onTap: () {
+        widget.onChange(index);
+        closeMenu();
+      },
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 15.0),
+        child: Row(
+          children: [
+            Icon(iconData, size: 20),
+            SizedBox(width: 10),
+            Text(label, style: TextStyle(color: widget.iconColor)),
+          ],
+        ),
+      ),
+    );
+  }
 }
 
 class ArrowClipper extends CustomClipper<Path> {
@@ -161,13 +197,14 @@ class ArrowClipper extends CustomClipper<Path> {
   Path getClip(Size size) {
     Path path = Path();
     path.moveTo(0, size.height);
-    path.lineTo(size.width / 2, size.height / 2);
+    path.lineTo(
+        size.width / 2, 0); // Align the tip of the triangle to the middle
     path.lineTo(size.width, size.height);
     return path;
   }
 
   @override
   bool shouldReclip(CustomClipper<Path> oldClipper) {
-    return true;
+    return false;
   }
 }

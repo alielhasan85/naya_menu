@@ -51,6 +51,7 @@ class _LoginFormState extends State<LoginForm> {
   }
 
   // Log in process with Firebase authentication
+// Log in process with Firebase authentication
   Future<void> _logIn() async {
     if (!widget.formKey.currentState!.validate()) return;
 
@@ -59,15 +60,22 @@ class _LoginFormState extends State<LoginForm> {
     });
 
     try {
-      await FirebaseAuth.instance.signInWithEmailAndPassword(
+      // Sign in with email and password
+      UserCredential userCredential =
+          await FirebaseAuth.instance.signInWithEmailAndPassword(
         email: widget.emailController.text,
         password: widget.passwordController.text,
       );
 
-      // Navigate to MainPage on successful login
+      // Retrieve the userId from the authenticated user
+      String userId = userCredential.user!.uid;
+
+      // Navigate to MainPage on successful login and pass the userId
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => const MainPage()),
+        MaterialPageRoute(
+          builder: (context) => MainPage(userId: userId),
+        ),
       );
     } on FirebaseAuthException catch (e) {
       // Handle error (e.g., show a dialog or Snackbar)

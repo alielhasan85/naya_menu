@@ -24,13 +24,6 @@ class NavigationRailWidget extends ConsumerWidget {
           _handleDestinationSelected(index, ref);
         }
       },
-      leading: IconButton(
-        icon: const Icon(Icons.menu),
-        onPressed: () {
-          ref.read(isNavigationRailExpandedProvider.notifier).state =
-              !isNavigationRailExpanded;
-        },
-      ),
       destinations: _buildDestinations(ref, isSettingsExpanded),
     );
   }
