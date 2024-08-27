@@ -18,33 +18,35 @@ class MyApp extends ConsumerWidget {
         ref.watch(languageProvider); // Watch the selected language
 
     return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Client Interface',
-      theme: ThemeData(primarySwatch: Colors.blue),
-      supportedLocales: const [
-        Locale('en', ''), // English
-        Locale('ar', ''), // Arabic
-      ],
-      localizationsDelegates: const [
-        AppLocalizations.delegate, // Your custom localization delegate
-        GlobalMaterialLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
-        GlobalCupertinoLocalizations.delegate,
-      ],
-      locale: Locale(currentLanguage == 'English'
-          ? 'en'
-          : 'ar'), // Set the locale based on the selected language
-      builder: (context, child) {
-        return Directionality(
-          textDirection: currentLanguage == 'Arabic'
-              ? TextDirection.rtl
-              : TextDirection.ltr,
-          child: child!,
+        debugShowCheckedModeBanner: false,
+        title: 'Client Interface',
+        theme: ThemeData(primarySwatch: Colors.blue),
+        supportedLocales: const [
+          Locale('en', ''), // English
+          Locale('ar', ''), // Arabic
+        ],
+        localizationsDelegates: const [
+          AppLocalizations.delegate, // Your custom localization delegate
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+        ],
+        locale: Locale(currentLanguage == 'English'
+            ? 'en'
+            : 'ar'), // Set the locale based on the selected language
+        builder: (context, child) {
+          return Directionality(
+            textDirection: currentLanguage == 'Arabic'
+                ? TextDirection.rtl
+                : TextDirection.ltr,
+            child: child!,
+          );
+        },
+        home: const GetStartedPage()
+
+        //     MainPage(
+        //   userId: 'Pt1SYSb4KKOzHLdmQe3WCNO5shy2',
+        // ),
         );
-      },
-      home: const MainPage(
-        userId: 'Pt1SYSb4KKOzHLdmQe3WCNO5shy2',
-      ),
-    );
   }
 }

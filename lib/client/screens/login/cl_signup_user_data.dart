@@ -12,9 +12,6 @@ import 'package:naya_menu/models/venue/check/venue_index.dart';
 
 import '../../widgets/custom_progress_indicator.dart';
 
-import 'package:flutter/material.dart';
-import 'package:dropdown_search/dropdown_search.dart';
-
 class ClSignUpUserData extends StatefulWidget {
   final String userId;
   final String email; // Email passed from the authentication page
