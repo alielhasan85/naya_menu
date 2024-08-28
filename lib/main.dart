@@ -11,6 +11,7 @@ import 'admin/app.dart' as adminApp;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );

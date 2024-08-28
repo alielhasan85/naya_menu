@@ -5,8 +5,8 @@ import 'package:naya_menu/service/lang/localization.dart';
 import 'package:naya_menu/theme/app_theme.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class GetStartedPage extends ConsumerWidget {
-  const GetStartedPage({super.key});
+class LoadingPage extends ConsumerWidget {
+  const LoadingPage({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

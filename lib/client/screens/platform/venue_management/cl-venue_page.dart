@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class VenueInformationPage extends StatelessWidget {
-  const VenueInformationPage({Key? key}) : super(key: key);
+  const VenueInformationPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -10,7 +10,7 @@ class VenueInformationPage extends StatelessWidget {
       padding: const EdgeInsets.all(16.0),
       child: Card(
         child: Padding(
-          padding: EdgeInsets.all(30),
+          padding: const EdgeInsets.all(30),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [

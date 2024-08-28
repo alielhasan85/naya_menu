@@ -3,7 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:naya_menu/client/widgets/input_fields.dart';
 import 'package:naya_menu/service/lang/localization.dart';
 
-import '../../widgets/custom_progress_indicator.dart';
+import '../../widgets/progress_indicator.dart';
 import '../platform/cl_main_page.dart';
 
 class LoginForm extends StatefulWidget {

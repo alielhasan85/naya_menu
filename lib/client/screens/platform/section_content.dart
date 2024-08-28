@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:naya_menu/client/screens/platform/cl-venue_page.dart';
+import 'package:naya_menu/client/screens/platform/venue_management/cl-venue_page.dart';
 
 class SectionContent extends ConsumerWidget {
   final String selectedSection;

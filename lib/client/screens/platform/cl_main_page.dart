@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:naya_menu/client/screens/platform/section_content.dart';
-import 'package:naya_menu/client/screens/platform/cl_user_page.dart';
-import 'package:naya_menu/client/screens/platform/user_notifier.dart';
+import 'package:naya_menu/client/screens/platform/user_management/cl_user_page.dart';
+import 'package:naya_menu/client/screens/platform/user_management/user_notifier.dart';
+import 'package:naya_menu/client/screens/platform/utility_functions.dart';
 import 'package:naya_menu/theme/app_theme.dart';
 import '../../../models/client/users.dart';
+import '../../widgets/progress_indicator.dart';
 import 'account_menu.dart';
-import '../../widgets/navigationRail.dart';
+import 'cl_main_navigationRail.dart';
 
 final selectedSectionProvider = StateProvider<String>((ref) => 'Dashboard');
 final isNavigationRailExpandedProvider = StateProvider<bool>((ref) => true);
@@ -51,30 +53,34 @@ class _MainPageState extends ConsumerState<MainPage> {
             ProfileMenu(
               onChange: (index) {
                 switch (index) {
-                  case 0:
-                    _viewProfile(
+                  case 1:
+                    viewProfile(
                         context); // Open UserProfilePage without passing user
                     break;
-                  case 1:
-                    _openNotifications(
+                  case 2:
+                    openNotifications(
                         context); // Open Notifications (to be implemented)
                     break;
-                  case 2:
-                    _changeLanguage(
+                  case 3:
+                    changeLanguage(
                         context); // Change Language (to be implemented)
                     break;
-                  case 3:
-                    _openHelpCenter(
+                  case 4:
+                    openHelpCenter(
                         context); // Open Help Center (to be implemented)
                     break;
-                  case 4:
-                    _logout(context); // Sign out
+                  case 5:
+                    logout(context); // Sign out
                     break;
                 }
               },
             )
           else
-            const CircularProgressIndicator(),
+            SizedBox(
+              height: 25,
+              width: 25,
+              child: CustomProgressIndicator(),
+            ),
           const SizedBox(width: 20),
         ],
         backgroundColor: AppTheme.appBarTheme.backgroundColor,
@@ -82,7 +88,7 @@ class _MainPageState extends ConsumerState<MainPage> {
       body: Row(
         children: [
           NavigationRailWidget(), // Use NavigationRailWidget
-          const VerticalDivider(thickness: 1, width: 1),
+          const VerticalDivider(thickness: 1, width: 1), // seperator
           Column(
             children: [
               IconButton(
@@ -174,46 +180,4 @@ class SettingsPage extends StatelessWidget {
           AppTheme.background, // Use AppTheme for scaffold background
     );
   }
-}
-
-void _openNotifications(BuildContext context) {
-  ScaffoldMessenger.of(context).showSnackBar(
-    const SnackBar(
-      content: Text('Notifications feature is under development.'),
-    ),
-  );
-}
-
-void _changeLanguage(BuildContext context) {
-  ScaffoldMessenger.of(context).showSnackBar(
-    const SnackBar(
-      content: Text('Change Language feature is under development.'),
-    ),
-  );
-}
-
-void _openHelpCenter(BuildContext context) {
-  ScaffoldMessenger.of(context).showSnackBar(
-    const SnackBar(
-      content: Text('Help Center is under development.'),
-    ),
-  );
-}
-
-void _logout(BuildContext context) {
-  ScaffoldMessenger.of(context).showSnackBar(
-    const SnackBar(
-      content: Text('Logging out...'),
-    ),
-  );
-  Navigator.of(context).pop();
-}
-
-void _viewProfile(BuildContext context) {
-  Navigator.push(
-    context,
-    MaterialPageRoute(
-      builder: (context) => const UserProfilePage(),
-    ),
-  );
 }

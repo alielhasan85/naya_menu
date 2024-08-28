@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:naya_menu/client/screens/platform/cl_user_page.dart';
+import 'package:naya_menu/client/screens/platform/user_management/cl_user_page.dart';
 import 'package:naya_menu/theme/app_theme.dart';
 import '../../../models/client/users.dart';
 import 'account_menu.dart';

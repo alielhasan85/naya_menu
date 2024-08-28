@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:naya_menu/client/screens/login/cl_signup_user_data.dart';
 import 'package:naya_menu/client/screens/platform/cl_main_page.dart';
-import 'package:naya_menu/client/screens/loading_page/cl_home_page.dart';
+import 'package:naya_menu/client/screens/loading_page/cl_loading_page.dart';
 import 'package:naya_menu/service/lang/localization.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:naya_menu/service/lang/lang_provider.dart';
@@ -42,7 +42,7 @@ class MyApp extends ConsumerWidget {
             child: child!,
           );
         },
-        home: const GetStartedPage()
+        home: const LoadingPage()
 
         //     MainPage(
         //   userId: 'Pt1SYSb4KKOzHLdmQe3WCNO5shy2',

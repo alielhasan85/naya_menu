@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../screens/platform/cl_main_page.dart';
+import 'cl_main_page.dart';
 
 // State provider to manage the expansion of the Settings dropdown
 final isSettingsExpandedProvider = StateProvider<bool>((ref) => false);
 
 class NavigationRailWidget extends ConsumerWidget {
+  const NavigationRailWidget({super.key});
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isNavigationRailExpanded =
