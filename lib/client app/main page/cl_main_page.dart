@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:naya_menu/client/screens/platform/section_content.dart';
-import 'package:naya_menu/client/screens/platform/user_management/cl_user_page.dart';
-import 'package:naya_menu/client/screens/platform/user_management/user_notifier.dart';
-import 'package:naya_menu/client/screens/platform/user_management/utility_functions.dart';
+import 'package:naya_menu/client%20app/venue_management/section_content.dart';
+import 'package:naya_menu/client%20app/user_management/cl_user_page.dart';
+import 'package:naya_menu/client%20app/user_management/user_notifier.dart';
+import 'package:naya_menu/client%20app/user_management/utility_functions.dart';
 import 'package:naya_menu/theme/app_theme.dart';
-import '../../../models/client/users.dart';
-import '../../widgets/progress_indicator.dart';
-import 'user_management/cl_account_menu.dart';
+import '../../models/client/users.dart';
+import '../widgets/progress_indicator.dart';
+import '../user_management/cl_account_menu.dart';
 import 'cl_main_navigation.dart';
 
 final selectedSectionProvider = StateProvider<String>((ref) => 'Dashboard');

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:naya_menu/client/screens/platform/user_management/cl_user_navigation.dart';
-import '../../../../models/client/users.dart';
-import '../../../../theme/app_theme.dart';
+import 'package:naya_menu/client%20app/user_management/cl_user_navigation.dart';
+import '../../models/client/users.dart';
+import '../../theme/app_theme.dart';
 import 'user_notifier.dart';
 
 final selectedProfileSectionProvider =

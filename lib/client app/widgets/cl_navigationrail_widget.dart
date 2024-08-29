@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:naya_menu/client/screens/platform/user_management/user_notifier.dart';
+import 'package:naya_menu/client%20app/user_management/user_notifier.dart';
 
 class CustomNavigationRail extends ConsumerWidget {
   final List<NavigationRailDestination> destinations;

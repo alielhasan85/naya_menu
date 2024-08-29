@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:naya_menu/client/widgets/input_fields.dart';
-import 'package:naya_menu/client/screens/login/cl_signup_phone.dart';
+import 'package:naya_menu/client%20app/widgets/input_fields.dart';
+import 'package:naya_menu/client%20app/login/cl_signup_phone.dart';
 import 'package:naya_menu/models/client/users.dart';
 import 'package:naya_menu/service/firebase/firestore_user.dart';
-import 'package:naya_menu/client/screens/platform/cl_main_page.dart';
+import 'package:naya_menu/client%20app/main%20page/cl_main_page.dart';
 import 'package:naya_menu/service/firebase/firestore_venue.dart';
 import 'package:naya_menu/theme/app_theme.dart'; // Import your AppTheme
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:naya_menu/theme/country_list.dart';
 import 'package:naya_menu/models/venue/check/venue_index.dart';
 
-import '../../widgets/progress_indicator.dart';
+import '../widgets/progress_indicator.dart';
 
 class ClSignUpUserData extends StatefulWidget {
   final String userId;

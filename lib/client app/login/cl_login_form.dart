@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:naya_menu/client/widgets/input_fields.dart';
+import 'package:naya_menu/client%20app/widgets/input_fields.dart';
 import 'package:naya_menu/service/lang/localization.dart';
 
-import '../../widgets/progress_indicator.dart';
-import '../platform/cl_main_page.dart';
+import '../widgets/progress_indicator.dart';
+import '../main page/cl_main_page.dart';
 
 class LoginForm extends StatefulWidget {
   final GlobalKey<FormState> formKey;

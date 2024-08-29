@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:naya_menu/client/screens/login/cl_signup_user_data.dart';
-import 'package:naya_menu/client/screens/platform/cl_main_page.dart';
-import 'package:naya_menu/client/screens/loading_page/cl_loading_page.dart';
+import 'package:naya_menu/client%20app/login/cl_signup_user_data.dart';
+import 'package:naya_menu/client%20app/main%20page/cl_main_page.dart';
+import 'package:naya_menu/client%20app/loading_page/cl_loading_page.dart';
 import 'package:naya_menu/service/lang/localization.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:naya_menu/service/lang/lang_provider.dart';
 
-import 'screens/platform/menu_management/meal_create.dart';
+import 'menu management/meal_create.dart';
 
 class MyApp extends ConsumerWidget {
   const MyApp({super.key});

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:naya_menu/client/screens/platform/user_management/cl_user_page.dart';
+import 'package:naya_menu/client%20app/user_management/cl_user_page.dart';
 
 void openNotifications(BuildContext context) {
   ScaffoldMessenger.of(context).showSnackBar(

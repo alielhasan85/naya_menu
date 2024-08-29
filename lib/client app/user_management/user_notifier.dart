@@ -1,6 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../../models/client/users.dart';
-import '../../../../service/firebase/firestore_user.dart';
+import '../../models/client/users.dart';
+import '../../service/firebase/firestore_user.dart';
 
 class UserNotifier extends StateNotifier<UserModel?> {
   UserNotifier() : super(null);

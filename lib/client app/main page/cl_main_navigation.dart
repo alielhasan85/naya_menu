@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:naya_menu/client/widgets/cl_navigationrail_widget.dart';
+import 'package:naya_menu/client%20app/widgets/cl_navigationrail_widget.dart';
 import 'cl_main_page.dart';
 
 final isSettingsExpandedProvider = StateProvider<bool>((ref) => false);
