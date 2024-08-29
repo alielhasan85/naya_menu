@@ -28,3 +28,14 @@ class UserNotifier extends StateNotifier<UserModel?> {
 final userProvider = StateNotifierProvider<UserNotifier, UserModel?>((ref) {
   return UserNotifier();
 });
+
+// State provider to manage the expansion of the NavigationRail
+final isNavigationRailExpandedProvider = StateProvider<bool>((ref) => true);
+
+// Add any other providers related to navigation or UI state here
+final isSettingsExpandedProvider = StateProvider<bool>((ref) => false);
+
+final selectedProfileSectionProvider =
+    StateProvider<String>((ref) => 'Profile');
+
+// You can add more providers as needed

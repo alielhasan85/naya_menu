@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:naya_menu/client/widgets/cl_navigationrail_widget.dart';
 import 'cl_main_page.dart';
 
-// State provider to manage the expansion of the Settings dropdown
 final isSettingsExpandedProvider = StateProvider<bool>((ref) => false);
 
 class NavigationRailWidget extends ConsumerWidget {
@@ -10,23 +10,23 @@ class NavigationRailWidget extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final isNavigationRailExpanded =
-        ref.watch(isNavigationRailExpandedProvider);
     final isSettingsExpanded = ref.watch(isSettingsExpandedProvider);
+    final selectedSection = ref.watch(selectedSectionProvider);
+    final destinations = _buildDestinations(ref, isSettingsExpanded);
 
-    return NavigationRail(
-      extended: isNavigationRailExpanded,
-      selectedIndex: _getSelectedIndex(ref),
+    return CustomNavigationRail(
+      destinations: destinations,
+      selectedIndex:
+          _getSelectedIndex(ref, selectedSection, isSettingsExpanded),
       onDestinationSelected: (int index) {
-        if (index == 10) {
-          // Assuming 10 is the index of the "Settings"
-          ref.read(isSettingsExpandedProvider.notifier).state =
-              !isSettingsExpanded;
-        } else {
-          _handleDestinationSelected(index, ref);
-        }
+        _handleDestinationSelected(index, ref);
       },
-      destinations: _buildDestinations(ref, isSettingsExpanded),
+      isSettingsSection: true,
+      isSettingsExpanded: isSettingsExpanded,
+      onToggleSettingsExpansion: () {
+        ref.read(isSettingsExpandedProvider.notifier).state =
+            !isSettingsExpanded;
+      },
     );
   }
 
@@ -114,10 +114,8 @@ class NavigationRailWidget extends ConsumerWidget {
     return destinations;
   }
 
-  int _getSelectedIndex(WidgetRef ref) {
-    final selectedSection = ref.watch(selectedSectionProvider);
-    final isSettingsExpanded = ref.watch(isSettingsExpandedProvider);
-
+  int _getSelectedIndex(
+      WidgetRef ref, String selectedSection, bool isSettingsExpanded) {
     switch (selectedSection) {
       case 'Dashboard':
         return 0;

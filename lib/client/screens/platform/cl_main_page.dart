@@ -3,12 +3,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:naya_menu/client/screens/platform/section_content.dart';
 import 'package:naya_menu/client/screens/platform/user_management/cl_user_page.dart';
 import 'package:naya_menu/client/screens/platform/user_management/user_notifier.dart';
-import 'package:naya_menu/client/screens/platform/utility_functions.dart';
+import 'package:naya_menu/client/screens/platform/user_management/utility_functions.dart';
 import 'package:naya_menu/theme/app_theme.dart';
 import '../../../models/client/users.dart';
 import '../../widgets/progress_indicator.dart';
-import 'account_menu.dart';
-import 'cl_main_navigationRail.dart';
+import 'user_management/cl_account_menu.dart';
+import 'cl_main_navigation.dart';
 
 final selectedSectionProvider = StateProvider<String>((ref) => 'Dashboard');
 final isNavigationRailExpandedProvider = StateProvider<bool>((ref) => true);
@@ -89,26 +89,32 @@ class _MainPageState extends ConsumerState<MainPage> {
         children: [
           NavigationRailWidget(), // Use NavigationRailWidget
           const VerticalDivider(thickness: 1, width: 1), // seperator
-          Column(
-            children: [
-              IconButton(
-                icon: Icon(
-                  isNavigationRailExpanded
-                      ? Icons.keyboard_arrow_left
-                      : Icons.keyboard_arrow_right,
-                  color: AppTheme.iconTheme.color,
-                ),
-                onPressed: () {
-                  ref.read(isNavigationRailExpandedProvider.notifier).state =
-                      !isNavigationRailExpanded;
-                },
-              ),
-            ],
-          ),
           Expanded(
-            child: Padding(
-              padding: const EdgeInsets.all(20.0),
-              child: SectionContent(selectedSection: selectedSection),
+            child: Column(
+              children: [
+                Align(
+                  alignment: Alignment.topLeft,
+                  child: IconButton(
+                    icon: Icon(
+                      isNavigationRailExpanded
+                          ? Icons.keyboard_arrow_left
+                          : Icons.keyboard_arrow_right,
+                      color: AppTheme.iconTheme.color,
+                    ),
+                    onPressed: () {
+                      ref
+                          .read(isNavigationRailExpandedProvider.notifier)
+                          .state = !isNavigationRailExpanded;
+                    },
+                  ),
+                ),
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.all(20.0),
+                    child: SectionContent(selectedSection: selectedSection),
+                  ),
+                ),
+              ],
             ),
           ),
         ],

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart'; // Import Riverpod
 import 'package:naya_menu/client/screens/platform/user_management/user_notifier.dart';
-import '../../../theme/app_theme.dart'; // Import your theme
+import '../../../../theme/app_theme.dart'; // Import your theme
 
 class ProfileMenu extends ConsumerWidget {
   final ValueChanged<int> onChange; // Callback for item selection

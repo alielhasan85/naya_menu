@@ -3,8 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:naya_menu/client/screens/platform/user_management/cl_user_page.dart';
 import 'package:naya_menu/theme/app_theme.dart';
 import '../../../models/client/users.dart';
-import 'account_menu.dart';
-import 'package:naya_menu/client/screens/platform/utility_functions.dart';
+import 'user_management/cl_account_menu.dart';
+import 'package:naya_menu/client/screens/platform/user_management/utility_functions.dart';
 
 List<Widget> buildAppBarActions(
     BuildContext context, UserModel? user, WidgetRef ref) {

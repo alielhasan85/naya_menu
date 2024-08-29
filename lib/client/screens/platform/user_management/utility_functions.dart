@@ -25,14 +25,6 @@ void openHelpCenter(BuildContext context) {
   );
 }
 
-void _openHelpCenter(BuildContext context) {
-  ScaffoldMessenger.of(context).showSnackBar(
-    const SnackBar(
-      content: Text('Help Center is under development.'),
-    ),
-  );
-}
-
 void logout(BuildContext context) {
   ScaffoldMessenger.of(context).showSnackBar(
     const SnackBar(
