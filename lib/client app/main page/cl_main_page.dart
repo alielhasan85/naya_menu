@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:naya_menu/client%20app/venue_management/section_content.dart';
-import 'package:naya_menu/client%20app/user_management/cl_user_page.dart';
+import 'package:naya_menu/client%20app/user_management/cl_user_profile_page.dart';
 import 'package:naya_menu/client%20app/user_management/user_notifier.dart';
 import 'package:naya_menu/client%20app/user_management/utility_functions.dart';
 import 'package:naya_menu/theme/app_theme.dart';
@@ -11,7 +11,6 @@ import '../user_management/cl_account_menu.dart';
 import 'cl_main_navigation.dart';
 
 final selectedSectionProvider = StateProvider<String>((ref) => 'Dashboard');
-final isNavigationRailExpandedProvider = StateProvider<bool>((ref) => true);
 
 class MainPage extends ConsumerStatefulWidget {
   final String userId;
@@ -39,10 +38,14 @@ class _MainPageState extends ConsumerState<MainPage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          "Platform Name",
-          style: AppTheme
-              .appBarTheme.titleTextStyle, // Use AppTheme for title style
+        backgroundColor: AppTheme.appBarTheme.backgroundColor,
+        title: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+          child: Text(
+            "Platform Name",
+            style: AppTheme
+                .appBarTheme.titleTextStyle, // Use AppTheme for title style
+          ),
         ),
         actions: [
           _buildSearchField(),
@@ -83,11 +86,10 @@ class _MainPageState extends ConsumerState<MainPage> {
             ),
           const SizedBox(width: 20),
         ],
-        backgroundColor: AppTheme.appBarTheme.backgroundColor,
       ),
       body: Row(
         children: [
-          NavigationRailWidget(), // Use NavigationRailWidget
+          const NavigationRailWidget(), // Use NavigationRailWidget
           const VerticalDivider(thickness: 1, width: 1), // seperator
           Expanded(
             child: Column(

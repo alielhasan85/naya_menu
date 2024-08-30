@@ -22,6 +22,22 @@ class UserNotifier extends StateNotifier<UserModel?> {
       setUser(userData);
     }
   }
+
+  // Function to update user data locally and in Firestore
+  Future<void> updateUserData(Map<String, dynamic> updatedData) async {
+    if (state != null) {
+      // Update Firestore with the new data
+      await FirestoreUser().updateUser(state!.id, updatedData);
+
+      // Update the state locally
+      state = state!.copyWith(
+        name: updatedData['name'] ?? state!.name,
+        jobTitle: updatedData['jobTitle'] ?? state!.jobTitle,
+        businessName: updatedData['businessName'] ?? state!.businessName,
+        // Add other fields as needed
+      );
+    }
+  }
 }
 
 // Provider to access the UserNotifier
@@ -37,5 +53,3 @@ final isSettingsExpandedProvider = StateProvider<bool>((ref) => false);
 
 final selectedProfileSectionProvider =
     StateProvider<String>((ref) => 'Profile');
-
-// You can add more providers as needed

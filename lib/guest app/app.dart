@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:naya_menu/client%20app/loading_page/cl_loading_page.dart';
+import 'package:naya_menu/client%20app/landing%20page/cl_loading_page.dart';
 import 'package:naya_menu/service/lang/localization.dart'; // Import your localization
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:naya_menu/service/lang/lang_provider.dart'; // Import language provider

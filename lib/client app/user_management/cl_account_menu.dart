@@ -6,7 +6,7 @@ import '../../theme/app_theme.dart'; // Import your theme
 class ProfileMenu extends ConsumerWidget {
   final ValueChanged<int> onChange; // Callback for item selection
 
-  const ProfileMenu({Key? key, required this.onChange}) : super(key: key);
+  const ProfileMenu({super.key, required this.onChange});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

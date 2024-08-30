@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:naya_menu/theme/app_theme.dart'; // Import your AppTheme
 
-//input field flexible to use in all the app
-
+// Input field flexible to use in all the app
 class InputField extends StatelessWidget {
   final String? label; // Made label optional
   final String? hintText;
@@ -13,6 +12,7 @@ class InputField extends StatelessWidget {
   final TextInputType keyboardType;
   final TextCapitalization textCapitalization;
   final bool labelAboveField; // Property to control label position
+  final InputDecoration? decoration; // Allow custom decoration
 
   InputField({
     this.label, // Label is now optional
@@ -25,23 +25,26 @@ class InputField extends StatelessWidget {
     this.textCapitalization = TextCapitalization.none,
     this.labelAboveField =
         false, // Default value is false (label on the same row)
+    this.decoration, // Allow passing custom InputDecoration
   });
 
   @override
   Widget build(BuildContext context) {
-    // Use the theme's input decoration theme
-    final inputDecoration = InputDecoration(
-      border: AppTheme.inputDecorationTheme.border,
-      focusedBorder: AppTheme.inputDecorationTheme.focusedBorder,
-      enabledBorder: AppTheme.inputDecorationTheme.enabledBorder,
-      contentPadding: AppTheme.inputDecorationTheme.contentPadding ??
-          const EdgeInsets.all(10.0),
-      hintText: hintText,
-      hintStyle: AppTheme.inputDecorationTheme.hintStyle ??
-          const TextStyle(fontSize: 14.0),
-      filled: AppTheme.inputDecorationTheme.filled ?? true,
-      fillColor: AppTheme.inputDecorationTheme.fillColor ?? Colors.blue.shade50,
-    );
+    // Use the provided decoration or fall back to the default theme's input decoration theme
+    final inputDecoration = decoration ??
+        InputDecoration(
+          border: AppTheme.inputDecorationTheme.border,
+          focusedBorder: AppTheme.inputDecorationTheme.focusedBorder,
+          enabledBorder: AppTheme.inputDecorationTheme.enabledBorder,
+          contentPadding: AppTheme.inputDecorationTheme.contentPadding ??
+              const EdgeInsets.all(10.0),
+          hintText: hintText,
+          hintStyle: AppTheme.inputDecorationTheme.hintStyle ??
+              const TextStyle(fontSize: 14.0),
+          filled: AppTheme.inputDecorationTheme.filled,
+          fillColor:
+              AppTheme.inputDecorationTheme.fillColor ?? Colors.blue.shade50,
+        );
 
     return labelAboveField
         ? Column(

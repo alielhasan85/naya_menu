@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:naya_menu/client%20app/widgets/cl_navigationrail_widget.dart';
+import 'package:naya_menu/client%20app/main%20page/cl_navigationrail_widget.dart';
+import 'package:naya_menu/theme/app_theme.dart';
 import 'cl_main_page.dart';
 
 final isSettingsExpandedProvider = StateProvider<bool>((ref) => false);
@@ -14,20 +15,27 @@ class NavigationRailWidget extends ConsumerWidget {
     final selectedSection = ref.watch(selectedSectionProvider);
     final destinations = _buildDestinations(ref, isSettingsExpanded);
 
-    return CustomNavigationRail(
-      destinations: destinations,
-      selectedIndex:
-          _getSelectedIndex(ref, selectedSection, isSettingsExpanded),
-      onDestinationSelected: (int index) {
-        _handleDestinationSelected(index, ref);
-      },
-      isSettingsSection: true,
-      isSettingsExpanded: isSettingsExpanded,
-      onToggleSettingsExpansion: () {
-        ref.read(isSettingsExpandedProvider.notifier).state =
-            !isSettingsExpanded;
-      },
-    );
+    return Row(children: [
+      CustomNavigationRail(
+        destinations: destinations,
+        selectedIndex:
+            _getSelectedIndex(ref, selectedSection, isSettingsExpanded),
+        onDestinationSelected: (int index) {
+          _handleDestinationSelected(index, ref);
+        },
+        isSettingsSection: true,
+        isSettingsExpanded: isSettingsExpanded,
+        onToggleSettingsExpansion: () {
+          ref.read(isSettingsExpandedProvider.notifier).state =
+              !isSettingsExpanded;
+        },
+      ),
+      const VerticalDivider(
+        color: AppTheme.accentColor,
+        thickness: 1,
+        width: 1,
+      )
+    ]);
   }
 
   List<NavigationRailDestination> _buildDestinations(

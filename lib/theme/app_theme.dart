@@ -218,19 +218,20 @@ class AppTheme {
   AppTheme._();
 
   // Colors extracted from the image
-  static const Color background = Color(0xFFF9F4F1); // Light beige (background)
+  static const Color background =
+      Color(0xFFFFF4EE); // Light beige (background) #fff4ee
   static const Color primaryColor =
-      Color(0xFF3D5365); // Dark teal (header, button background)
+      Color(0xFF2e4857); // Dark teal (header, button background)
   static const Color accentColor =
-      Color(0xFFFF5C00); // Orange (text "Delicious", login button)
-  static const Color textPrimary = Color(0xFF223843); // Dark blue text
+      Color(0xFFff5e1e); // Orange (text "Delicious", login button)
+  static const Color textPrimary = Color(0xFF3c3b39); // Dark blue text
   static const Color white = Color(0xFFFFFFFF); // White (common usage)
   static const Color grey =
-      Color(0xFFE3E3E3); // Light grey (outlines, dividers)
+      Color(0xFFa7afb8); // Light grey (outlines, dividers)
   static const Color lightGreen =
-      Color(0xFFD5E6BC); // Light green (secondary accent)
+      Color(0xFFd3f1a7); // Light green (secondary accent)
   static const Color lightPeach =
-      Color(0xFFFBD6C6); // Light peach (additional accent)
+      Color(0xFFfec195); // Light peach (additional accent)
 
   // Text Colors
   static const Color darkText = textPrimary;
@@ -370,12 +371,13 @@ class AppTheme {
 
   // AppBar theme
   static AppBarTheme appBarTheme = const AppBarTheme(
-    backgroundColor: AppTheme.background, // Light beige
+    backgroundColor: AppTheme.white, // Light beige
     elevation: 0,
-    iconTheme: IconThemeData(color: AppTheme.darkText), // Dark blue text color
+    iconTheme:
+        IconThemeData(color: AppTheme.primaryColor), // Dark blue text color
     titleTextStyle: TextStyle(
       fontFamily: fontName,
-      color: AppTheme.darkText,
+      color: AppTheme.primaryColor,
       fontWeight: FontWeight.bold,
       fontSize: 20,
     ),

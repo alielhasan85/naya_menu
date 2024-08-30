@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:naya_menu/client%20app/user_management/user_notifier.dart';
 
+import '../../theme/app_theme.dart';
+
 class CustomNavigationRail extends ConsumerWidget {
   final List<NavigationRailDestination> destinations;
   final int selectedIndex;
@@ -23,6 +25,7 @@ class CustomNavigationRail extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return NavigationRail(
+      backgroundColor: AppTheme.appBarTheme.backgroundColor,
       extended: ref.watch(isNavigationRailExpandedProvider),
       selectedIndex: selectedIndex,
       onDestinationSelected: (int index) {

@@ -20,27 +20,24 @@ the user will have this data:
 */
 
 class UserModel {
-  final String id; // Firebase UID
-  final String name; // Required
-  final String email; // Retrieved from FirebaseAuth
-  final String phoneNumber; // Required
+  final String id;
+  final String name;
+  final String email;
+  final String phoneNumber;
   final String country;
-  final String jobTitle; // Required
-  final String businessName; // Required
-  final bool emailNotification; // Optional, default true
-  final bool smsNotification; // Optional, default true
-
-  final List<String> staff; // List of staff/team members, could be empty
-  final DateTime createdAt; // Date of account creation
-  final int loginCount; // Number of times the user has logged in
-  final String
-      subscriptionType; // Type of subscription (e.g., free, basic, premium)
-  final double
-      totalPaid; // Total amount the user has paid since account creation
-  final List<Map<String, dynamic>> paymentHistory; // List of payment records
-  final bool isActive; // Whether the user account is active
-  final DateTime? lastLogin; // Date and time of the last login
-  final Map<String, dynamic>? userSettings; // Any user-specific settings
+  final String jobTitle;
+  final String businessName;
+  final bool emailNotification;
+  final bool smsNotification;
+  final List<String> staff;
+  final DateTime createdAt;
+  final int loginCount;
+  final String subscriptionType;
+  final double totalPaid;
+  final List<Map<String, dynamic>> paymentHistory;
+  final bool isActive;
+  final DateTime? lastLogin;
+  final Map<String, dynamic>? userSettings;
 
   UserModel({
     required this.id,
@@ -50,18 +47,60 @@ class UserModel {
     required this.country,
     required this.businessName,
     this.jobTitle = '',
-    this.emailNotification = true, // Default to true
-    this.smsNotification = true, // Default to true
-    this.staff = const [], // Default to an empty list
-    DateTime? createdAt, // Optional, will default to now
-    this.loginCount = 0, // Default to 0
-    this.subscriptionType = 'free', // Default to 'free'
-    this.totalPaid = 0.0, // Default to 0.0
-    this.paymentHistory = const [], // Default to an empty list
-    this.isActive = true, // Default to active
-    this.lastLogin, // Can be null if the user hasn't logged in yet
-    this.userSettings, // Optional user settings
-  }) : createdAt = createdAt ?? DateTime.now(); // Set to now if not provided
+    this.emailNotification = true,
+    this.smsNotification = true,
+    this.staff = const [],
+    DateTime? createdAt,
+    this.loginCount = 0,
+    this.subscriptionType = 'free',
+    this.totalPaid = 0.0,
+    this.paymentHistory = const [],
+    this.isActive = true,
+    this.lastLogin,
+    this.userSettings,
+  }) : createdAt = createdAt ?? DateTime.now();
+
+  // Add this copyWith method
+  UserModel copyWith({
+    String? name,
+    String? email,
+    String? phoneNumber,
+    String? country,
+    String? jobTitle,
+    String? businessName,
+    bool? emailNotification,
+    bool? smsNotification,
+    List<String>? staff,
+    DateTime? createdAt,
+    int? loginCount,
+    String? subscriptionType,
+    double? totalPaid,
+    List<Map<String, dynamic>>? paymentHistory,
+    bool? isActive,
+    DateTime? lastLogin,
+    Map<String, dynamic>? userSettings,
+  }) {
+    return UserModel(
+      id: this.id, // id is not changeable
+      name: name ?? this.name,
+      email: email ?? this.email,
+      phoneNumber: phoneNumber ?? this.phoneNumber,
+      country: country ?? this.country,
+      jobTitle: jobTitle ?? this.jobTitle,
+      businessName: businessName ?? this.businessName,
+      emailNotification: emailNotification ?? this.emailNotification,
+      smsNotification: smsNotification ?? this.smsNotification,
+      staff: staff ?? this.staff,
+      createdAt: createdAt ?? this.createdAt,
+      loginCount: loginCount ?? this.loginCount,
+      subscriptionType: subscriptionType ?? this.subscriptionType,
+      totalPaid: totalPaid ?? this.totalPaid,
+      paymentHistory: paymentHistory ?? this.paymentHistory,
+      isActive: isActive ?? this.isActive,
+      lastLogin: lastLogin ?? this.lastLogin,
+      userSettings: userSettings ?? this.userSettings,
+    );
+  }
 
   // Convert a UserModel into a Map. The keys must correspond to the names of the fields in Firestore.
   Map<String, dynamic> toMap() {
