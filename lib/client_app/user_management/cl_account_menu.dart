@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart'; // Import Riverpod
-import 'package:naya_menu/client%20app/user_management/user_notifier.dart';
+import 'package:naya_menu/client_app/notifier.dart';
 import '../../theme/app_theme.dart'; // Import your theme
 
 class ProfileMenu extends ConsumerWidget {

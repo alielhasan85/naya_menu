@@ -4,7 +4,7 @@ import '../../models/client/users.dart';
 import '../../theme/app_theme.dart';
 import '../../service/firebase/firestore_user.dart';
 import '../widgets/input_fields.dart';
-import 'user_notifier.dart';
+import '../notifier.dart';
 
 class ProfileTab extends ConsumerStatefulWidget {
   const ProfileTab({super.key});

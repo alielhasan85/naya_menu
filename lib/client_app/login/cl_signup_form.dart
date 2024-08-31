@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:naya_menu/client%20app/login/cl_signup_user_data.dart';
-import 'package:naya_menu/client%20app/widgets/input_fields.dart';
+import 'package:naya_menu/client_app/login/cl_signup_user_data.dart';
+import 'package:naya_menu/client_app/widgets/input_fields.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:naya_menu/service/lang/localization.dart';
 

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:naya_menu/admin%20app/screen/ad_home.dart';
+import 'package:naya_menu/admin_app/screen/ad_home.dart';
 import 'package:naya_menu/service/lang/localization.dart'; // Import your localization
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:naya_menu/service/lang/lang_provider.dart'; // Import language provider

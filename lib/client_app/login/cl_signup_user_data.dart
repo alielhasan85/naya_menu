@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:naya_menu/client%20app/widgets/input_fields.dart';
-import 'package:naya_menu/client%20app/login/cl_signup_phone.dart';
+import 'package:naya_menu/client_app/widgets/input_fields.dart';
+import 'package:naya_menu/client_app/login/cl_signup_phone.dart';
 import 'package:naya_menu/models/client/users.dart';
 import 'package:naya_menu/service/firebase/firestore_user.dart';
-import 'package:naya_menu/client%20app/main%20page/cl_main_page.dart';
+import 'package:naya_menu/client_app/main_page/cl_main_page.dart';
 import 'package:naya_menu/service/firebase/firestore_venue.dart';
 import 'package:naya_menu/theme/app_theme.dart'; // Import your AppTheme
 import 'package:dropdown_search/dropdown_search.dart';

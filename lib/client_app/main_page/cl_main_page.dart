@@ -1,16 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:naya_menu/client%20app/venue_management/section_content.dart';
-import 'package:naya_menu/client%20app/user_management/cl_user_profile_page.dart';
-import 'package:naya_menu/client%20app/user_management/user_notifier.dart';
-import 'package:naya_menu/client%20app/user_management/utility_functions.dart';
+import 'package:naya_menu/client_app/main_page/cl_main_navigation.dart';
+import 'package:naya_menu/client_app/main_page/section_content.dart';
+import 'package:naya_menu/client_app/notifier.dart';
+import 'package:naya_menu/client_app/user_management/utility_functions.dart';
+import 'package:naya_menu/client_app/widgets/cl_user_app_bar.dart';
 import 'package:naya_menu/theme/app_theme.dart';
-import '../../models/client/users.dart';
 import '../widgets/progress_indicator.dart';
 import '../user_management/cl_account_menu.dart';
-import 'cl_main_navigation.dart';
-
-final selectedSectionProvider = StateProvider<String>((ref) => 'Dashboard');
 
 class MainPage extends ConsumerStatefulWidget {
   final String userId;
@@ -37,16 +34,8 @@ class _MainPageState extends ConsumerState<MainPage> {
     final user = ref.watch(userProvider);
 
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: AppTheme.appBarTheme.backgroundColor,
-        title: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0),
-          child: Text(
-            "Platform Name",
-            style: AppTheme
-                .appBarTheme.titleTextStyle, // Use AppTheme for title style
-          ),
-        ),
+      appBar: CustomAppBar(
+        title: "Platform Name",
         actions: [
           _buildSearchField(),
           const SizedBox(width: 20),
@@ -57,20 +46,16 @@ class _MainPageState extends ConsumerState<MainPage> {
               onChange: (index) {
                 switch (index) {
                   case 1:
-                    viewProfile(
-                        context); // Open UserProfilePage without passing user
+                    viewProfile(context); // Open UserProfilePage
                     break;
                   case 2:
-                    openNotifications(
-                        context); // Open Notifications (to be implemented)
+                    openNotifications(context); // Open Notifications
                     break;
                   case 3:
-                    changeLanguage(
-                        context); // Change Language (to be implemented)
+                    changeLanguage(context); // Change Language
                     break;
                   case 4:
-                    openHelpCenter(
-                        context); // Open Help Center (to be implemented)
+                    openHelpCenter(context); // Open Help Center
                     break;
                   case 5:
                     logout(context); // Sign out
@@ -86,11 +71,12 @@ class _MainPageState extends ConsumerState<MainPage> {
             ),
           const SizedBox(width: 20),
         ],
+        centerTitle: false, // Adjust according to your preference
       ),
       body: Row(
         children: [
           const NavigationRailWidget(), // Use NavigationRailWidget
-          const VerticalDivider(thickness: 1, width: 1), // seperator
+          const VerticalDivider(thickness: 1, width: 1), // Separator
           Expanded(
             child: Column(
               children: [
@@ -125,15 +111,6 @@ class _MainPageState extends ConsumerState<MainPage> {
     );
   }
 
-  void _openSettings(BuildContext context) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => SettingsPage(),
-      ),
-    );
-  }
-
   Widget _buildSearchField() {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
@@ -163,7 +140,7 @@ class _MainPageState extends ConsumerState<MainPage> {
         color: AppTheme.iconTheme.color,
       ),
       onPressed: () {
-        // Handle notification icon button press
+        // Handle notification icon button press (you can move this logic to utility_functions.dart if needed)
       },
     );
   }
@@ -173,12 +150,8 @@ class SettingsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Settings',
-            style: AppTheme
-                .appBarTheme.titleTextStyle), // Use AppTheme for title style
-        backgroundColor:
-            AppTheme.appBarTheme.backgroundColor, // Use AppTheme for background
+      appBar: CustomAppBar(
+        title: 'Settings',
       ),
       body: Center(
         child: Text('Settings Details',

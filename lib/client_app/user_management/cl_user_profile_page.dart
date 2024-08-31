@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:naya_menu/client%20app/user_management/cl_profile_tab.dart';
-import 'package:naya_menu/client%20app/user_management/cl_user_profile_navigation.dart';
+import 'package:naya_menu/client_app/user_management/cl_profile_tab.dart';
+import 'package:naya_menu/client_app/user_management/cl_user_profile_navigation.dart';
+import 'package:naya_menu/client_app/widgets/cl_user_app_bar.dart';
 import 'package:naya_menu/models/client/users.dart';
-import 'cl_user_app_bar.dart'; // Separate AppBar
 import '../../theme/app_theme.dart';
-import 'user_notifier.dart';
+import '../notifier.dart';
 
 class UserProfilePage extends ConsumerWidget {
   const UserProfilePage({super.key});
@@ -19,13 +19,32 @@ class UserProfilePage extends ConsumerWidget {
 
     if (user == null) {
       return Scaffold(
-        appBar: buildUserProfileAppBar(context),
+        appBar: CustomAppBar(
+          title: 'Account Settings',
+          actions: [
+            IconButton(
+              tooltip: 'Close',
+              icon: Icon(Icons.close, color: AppTheme.iconTheme.color),
+              onPressed: () => Navigator.of(context).pop(),
+            ),
+          ],
+        ),
         body: const Center(child: CircularProgressIndicator()),
       );
     }
 
     return Scaffold(
-      appBar: buildUserProfileAppBar(context),
+      appBar: CustomAppBar(
+        title: 'Account Settings',
+        actions: [
+          IconButton(
+            tooltip: 'Close',
+            icon: Icon(Icons.close, color: AppTheme.iconTheme.color),
+            onPressed: () => Navigator.of(context).pop(),
+          ),
+          const SizedBox(width: 20),
+        ],
+      ),
       body: Row(
         children: [
           const UserProfileNavigationRail(), // Moved to separate file

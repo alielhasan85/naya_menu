@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:naya_menu/client%20app/venue_management/cl-venue_page.dart';
+import 'package:naya_menu/client_app/venue_management/cl-venue_page.dart';
 
 class SectionContent extends ConsumerWidget {
   final String selectedSection;
 
-  const SectionContent({required this.selectedSection, Key? key})
-      : super(key: key);
+  const SectionContent({required this.selectedSection, super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

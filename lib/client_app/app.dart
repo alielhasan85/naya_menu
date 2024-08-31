@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:naya_menu/client%20app/main%20page/cl_main_page.dart';
+import 'package:naya_menu/client_app/main_page/cl_main_page.dart';
 import 'package:naya_menu/service/lang/localization.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:naya_menu/service/lang/lang_provider.dart';

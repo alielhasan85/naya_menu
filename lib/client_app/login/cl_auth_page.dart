@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:naya_menu/client%20app/login/cl_login_form.dart';
-import 'package:naya_menu/client%20app/login/cl_signup_form.dart';
+import 'package:naya_menu/client_app/login/cl_login_form.dart';
+import 'package:naya_menu/client_app/login/cl_signup_form.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:naya_menu/client%20app/widgets/language_menu.dart';
+import 'package:naya_menu/client_app/widgets/language_menu.dart';
 import 'package:naya_menu/service/lang/localization.dart';
 import 'package:naya_menu/theme/app_theme.dart';
 

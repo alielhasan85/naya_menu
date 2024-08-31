@@ -1,6 +1,7 @@
+// notifier.dart
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../models/client/users.dart';
-import '../../service/firebase/firestore_user.dart';
+import 'package:naya_menu/models/client/users.dart';
+import 'package:naya_menu/service/firebase/firestore_user.dart';
 
 class UserNotifier extends StateNotifier<UserModel?> {
   UserNotifier() : super(null);
@@ -40,16 +41,18 @@ class UserNotifier extends StateNotifier<UserModel?> {
   }
 }
 
-// Provider to access the UserNotifier
+// Providers
 final userProvider = StateNotifierProvider<UserNotifier, UserModel?>((ref) {
   return UserNotifier();
 });
 
-// State provider to manage the expansion of the NavigationRail
 final isNavigationRailExpandedProvider = StateProvider<bool>((ref) => true);
 
-// Add any other providers related to navigation or UI state here
 final isSettingsExpandedProvider = StateProvider<bool>((ref) => false);
 
 final selectedProfileSectionProvider =
     StateProvider<String>((ref) => 'Profile');
+
+final selectedSectionProvider = StateProvider<String>((ref) => 'Dashboard');
+
+// Add other related providers here

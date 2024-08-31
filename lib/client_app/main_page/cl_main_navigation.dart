@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:naya_menu/client%20app/main%20page/cl_navigationrail_widget.dart';
-import 'package:naya_menu/theme/app_theme.dart';
-import 'cl_main_page.dart';
-
-final isSettingsExpandedProvider = StateProvider<bool>((ref) => false);
+import 'package:naya_menu/client_app/main_page/cl_main_page.dart';
+import 'package:naya_menu/client_app/notifier.dart';
+import '../../theme/app_theme.dart';
 
 class NavigationRailWidget extends ConsumerWidget {
   const NavigationRailWidget({super.key});
@@ -13,33 +11,33 @@ class NavigationRailWidget extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final isSettingsExpanded = ref.watch(isSettingsExpandedProvider);
     final selectedSection = ref.watch(selectedSectionProvider);
-    final destinations = _buildDestinations(ref, isSettingsExpanded);
+    final isNavigationRailExpanded =
+        ref.watch(isNavigationRailExpandedProvider);
 
-    return Row(children: [
-      CustomNavigationRail(
-        destinations: destinations,
-        selectedIndex:
-            _getSelectedIndex(ref, selectedSection, isSettingsExpanded),
-        onDestinationSelected: (int index) {
-          _handleDestinationSelected(index, ref);
-        },
-        isSettingsSection: true,
-        isSettingsExpanded: isSettingsExpanded,
-        onToggleSettingsExpansion: () {
-          ref.read(isSettingsExpandedProvider.notifier).state =
-              !isSettingsExpanded;
-        },
-      ),
-      const VerticalDivider(
-        color: AppTheme.accentColor,
-        thickness: 1,
-        width: 1,
-      )
-    ]);
+    final destinations = _buildDestinations(isSettingsExpanded);
+
+    return Row(
+      children: [
+        NavigationRail(
+          backgroundColor: AppTheme.appBarTheme.backgroundColor,
+          extended: isNavigationRailExpanded,
+          selectedIndex:
+              _getSelectedIndex(ref, selectedSection, isSettingsExpanded),
+          onDestinationSelected: (int index) {
+            _handleDestinationSelected(index, ref, isSettingsExpanded);
+          },
+          destinations: destinations,
+        ),
+        const VerticalDivider(
+          color: AppTheme.accentColor,
+          thickness: 1,
+          width: 1,
+        ),
+      ],
+    );
   }
 
-  List<NavigationRailDestination> _buildDestinations(
-      WidgetRef ref, bool isSettingsExpanded) {
+  List<NavigationRailDestination> _buildDestinations(bool isSettingsExpanded) {
     List<NavigationRailDestination> destinations = [
       const NavigationRailDestination(
         icon: Icon(Icons.dashboard),
@@ -82,22 +80,17 @@ class NavigationRailWidget extends ConsumerWidget {
         label: Text('Marketplace'),
       ),
       NavigationRailDestination(
-        icon: Icon(Icons.settings),
-        label: Row(children: [
-          Text('Settings'),
-          SizedBox(
-            width: 5,
-          ),
-          isSettingsExpanded
-              ? Icon(
-                  Icons.arrow_downward_outlined,
-                  size: 15,
-                )
-              : Icon(
-                  Icons.arrow_upward_outlined,
-                  size: 15,
-                )
-        ]),
+        icon: const Icon(Icons.settings),
+        label: Row(
+          children: [
+            const Text('Settings'),
+            const SizedBox(width: 5),
+            Icon(
+              isSettingsExpanded ? Icons.arrow_upward : Icons.arrow_downward,
+              size: 15,
+            ),
+          ],
+        ),
       ),
     ];
 
@@ -105,15 +98,23 @@ class NavigationRailWidget extends ConsumerWidget {
       destinations.addAll([
         const NavigationRailDestination(
           icon: Padding(
-              padding: EdgeInsets.only(left: 20.0), child: Icon(Icons.info)),
+            padding: EdgeInsets.only(left: 20.0),
+            child: Icon(Icons.info),
+          ),
           label: Text('Venue Information'),
         ),
         const NavigationRailDestination(
-          icon: Icon(Icons.build),
+          icon: Padding(
+            padding: EdgeInsets.only(left: 20.0),
+            child: Icon(Icons.build),
+          ),
           label: Text('Operations'),
         ),
         const NavigationRailDestination(
-          icon: Icon(Icons.design_services),
+          icon: Padding(
+            padding: EdgeInsets.only(left: 20.0),
+            child: Icon(Icons.design_services),
+          ),
           label: Text('Design and Display'),
         ),
       ]);
@@ -123,7 +124,10 @@ class NavigationRailWidget extends ConsumerWidget {
   }
 
   int _getSelectedIndex(
-      WidgetRef ref, String selectedSection, bool isSettingsExpanded) {
+    WidgetRef ref,
+    String selectedSection,
+    bool isSettingsExpanded,
+  ) {
     switch (selectedSection) {
       case 'Dashboard':
         return 0;
@@ -146,11 +150,9 @@ class NavigationRailWidget extends ConsumerWidget {
       case 'Marketplace':
         return 9;
       case 'Settings':
-        return 10; // The base Settings item
+        return 10;
       case 'Settings/Venue Information':
-        return isSettingsExpanded
-            ? 11
-            : 10; // Adjust based on whether Settings is expanded
+        return isSettingsExpanded ? 11 : 10;
       case 'Settings/Operations':
         return isSettingsExpanded ? 12 : 10;
       case 'Settings/Design and Display':
@@ -160,60 +162,64 @@ class NavigationRailWidget extends ConsumerWidget {
     }
   }
 
-  void _handleDestinationSelected(int index, WidgetRef ref) {
-    final isSettingsExpanded = ref.read(isSettingsExpandedProvider);
-
-    if (isSettingsExpanded && index >= 11 && index <= 13) {
-      switch (index) {
-        case 11:
-          ref.read(selectedSectionProvider.notifier).state =
-              'Settings/Venue Information';
-          break;
-        case 12:
-          ref.read(selectedSectionProvider.notifier).state =
-              'Settings/Operations';
-          break;
-        case 13:
-          ref.read(selectedSectionProvider.notifier).state =
-              'Settings/Design and Display';
-          break;
-      }
+  void _handleDestinationSelected(
+    int index,
+    WidgetRef ref,
+    bool isSettingsExpanded,
+  ) {
+    if (index == 10) {
+      ref.read(isSettingsExpandedProvider.notifier).state = !isSettingsExpanded;
     } else {
-      switch (index) {
-        case 0:
-          ref.read(selectedSectionProvider.notifier).state = 'Dashboard';
-          break;
-        case 1:
-          ref.read(selectedSectionProvider.notifier).state = 'Report';
-          break;
-        case 2:
-          ref.read(selectedSectionProvider.notifier).state = 'Recommendation';
-          break;
-        case 3:
-          ref.read(selectedSectionProvider.notifier).state = 'Orders';
-          break;
-        case 4:
-          ref.read(selectedSectionProvider.notifier).state = 'Reservation';
-          break;
-        case 5:
-          ref.read(selectedSectionProvider.notifier).state = 'Engagement';
-          break;
-        case 6:
-          ref.read(selectedSectionProvider.notifier).state = 'Menu Management';
-          break;
-        case 7:
-          ref.read(selectedSectionProvider.notifier).state = 'Feedback';
-          break;
-        case 8:
-          ref.read(selectedSectionProvider.notifier).state =
-              'Translation Center';
-          break;
-        case 9:
-          ref.read(selectedSectionProvider.notifier).state = 'Marketplace';
-          break;
-        case 10:
-          ref.read(selectedSectionProvider.notifier).state = 'Settings';
-          break;
+      if (isSettingsExpanded && index >= 11) {
+        switch (index) {
+          case 11:
+            ref.read(selectedSectionProvider.notifier).state =
+                'Settings/Venue Information';
+            break;
+          case 12:
+            ref.read(selectedSectionProvider.notifier).state =
+                'Settings/Operations';
+            break;
+          case 13:
+            ref.read(selectedSectionProvider.notifier).state =
+                'Settings/Design and Display';
+            break;
+        }
+      } else {
+        switch (index) {
+          case 0:
+            ref.read(selectedSectionProvider.notifier).state = 'Dashboard';
+            break;
+          case 1:
+            ref.read(selectedSectionProvider.notifier).state = 'Report';
+            break;
+          case 2:
+            ref.read(selectedSectionProvider.notifier).state = 'Recommendation';
+            break;
+          case 3:
+            ref.read(selectedSectionProvider.notifier).state = 'Orders';
+            break;
+          case 4:
+            ref.read(selectedSectionProvider.notifier).state = 'Reservation';
+            break;
+          case 5:
+            ref.read(selectedSectionProvider.notifier).state = 'Engagement';
+            break;
+          case 6:
+            ref.read(selectedSectionProvider.notifier).state =
+                'Menu Management';
+            break;
+          case 7:
+            ref.read(selectedSectionProvider.notifier).state = 'Feedback';
+            break;
+          case 8:
+            ref.read(selectedSectionProvider.notifier).state =
+                'Translation Center';
+            break;
+          case 9:
+            ref.read(selectedSectionProvider.notifier).state = 'Marketplace';
+            break;
+        }
       }
     }
   }

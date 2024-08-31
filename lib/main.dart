@@ -5,9 +5,9 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 import 'firebase_options.dart';
 
-import 'client app/app.dart' as clientApp;
-import 'guest app/app.dart' as guestApp;
-import 'admin app/app.dart' as adminApp;
+import 'client_app/app.dart' as clientApp;
+import 'guest_app/app.dart' as guestApp;
+import 'admin_app/app.dart' as adminApp;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

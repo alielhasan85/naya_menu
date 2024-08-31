@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'user_notifier.dart';
+import '../notifier.dart';
 import '../../theme/app_theme.dart';
 
 class UserProfileNavigationRail extends ConsumerWidget {
