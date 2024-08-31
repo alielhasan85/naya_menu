@@ -33,7 +33,10 @@ class _LoginPageState extends ConsumerState<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    return _buildFormContent(context, ref);
+    return Scaffold(
+      // Added Scaffold here
+      body: _buildFormContent(context, ref),
+    );
   }
 
   Widget _buildFormContent(BuildContext context, WidgetRef ref) {

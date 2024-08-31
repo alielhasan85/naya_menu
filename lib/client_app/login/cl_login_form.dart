@@ -1,8 +1,8 @@
-import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
+import 'package:naya_menu/service/firebase/auth_user.dart';
 import 'package:naya_menu/client_app/widgets/input_fields.dart';
 import 'package:naya_menu/service/lang/localization.dart';
-
 import '../widgets/progress_indicator.dart';
 import '../main_page/cl_main_page.dart';
 
@@ -26,8 +26,8 @@ class LoginForm extends StatefulWidget {
 
 class _LoginFormState extends State<LoginForm> {
   bool _isLoading = false;
+  final AuthService _authService = AuthService();
 
-  // Validate email input
   String? _validateEmail(String? value) {
     if (value == null || value.isEmpty) {
       return AppLocalizations.of(context)!.translate('email_hint');
@@ -39,7 +39,6 @@ class _LoginFormState extends State<LoginForm> {
     return null;
   }
 
-  // Validate password input
   String? _validatePassword(String? value) {
     if (value == null || value.isEmpty) {
       return AppLocalizations.of(context)!.translate('password_hint');
@@ -50,8 +49,6 @@ class _LoginFormState extends State<LoginForm> {
     return null;
   }
 
-  // Log in process with Firebase authentication
-// Log in process with Firebase authentication
   Future<void> _logIn() async {
     if (!widget.formKey.currentState!.validate()) return;
 
@@ -60,26 +57,22 @@ class _LoginFormState extends State<LoginForm> {
     });
 
     try {
-      // Sign in with email and password
       UserCredential userCredential =
-          await FirebaseAuth.instance.signInWithEmailAndPassword(
-        email: widget.emailController.text,
-        password: widget.passwordController.text,
+          await _authService.signInWithEmailAndPassword(
+        widget.emailController.text,
+        widget.passwordController.text,
       );
 
-      // Retrieve the userId from the authenticated user
-      String userId = userCredential.user!.uid;
-
-      // Navigate to MainPage on successful login and pass the userId
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
-          builder: (context) => MainPage(userId: userId),
+          builder: (context) => MainPage(userId: userCredential.user!.uid),
         ),
       );
-    } on FirebaseAuthException catch (e) {
-      // Handle error (e.g., show a dialog or Snackbar)
-      print(e.message);
+    } on AuthException catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(e.message)),
+      );
     } finally {
       setState(() {
         _isLoading = false;
@@ -147,7 +140,6 @@ class _LoginFormState extends State<LoginForm> {
             ),
           ),
           const SizedBox(height: 20.0),
-          // Toggle to sign-up form if the user doesn't have an account
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [

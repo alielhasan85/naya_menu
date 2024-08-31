@@ -251,7 +251,7 @@ class _ProfileTabState extends ConsumerState<ProfileTab> {
       'businessName': _businessNameController.text,
     };
 
-    await FirestoreUser().updateUser(user.id, updatedData);
+    await FirestoreUser().updateUser(user.userId, updatedData);
     ref.read(userProvider.notifier).updateUserData(updatedData);
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text('Changes saved successfully!')),

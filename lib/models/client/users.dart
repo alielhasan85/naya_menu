@@ -20,7 +20,7 @@ the user will have this data:
 */
 
 class UserModel {
-  final String id;
+  final String userId;
   final String name;
   final String email;
   final String phoneNumber;
@@ -40,7 +40,7 @@ class UserModel {
   final Map<String, dynamic>? userSettings;
 
   UserModel({
-    required this.id,
+    required this.userId,
     required this.name,
     required this.email,
     required this.phoneNumber,
@@ -81,7 +81,7 @@ class UserModel {
     Map<String, dynamic>? userSettings,
   }) {
     return UserModel(
-      id: this.id, // id is not changeable
+      userId: this.userId, // id is not changeable
       name: name ?? this.name,
       email: email ?? this.email,
       phoneNumber: phoneNumber ?? this.phoneNumber,
@@ -105,7 +105,7 @@ class UserModel {
   // Convert a UserModel into a Map. The keys must correspond to the names of the fields in Firestore.
   Map<String, dynamic> toMap() {
     return {
-      'id': id,
+      'userId': userId,
       'name': name,
       'email': email,
       'phoneNumber': phoneNumber,
@@ -127,9 +127,9 @@ class UserModel {
   }
 
   // Create a UserModel from a Map (from Firestore).
-  factory UserModel.fromMap(Map<String, dynamic> map, String id) {
+  factory UserModel.fromMap(Map<String, dynamic> map, String userId) {
     return UserModel(
-      id: id,
+      userId: userId,
       name: map['name'],
       email: map['email'],
       phoneNumber: map['phoneNumber'],

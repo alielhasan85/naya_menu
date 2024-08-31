@@ -1,8 +1,9 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:naya_menu/service/firebase/auth_user.dart';
 import 'package:naya_menu/client_app/login/cl_signup_user_data.dart';
 import 'package:naya_menu/client_app/widgets/input_fields.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:naya_menu/service/lang/localization.dart';
 
 class SignUpForm extends StatefulWidget {
@@ -28,28 +29,32 @@ class SignUpForm extends StatefulWidget {
 class _SignUpFormState extends State<SignUpForm> {
   bool _showConfirmPassword = false;
   bool _isLoading = false;
+  final AuthService _authService = AuthService();
 
+  // Validate email input
   String? _validateEmail(String? value) {
     if (value == null || value.isEmpty) {
       return AppLocalizations.of(context)!.translate('email_hint');
     }
     final regex = RegExp(r'^[^@]+@[^@]+\.[^@]+');
     if (!regex.hasMatch(value)) {
-      return AppLocalizations.of(context)!.translate('email_hint');
+      return AppLocalizations.of(context)!.translate('email_invalid');
     }
     return null;
   }
 
+  // Validate password input
   String? _validatePassword(String? value) {
     if (value == null || value.isEmpty) {
       return AppLocalizations.of(context)!.translate('password_hint');
     }
     if (value.length < 6) {
-      return AppLocalizations.of(context)!.translate('password_hint');
+      return AppLocalizations.of(context)!.translate('password_too_short');
     }
     return null;
   }
 
+  // Check if the fields are valid to show the confirm password field
   void _checkFields() {
     final isEmailValid = _validateEmail(widget.emailController.text) == null;
     final isPasswordValid =
@@ -60,6 +65,7 @@ class _SignUpFormState extends State<SignUpForm> {
     });
   }
 
+  // Sign up process
   Future<void> _signUp() async {
     if (!widget.formKey.currentState!.validate()) return;
 
@@ -68,12 +74,14 @@ class _SignUpFormState extends State<SignUpForm> {
     });
 
     try {
+      // Sign up the user using AuthService
       UserCredential userCredential =
-          await FirebaseAuth.instance.createUserWithEmailAndPassword(
-        email: widget.emailController.text,
-        password: widget.passwordController.text,
+          await _authService.signUpWithEmailAndPassword(
+        widget.emailController.text,
+        widget.passwordController.text,
       );
 
+      // Navigate to the next page if sign-up is successful
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
@@ -83,26 +91,24 @@ class _SignUpFormState extends State<SignUpForm> {
           ),
         ),
       );
-    } on FirebaseAuthException catch (e) {
-      String errorMessage;
-
-      if (e.code == 'weak-password') {
-        errorMessage =
-            AppLocalizations.of(context)!.translate('weak_password_error');
-      } else if (e.code == 'email-already-in-use') {
-        errorMessage =
-            AppLocalizations.of(context)!.translate('email_in_use_error');
-      } else {
-        errorMessage = AppLocalizations.of(context)!.translate('generic_error');
-      }
-
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(errorMessage)),
-      );
-    } finally {
+    } on AuthException catch (e) {
+      // Handle authentication errors
       setState(() {
         _isLoading = false;
       });
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(e.message)),
+      );
+    } catch (e) {
+      // Handle unexpected errors
+      setState(() {
+        _isLoading = false;
+      });
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('An unexpected error occurred. Please try again.'),
+        ),
+      );
     }
   }
 
@@ -114,6 +120,7 @@ class _SignUpFormState extends State<SignUpForm> {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
+          // Title
           Text(
             AppLocalizations.of(context)!.translate('sign_up_page_title'),
             style: const TextStyle(
@@ -122,6 +129,7 @@ class _SignUpFormState extends State<SignUpForm> {
             ),
           ),
           const SizedBox(height: 15.0),
+          // Subtitle
           Text(
             AppLocalizations.of(context)!.translate('no_credit_card_required'),
             style: const TextStyle(
@@ -130,6 +138,7 @@ class _SignUpFormState extends State<SignUpForm> {
             ),
           ),
           const SizedBox(height: 20.0),
+          // Email input field
           InputField(
             label: AppLocalizations.of(context)!.translate('email_label'),
             hintText: AppLocalizations.of(context)!.translate('email_hint'),
@@ -138,6 +147,7 @@ class _SignUpFormState extends State<SignUpForm> {
             onChanged: (value) => _checkFields(),
           ),
           const SizedBox(height: 20.0),
+          // Password input field
           InputField(
             label: AppLocalizations.of(context)!.translate('password_label'),
             hintText: AppLocalizations.of(context)!.translate('password_hint'),
@@ -147,6 +157,7 @@ class _SignUpFormState extends State<SignUpForm> {
             obscureText: true,
           ),
           if (_showConfirmPassword) const SizedBox(height: 20.0),
+          // Confirm Password input field
           if (_showConfirmPassword)
             InputField(
               label: AppLocalizations.of(context)!
@@ -164,6 +175,7 @@ class _SignUpFormState extends State<SignUpForm> {
               obscureText: true,
             ),
           const SizedBox(height: 20.0),
+          // Sign up button
           SizedBox(
             width: 400,
             child: ElevatedButton(
@@ -182,6 +194,7 @@ class _SignUpFormState extends State<SignUpForm> {
             ),
           ),
           const SizedBox(height: 20.0),
+          // Divider and alternative sign-up methods
           const Row(
             children: <Widget>[
               Expanded(child: Divider(color: Colors.black)),
@@ -194,6 +207,7 @@ class _SignUpFormState extends State<SignUpForm> {
             ],
           ),
           const SizedBox(height: 20.0),
+          // Sign up with Google button
           SizedBox(
             width: 400,
             child: ElevatedButton.icon(
@@ -217,6 +231,7 @@ class _SignUpFormState extends State<SignUpForm> {
             ),
           ),
           const SizedBox(height: 20.0),
+          // Already have an account
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -235,7 +250,7 @@ class _SignUpFormState extends State<SignUpForm> {
                 ),
               ),
             ],
-          )
+          ),
         ],
       ),
     );

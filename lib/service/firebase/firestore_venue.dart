@@ -1,194 +1,182 @@
-// import 'package:cloud_firestore/cloud_firestore.dart';
-// import 'package:naya_menu/models/venue/venue_index.dart';
-
-// class FirestoreVenueService {
-//   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-
-//   // Add a new venue and let Firestore generate the ID
-//   Future<String> addVenue(Venue venue) async {
-//     DocumentReference docRef = _firestore
-//         .collection('restaurants')
-//         .doc(); // Generate the document reference with a unique ID
-//     venue.id = docRef.id; // Set the generated ID to the venue object
-
-//     await docRef
-//         .set(venue.toMap()); // Save the venue data with the generated ID
-
-//     return docRef.id; // Return the generated ID for further use if needed
-//   }
-
-//   // Set venue information for the venue
-//   Future<void> setVenueInfo(String venueId, VenueInfo venueInfo) async {
-//     await _firestore
-//         .collection('restaurants')
-//         .doc(venueId)
-//         .collection('venueInfo')
-//         .doc('main')
-//         .set(venueInfo.toMap());
-//   }
-
-//   // Set contact information for the venue
-//   Future<void> setContactInfo(String venueId, ContactInfo contactInfo) async {
-//     await _firestore
-//         .collection('restaurants')
-//         .doc(venueId)
-//         .collection('contactInfo')
-//         .doc('main')
-//         .set(contactInfo.toMap());
-//   }
-
-//   // Set language options for the venue
-//   Future<void> setLanguageOptions(
-//       String venueId, LanguageOptions languageOptions) async {
-//     await _firestore
-//         .collection('restaurants')
-//         .doc(venueId)
-//         .collection('languageOptions')
-//         .doc('main')
-//         .set(languageOptions.toMap());
-//   }
-
-//   // Set social accounts for the venue
-//   Future<void> setSocialAccounts(
-//       String venueId, SocialAccounts socialAccounts) async {
-//     await _firestore
-//         .collection('restaurants')
-//         .doc(venueId)
-//         .collection('socialAccounts')
-//         .doc('main')
-//         .set(socialAccounts.toMap());
-//   }
-
-//   // Set operations for the venue
-//   Future<void> setOperations(String venueId, Operations operations) async {
-//     await _firestore
-//         .collection('restaurants')
-//         .doc(venueId)
-//         .collection('operations')
-//         .doc('main')
-//         .set(operations.toMap());
-//   }
-
-//   // Set QR codes for the venue
-//   Future<void> setQRCodes(String venueId, QRCodes qrCodes) async {
-//     await _firestore
-//         .collection('restaurants')
-//         .doc(venueId)
-//         .collection('qrCodes')
-//         .doc('main')
-//         .set(qrCodes.toMap());
-//   }
-
-//   // Set theme data for the venue
-//   Future<void> setThemeData(String venueId, ThemeData themeData) async {
-//     await _firestore
-//         .collection('restaurants')
-//         .doc(venueId)
-//         .collection('themeData')
-//         .doc('main')
-//         .set(themeData.toMap());
-//   }
-
-//   // Set timing hours for the venue
-//   Future<void> setTimingHours(String venueId, TimingHours timingHours) async {
-//     await _firestore
-//         .collection('restaurants')
-//         .doc(venueId)
-//         .collection('timingHours')
-//         .doc('main')
-//         .set(timingHours.toMap());
-//   }
-
-//   // Set price options for the venue
-//   Future<void> setPriceOptions(
-//       String venueId, PriceOptions priceOptions) async {
-//     await _firestore
-//         .collection('restaurants')
-//         .doc(venueId)
-//         .collection('priceOptions')
-//         .doc('main')
-//         .set(priceOptions.toMap());
-//   }
-
-//   // Set subscription status for the venue
-//   Future<void> setSubscriptionStatus(
-//       String venueId, SubscriptionStatus subscriptionStatus) async {
-//     await _firestore
-//         .collection('restaurants')
-//         .doc(venueId)
-//         .collection('subscriptionStatus')
-//         .doc('main')
-//         .set(subscriptionStatus.toMap());
-//   }
-
-//   // Example: Get venue information by venue ID
-//   Future<VenueInfo?> getVenueInfo(String venueId) async {
-//     DocumentSnapshot doc = await _firestore
-//         .collection('restaurants')
-//         .doc(venueId)
-//         .collection('venueInfo')
-//         .doc('main')
-//         .get();
-//     if (doc.exists) {
-//       return VenueInfo.fromMap(doc.data() as Map<String, dynamic>);
-//     }
-//     return null;
-//   }
-
-//   // Additional methods for other subcollections can be added similarly...
-// }
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:naya_menu/models/venue/venue.dart';
+import 'package:naya_menu/models/client/users.dart'; // Import the user model
 
-import '../../models/venue/venue.dart';
-
-class FirestoreVenueService {
+class FirestoreVenue {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  // Get a reference to the venues subcollection of a user
-  CollectionReference _getVenueCollection(String userId) {
-    return _firestore.collection('users').doc(userId).collection('venues');
-  }
+  // Add a new venue to a specific user's document in Firestore
+  Future<String> addVenue(String userId, VenueModel venue) async {
+    final venuesCollection =
+        _firestore.collection('users').doc(userId).collection('venues');
 
-// Add a new venue to Firestore for a specific user and return the venue ID
-  Future<String> addVenue(String userId, Venue venue) async {
-    final venueCollection = _getVenueCollection(userId);
-    final venueDoc = venueCollection.doc();
-    venue.id = venueDoc.id; // Set the venue ID to the generated document ID
+    // Generate a new document ID
+    DocumentReference venueDoc = venuesCollection.doc();
+    venue = venue.copyWith(venueId: venueDoc.id);
+
     await venueDoc.set(venue.toMap());
-    return venue.id; // Return the generated venue ID
+
+    // Return the newly created venue ID
+    return venueDoc.id;
   }
 
-  // Update a specific venue's details
-  Future<void> updateVenue(String userId, Venue venue) async {
-    final venueCollection = _getVenueCollection(userId);
-    await venueCollection.doc(venue.id).update(venue.toMap());
-  }
+  // Create a default venue when a user account is created
+  Future<void> createDefaultVenue(UserModel user) async {
+    try {
+      VenueModel defaultVenue = VenueModel(
+        venueId: '', // Empty string, Firestore will generate the ID
+        venueName: user.businessName, // Default venue name from user
+        logoUrl: '', // Default empty URL for logo
+        address: {
+          'country': user.country,
+        },
+        contact: {
+          'email': user.email,
+          'phoneNumber': user.phoneNumber,
+        },
+        // Additional fields can be left as default or set as required
+        socialAccounts: {},
+        operations: {},
+        qrCodes: {},
+        designAndDisplay: {},
+        priceOptions: {},
+      );
 
-  // Delete a specific venue from Firestore
-  Future<void> deleteVenue(String userId, String venueId) async {
-    final venueCollection = _getVenueCollection(userId);
-    await venueCollection.doc(venueId).delete();
-  }
+      // Add the venue using the addVenue method
+      await addVenue(user.userId, defaultVenue);
 
-  // Retrieve a specific venue by its ID
-  Future<Venue?> getVenueById(String userId, String venueId) async {
-    final venueCollection = _getVenueCollection(userId);
-    final docSnapshot = await venueCollection.doc(venueId).get();
-
-    if (docSnapshot.exists) {
-      return Venue.fromMap(
-          docSnapshot.data() as Map<String, dynamic>, docSnapshot.id);
+      print('Default venue created successfully');
+    } catch (e) {
+      print('Error creating default venue: $e');
+      // Handle error (e.g., show a message to the user)
     }
+  }
+
+  // Update specific fields of a venue by its [venueId] for a specific user
+  Future<void> updateVenue(
+      String userId, String venueId, Map<String, dynamic> updatedData) async {
+    final venueDoc = _firestore
+        .collection('users')
+        .doc(userId)
+        .collection('venues')
+        .doc(venueId);
+
+    await venueDoc.update(updatedData);
+  }
+
+  // Delete a venue from Firestore by its [venueId] for a specific user
+  Future<void> deleteVenue(String userId, String venueId) async {
+    final venueDoc = _firestore
+        .collection('users')
+        .doc(userId)
+        .collection('venues')
+        .doc(venueId);
+
+    await venueDoc.delete();
+  }
+
+  // Retrieve a specific venue's data by its [venueId] for a specific user
+  Future<VenueModel?> getVenueById(String userId, String venueId) async {
+    final venueDoc = await _firestore
+        .collection('users')
+        .doc(userId)
+        .collection('venues')
+        .doc(venueId)
+        .get();
+
+    if (venueDoc.exists) {
+      return VenueModel.fromMap(
+          venueDoc.data() as Map<String, dynamic>, venueDoc.id);
+    }
+
     return null;
   }
 
-  // Retrieve all venues for a specific user
-  Future<List<Venue>> getAllVenues(String userId) async {
-    final venueCollection = _getVenueCollection(userId);
-    final querySnapshot = await venueCollection.get();
+  // Retrieve a list of all venues for a specific user
+  Future<List<VenueModel>> getAllVenues(String userId) async {
+    final querySnapshot = await _firestore
+        .collection('users')
+        .doc(userId)
+        .collection('venues')
+        .get();
 
-    return querySnapshot.docs.map((doc) {
-      return Venue.fromMap(doc.data() as Map<String, dynamic>, doc.id);
-    }).toList();
+    return querySnapshot.docs
+        .map((doc) =>
+            VenueModel.fromMap(doc.data() as Map<String, dynamic>, doc.id))
+        .toList();
+  }
+
+  // Update venue's address field specifically
+  Future<void> updateVenueAddress(
+      String userId, String venueId, Map<String, dynamic> address) async {
+    final venueDoc = _firestore
+        .collection('users')
+        .doc(userId)
+        .collection('venues')
+        .doc(venueId);
+
+    await venueDoc.update({'address': address});
+  }
+
+  // Add or update social accounts for a venue
+  Future<void> updateVenueSocialAccounts(
+      String userId, String venueId, Map<String, String> socialAccounts) async {
+    final venueDoc = _firestore
+        .collection('users')
+        .doc(userId)
+        .collection('venues')
+        .doc(venueId);
+
+    await venueDoc.update({'socialAccounts': socialAccounts});
+  }
+
+  // Update design and display settings for a venue
+  Future<void> updateDesignAndDisplay(String userId, String venueId,
+      Map<String, dynamic> designAndDisplay) async {
+    final venueDoc = _firestore
+        .collection('users')
+        .doc(userId)
+        .collection('venues')
+        .doc(venueId);
+
+    await venueDoc.update({'designAndDisplay': designAndDisplay});
+  }
+
+  // Update the operation settings for a venue
+  Future<void> updateOperations(
+      String userId, String venueId, Map<String, dynamic> operations) async {
+    final venueDoc = _firestore
+        .collection('users')
+        .doc(userId)
+        .collection('venues')
+        .doc(venueId);
+
+    await venueDoc.update({'operations': operations});
+  }
+
+  // Update price options for a venue
+  Future<void> updatePriceOptions(
+      String userId, String venueId, Map<String, dynamic> priceOptions) async {
+    final venueDoc = _firestore
+        .collection('users')
+        .doc(userId)
+        .collection('venues')
+        .doc(venueId);
+
+    await venueDoc.update({'priceOptions': priceOptions});
+  }
+
+  // Log changes or activities related to the venue (e.g., changes to the menu, updates to venue info)
+  Future<void> logVenueActivity(
+      String userId, String venueId, String activity) async {
+    final venueDoc = _firestore
+        .collection('users')
+        .doc(userId)
+        .collection('venues')
+        .doc(venueId);
+
+    await venueDoc.update({
+      'recentActivities': FieldValue.arrayUnion([activity]),
+    });
   }
 }

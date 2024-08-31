@@ -28,7 +28,7 @@ class UserNotifier extends StateNotifier<UserModel?> {
   Future<void> updateUserData(Map<String, dynamic> updatedData) async {
     if (state != null) {
       // Update Firestore with the new data
-      await FirestoreUser().updateUser(state!.id, updatedData);
+      await FirestoreUser().updateUser(state!.userId, updatedData);
 
       // Update the state locally
       state = state!.copyWith(

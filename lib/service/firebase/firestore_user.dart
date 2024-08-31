@@ -34,7 +34,7 @@ class FirestoreUser {
 
   // Add a new user to Firestore with the provided [UserModel] data.
   Future<void> addUser(UserModel user) async {
-    await _usersCollection.doc(user.id).set(user.toMap());
+    await _usersCollection.doc(user.userId).set(user.toMap());
   }
 
   // Delete a user from Firestore by their [userId].

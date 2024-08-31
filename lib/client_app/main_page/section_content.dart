@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:naya_menu/client_app/venue_management/cl-venue_page.dart';
+import 'package:naya_menu/client_app/venue_management/cl_venue_page.dart';
 
 class SectionContent extends ConsumerWidget {
   final String selectedSection;
@@ -42,7 +42,7 @@ class SectionContent extends ConsumerWidget {
   Widget _buildSettingsContent(BuildContext context, WidgetRef ref) {
     switch (selectedSection) {
       case 'Settings/Venue Information':
-        return VenueInformationPage();
+        return const VenueInformationPage();
       case 'Settings/Design and Display':
         return Center(child: Text('Design and Display Content'));
       case 'Settings/Operations':

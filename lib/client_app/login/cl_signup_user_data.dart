@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:naya_menu/client_app/widgets/input_fields.dart';
 import 'package:naya_menu/client_app/login/cl_signup_phone.dart';
 import 'package:naya_menu/models/client/users.dart';
+import 'package:naya_menu/models/venue/venue.dart';
 import 'package:naya_menu/service/firebase/firestore_user.dart';
 import 'package:naya_menu/client_app/main_page/cl_main_page.dart';
 import 'package:naya_menu/service/firebase/firestore_venue.dart';
 import 'package:naya_menu/theme/app_theme.dart'; // Import your AppTheme
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:naya_menu/theme/country_list.dart';
-import 'package:naya_menu/models/venue/check/venue_index.dart';
 
 import '../widgets/progress_indicator.dart';
 
@@ -75,8 +75,10 @@ class _ClSignUpUserDataState extends State<ClSignUpUserData> {
         if (phoneExists) {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
-                content: Text(
-                    'This phone number is already associated with an account. Please use a different phone number.')),
+              content: Text(
+                'This phone number is already associated with an account. Please use a different phone number.',
+              ),
+            ),
           );
           setState(() {
             _isLoading = false;
@@ -86,7 +88,7 @@ class _ClSignUpUserDataState extends State<ClSignUpUserData> {
 
         // Create UserModel with the provided information
         UserModel user = UserModel(
-          id: widget.userId,
+          userId: widget.userId,
           name: _nameController.text,
           email: widget.email,
           phoneNumber: fullPhoneNumber, // Correctly formatted phone number
@@ -100,30 +102,41 @@ class _ClSignUpUserDataState extends State<ClSignUpUserData> {
         await _firestoreUser.addUser(user);
 
         // Create the venue in Firestore
-        FirestoreVenueService venueService = FirestoreVenueService();
+        FirestoreVenue venueService = FirestoreVenue();
 
-        Venue venue = Venue(
-          id: '', // Empty id, Firestore will generate it
-          ownerId: widget.userId,
-          name: _businessController.text.trim(),
+        // Create a default venue using the user information
+        VenueModel defaultVenue = VenueModel(
+          venueId: '', // Firestore will generate the ID
+          venueName: user.businessName,
+          logoUrl: '', // Default empty URL for logo
+          address: {
+            'country': user.country,
+          },
+          contact: {
+            'email': user.email,
+            'phoneNumber': user.phoneNumber,
+          },
+          // Additional fields can be left as default
         );
 
         // Add the venue using the service
-        String venueId = await venueService.addVenue(widget.userId, venue);
+        await venueService.addVenue(user.userId, defaultVenue);
 
-        print('Venue created successfully with ID: $venueId');
+        print('Venue created successfully');
 
+        // Navigate to the MainPage
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-              builder: (context) => MainPage(userId: widget.userId)),
+            builder: (context) => MainPage(userId: widget.userId),
+          ),
         );
       } catch (e) {
         print('Error during submission: $e');
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-              content:
-                  Text('Failed to save user information. Please try again.')),
+            content: Text('Failed to save user information. Please try again.'),
+          ),
         );
       } finally {
         setState(() {
