@@ -145,20 +145,3 @@ class _MainPageState extends ConsumerState<MainPage> {
     );
   }
 }
-
-class SettingsPage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: CustomAppBar(
-        title: 'Settings',
-      ),
-      body: Center(
-        child: Text('Settings Details',
-            style: AppTheme.textTheme.bodyMedium), // Use AppTheme for body text
-      ),
-      backgroundColor:
-          AppTheme.background, // Use AppTheme for scaffold background
-    );
-  }
-}

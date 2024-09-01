@@ -23,31 +23,31 @@ class _MyAppState extends ConsumerState<MyApp> {
   @override
   void initState() {
     super.initState();
-    // _logInDevelopmentAccount();
+    _logInDevelopmentAccount();
   }
 
-  // Future<void> _logInDevelopmentAccount() async {
-  //   try {
-  //     final String email =
-  //         'elhasan.ali@gmail.com'; // Replace with your development email
-  //     final String password =
-  //         'rotation'; // Replace with your development password
+  Future<void> _logInDevelopmentAccount() async {
+    try {
+      final String email =
+          'elhasan.ali@gmail.com'; // Replace with your development email
+      final String password =
+          'rotation'; // Replace with your development password
 
-  //     UserCredential userCredential =
-  //         await FirebaseAuth.instance.signInWithEmailAndPassword(
-  //       email: email,
-  //       password: password,
-  //     );
+      UserCredential userCredential =
+          await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
 
-  //     setState(() {
-  //       _isLoggedIn = true;
-  //       _userId = userCredential.user!.uid;
-  //     });
-  //   } catch (e) {
-  //     print('Login failed: $e');
-  //     // Handle the error, e.g., show a Snackbar or dialog
-  //   }
-  // }
+      setState(() {
+        _isLoggedIn = true;
+        _userId = userCredential.user!.uid;
+      });
+    } catch (e) {
+      print('Login failed: $e');
+      // Handle the error, e.g., show a Snackbar or dialog
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -77,11 +77,11 @@ class _MyAppState extends ConsumerState<MyApp> {
         );
       },
       home: Scaffold(
-        body: LoadingPage(),
+        body: // LoadingPage(),
 
-        // _isLoggedIn && _userId != null
-        //     ? MainPage(userId: _userId!)
-        //     : Center(child: CircularProgressIndicator()),
+            _isLoggedIn && _userId != null
+                ? MainPage(userId: _userId!)
+                : Center(child: CircularProgressIndicator()),
       ),
     );
   }
