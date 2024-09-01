@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:naya_menu/client_app/notifier.dart';
 import 'package:naya_menu/client_app/widgets/input_fields.dart';
 import 'package:naya_menu/client_app/login/cl_signup_phone.dart';
 import 'package:naya_menu/models/client/users.dart';
@@ -12,7 +14,7 @@ import 'package:naya_menu/theme/country_list.dart';
 
 import '../widgets/progress_indicator.dart';
 
-class ClSignUpUserData extends StatefulWidget {
+class ClSignUpUserData extends ConsumerStatefulWidget {
   final String userId;
   final String email; // Email passed from the authentication page
 
@@ -23,7 +25,7 @@ class ClSignUpUserData extends StatefulWidget {
   _ClSignUpUserDataState createState() => _ClSignUpUserDataState();
 }
 
-class _ClSignUpUserDataState extends State<ClSignUpUserData> {
+class _ClSignUpUserDataState extends ConsumerState<ClSignUpUserData> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
   final TextEditingController _businessController = TextEditingController();
@@ -119,16 +121,22 @@ class _ClSignUpUserDataState extends State<ClSignUpUserData> {
           // Additional fields can be left as default
         );
 
-        // Add the venue using the service
-        await venueService.addVenue(user.userId, defaultVenue);
+        // Add the venue using the service and get the venue ID
+        final venueId = await venueService.addVenue(user.userId, defaultVenue);
 
         print('Venue created successfully');
+
+        // Set the UserProvider with the new user data
+        ref.read(userProvider.notifier).setUser(user);
+
+        // Set the VenueProvider with the newly created venue data
+        ref.read(venueProvider.notifier).fetchVenue(user.userId, venueId);
 
         // Navigate to the MainPage
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-            builder: (context) => MainPage(userId: widget.userId),
+            builder: (context) => const MainPage(),
           ),
         );
       } catch (e) {

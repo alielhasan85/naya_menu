@@ -10,9 +10,7 @@ import '../widgets/progress_indicator.dart';
 import '../user_management/cl_account_menu.dart';
 
 class MainPage extends ConsumerStatefulWidget {
-  final String userId;
-
-  const MainPage({required this.userId, super.key});
+  const MainPage({super.key});
 
   @override
   _MainPageState createState() => _MainPageState();
@@ -23,7 +21,8 @@ class _MainPageState extends ConsumerState<MainPage> {
   void initState() {
     super.initState();
     // Fetch and store user data on init
-    ref.read(userProvider.notifier).fetchUser(widget.userId);
+
+    // Fetch and store venue data on init
   }
 
   @override

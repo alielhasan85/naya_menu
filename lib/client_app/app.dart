@@ -3,6 +3,8 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:naya_menu/client_app/landing_page/cl_loading_page.dart';
 import 'package:naya_menu/client_app/main_page/cl_main_page.dart';
+import 'package:naya_menu/client_app/notifier.dart';
+import 'package:naya_menu/service/firebase/firestore_venue.dart';
 import 'package:naya_menu/service/lang/localization.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:naya_menu/service/lang/lang_provider.dart';
@@ -39,9 +41,24 @@ class _MyAppState extends ConsumerState<MyApp> {
         password: password,
       );
 
+      final userId = userCredential.user!.uid;
+
+      // Fetch the user data from Firestore and set it in the UserProvider
+      await ref.read(userProvider.notifier).fetchUser(userId);
+
+      // Assuming you have a method to fetch the venue ID associated with the user
+      final user = ref.read(userProvider);
+      if (user != null) {
+        // Fetch the venue data associated with the user
+        final venueList = await FirestoreVenue().getAllVenues(userId);
+        if (venueList.isNotEmpty) {
+          ref.read(venueProvider.notifier).setVenue(venueList.first);
+        }
+      }
+
       setState(() {
         _isLoggedIn = true;
-        _userId = userCredential.user!.uid;
+        _userId = userId;
       });
     } catch (e) {
       print('Login failed: $e');
@@ -77,11 +94,9 @@ class _MyAppState extends ConsumerState<MyApp> {
         );
       },
       home: Scaffold(
-        body: // LoadingPage(),
-
-            _isLoggedIn && _userId != null
-                ? MainPage(userId: _userId!)
-                : Center(child: CircularProgressIndicator()),
+        body: _isLoggedIn && _userId != null
+            ? const MainPage() // Navigate to MainPage when logged in
+            : const Center(child: CircularProgressIndicator()),
       ),
     );
   }

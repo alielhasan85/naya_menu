@@ -1,12 +1,16 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:naya_menu/service/firebase/auth_user.dart';
 import 'package:naya_menu/client_app/widgets/input_fields.dart';
+import 'package:naya_menu/service/firebase/firestore_venue.dart';
 import 'package:naya_menu/service/lang/localization.dart';
 import '../widgets/progress_indicator.dart';
 import '../main_page/cl_main_page.dart';
 
-class LoginForm extends StatefulWidget {
+import 'package:naya_menu/client_app/notifier.dart';
+
+class LoginForm extends ConsumerStatefulWidget {
   final GlobalKey<FormState> formKey;
   final TextEditingController emailController;
   final TextEditingController passwordController;
@@ -24,7 +28,7 @@ class LoginForm extends StatefulWidget {
   _LoginFormState createState() => _LoginFormState();
 }
 
-class _LoginFormState extends State<LoginForm> {
+class _LoginFormState extends ConsumerState<LoginForm> {
   bool _isLoading = false;
   final AuthService _authService = AuthService();
 
@@ -49,6 +53,37 @@ class _LoginFormState extends State<LoginForm> {
     return null;
   }
 
+  // Future<void> _logIn() async {
+  //   if (!widget.formKey.currentState!.validate()) return;
+
+  //   setState(() {
+  //     _isLoading = true;
+  //   });
+
+  //   try {
+  //     UserCredential userCredential =
+  //         await _authService.signInWithEmailAndPassword(
+  //       widget.emailController.text,
+  //       widget.passwordController.text,
+  //     );
+
+  //     Navigator.pushReplacement(
+  //       context,
+  //       MaterialPageRoute(
+  //         builder: (context) => MainPage(userId: userCredential.user!.uid),
+  //       ),
+  //     );
+  //   } on AuthException catch (e) {
+  //     ScaffoldMessenger.of(context).showSnackBar(
+  //       SnackBar(content: Text(e.message)),
+  //     );
+  //   } finally {
+  //     setState(() {
+  //       _isLoading = false;
+  //     });
+  //   }
+  // }
+
   Future<void> _logIn() async {
     if (!widget.formKey.currentState!.validate()) return;
 
@@ -57,16 +92,33 @@ class _LoginFormState extends State<LoginForm> {
     });
 
     try {
+      // Sign in the user
       UserCredential userCredential =
           await _authService.signInWithEmailAndPassword(
         widget.emailController.text,
         widget.passwordController.text,
       );
 
+      final userId = userCredential.user!.uid;
+
+      // Fetch the user data from Firestore
+      await ref.read(userProvider.notifier).fetchUser(userId);
+
+      // Assuming you have a method to fetch the venue ID associated with the user
+      final user = ref.read(userProvider);
+      if (user != null) {
+        // Fetch the venue data associated with the user
+        final venueList = await FirestoreVenue().getAllVenues(userId);
+        if (venueList.isNotEmpty) {
+          ref.read(venueProvider.notifier).setVenue(venueList.first);
+        }
+      }
+
+      // Navigate to the MainPage
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
-          builder: (context) => MainPage(userId: userCredential.user!.uid),
+          builder: (context) => const MainPage(),
         ),
       );
     } on AuthException catch (e) {
