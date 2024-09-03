@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:naya_menu/client_app/landing_page/cl_loading_page.dart';
+import 'package:naya_menu/guest_app/screens/gu_home.dart';
 import 'package:naya_menu/service/lang/localization.dart'; // Import your localization
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:naya_menu/service/lang/lang_provider.dart'; // Import language provider
@@ -42,7 +43,7 @@ class MyApp extends ConsumerWidget {
           child: child!,
         );
       },
-      home: const LoadingPage(),
+      home: const GuHome(),
     );
   }
 }
