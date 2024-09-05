@@ -34,7 +34,7 @@ class _MainPageState extends ConsumerState<MainPage> {
 
     return Scaffold(
       appBar: CustomAppBar(
-        title: "Platform Name",
+        title: "Areola platform",
         actions: [
           _buildSearchField(),
           const SizedBox(width: 20),
