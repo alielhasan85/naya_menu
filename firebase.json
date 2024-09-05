@@ -14,25 +14,23 @@
           "configurations": {
             "android": "1:496204255608:android:72b7de6ac880c4c146788d",
             "ios": "1:496204255608:ios:d68afed6f1b7793646788d",
-            "web": "1:496204255608:web:d3662e28c95ae99046788d"
+            "web": "1:496204255608:web:d3662e28c95ae99046788d",
+            "windows": "1:496204255608:web:a4cc5bb84561196846788d"
           }
         }
       }
     }
   },
   "hosting": {
-    "public": "build/web",
+    "source": ".",
     "ignore": [
       "firebase.json",
       "**/.*",
       "**/node_modules/**",
       ".env"
     ],
-    "rewrites": [
-      {
-        "source": "**",
-        "destination": "/index.html"
-      }
-    ]
+    "frameworksBackend": {
+      "region": "us-central1"
+    }
   }
 }

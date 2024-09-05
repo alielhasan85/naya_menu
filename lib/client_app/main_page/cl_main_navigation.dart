@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:naya_menu/client_app/main_page/cl_main_page.dart';
 import 'package:naya_menu/client_app/notifier.dart';
 import '../../theme/app_theme.dart';
 
@@ -16,24 +15,26 @@ class NavigationRailWidget extends ConsumerWidget {
 
     final destinations = _buildDestinations(isSettingsExpanded);
 
-    return Row(
-      children: [
-        NavigationRail(
-          backgroundColor: AppTheme.appBarTheme.backgroundColor,
-          extended: isNavigationRailExpanded,
-          selectedIndex:
-              _getSelectedIndex(ref, selectedSection, isSettingsExpanded),
-          onDestinationSelected: (int index) {
-            _handleDestinationSelected(index, ref, isSettingsExpanded);
-          },
-          destinations: destinations,
-        ),
-        const VerticalDivider(
-          color: AppTheme.accentColor,
-          thickness: 1,
-          width: 1,
-        ),
-      ],
+    return LayoutBuilder(
+      builder: (context, constraint) {
+        return SingleChildScrollView(
+          child: ConstrainedBox(
+            constraints: BoxConstraints(minHeight: constraint.maxHeight),
+            child: IntrinsicHeight(
+              child: NavigationRail(
+                backgroundColor: AppTheme.appBarTheme.backgroundColor,
+                extended: isNavigationRailExpanded,
+                selectedIndex:
+                    _getSelectedIndex(ref, selectedSection, isSettingsExpanded),
+                onDestinationSelected: (int index) {
+                  _handleDestinationSelected(index, ref, isSettingsExpanded);
+                },
+                destinations: destinations,
+              ),
+            ),
+          ),
+        );
+      },
     );
   }
 

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 import 'firebase_options.dart';
 
@@ -16,9 +15,12 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
-  await dotenv.load(fileName: ".env");
+  // await dotenv.load(fileName: ".env");
 
-  String appType = dotenv.env['APP_TYPE'] ?? 'client';
+  // String appType = dotenv.env['APP_TYPE'] ?? 'client';
+
+  // Manually set the app type here (choose between 'client', 'guest', or 'admin')
+  String appType = 'client'; // Change this manually as needed
 
   runApp(ProviderScope(child: MyApp(appType: appType)));
 }
@@ -27,8 +29,6 @@ class MyApp extends StatelessWidget {
   final String appType;
 
   const MyApp({super.key, required this.appType});
-
-  // This widget is the root of your application.
 
   @override
   Widget build(BuildContext context) {

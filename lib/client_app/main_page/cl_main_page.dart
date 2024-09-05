@@ -34,7 +34,7 @@ class _MainPageState extends ConsumerState<MainPage> {
 
     return Scaffold(
       appBar: CustomAppBar(
-        title: "Areola platform",
+        title: "Aureola Platform",
         actions: [
           _buildSearchField(),
           const SizedBox(width: 20),
@@ -75,7 +75,11 @@ class _MainPageState extends ConsumerState<MainPage> {
       body: Row(
         children: [
           const NavigationRailWidget(), // Use NavigationRailWidget
-          const VerticalDivider(thickness: 1, width: 1), // Separator
+          const VerticalDivider(
+            color: AppTheme.accentColor,
+            thickness: 1,
+            width: 1,
+          ), // Separator
           Expanded(
             child: Column(
               children: [
