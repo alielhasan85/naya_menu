@@ -11,7 +11,7 @@ class GuHome extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          'DigiResto',
+          'DigiRes',
           style: TextStyle(
             color: Colors.white,
             fontSize: 30,
@@ -57,8 +57,8 @@ class GuHome extends StatelessWidget {
                   ),
                   BackdropFilter(
                     filter: ImageFilter.blur(
-                        sigmaX: 5.0,
-                        sigmaY: 5.0), // Adjust the blur strength as needed
+                        sigmaX: 2.0,
+                        sigmaY: 2.0), // Adjust the blur strength as needed
                     child: Container(
                       color: Colors.black.withOpacity(
                           0), // Optional: Adds a translucent overlay
@@ -258,7 +258,7 @@ class GuHome extends StatelessWidget {
                   imagePath,
                   width: double
                       .infinity, // Make the image take up the card's width
-                  height: 100, // Adjust height as needed
+                  height: 150, // Adjust height as needed
                   fit: BoxFit.cover,
                 ),
               ),
