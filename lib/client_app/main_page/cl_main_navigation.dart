@@ -14,7 +14,7 @@ class NavigationRailWidget extends ConsumerWidget {
     final isNavigationRailExpanded =
         ref.watch(isNavigationRailExpandedProvider);
 
-    final destinations = _buildDestinations(isSettingsExpanded);
+    final destinations = _buildDestinations(context, isSettingsExpanded);
 
     return LayoutBuilder(
       builder: (context, constraint) {
@@ -24,8 +24,19 @@ class NavigationRailWidget extends ConsumerWidget {
             child: IntrinsicHeight(
               child: NavigationRail(
                 backgroundColor: AppTheme.background,
-                leading:
-                    const ClLeadingWidgetNavigation(), // to be developped to be dynamics
+                leading: isNavigationRailExpanded
+                    ? const ClLeadingWidgetNavigation() // Show the custom widget when expanded
+                    : IconButton(
+                        icon: const Icon(Icons.store),
+                        color: AppTheme.primaryColor, // Apply theme color
+                        onPressed: () {
+                          // Toggle navigation rail expansion state
+                          ref
+                              .read(isNavigationRailExpandedProvider.notifier)
+                              .state = true;
+                        },
+                      ),
+                // to be developped to be dynamics
                 extended: isNavigationRailExpanded,
                 selectedIndex:
                     _getSelectedIndex(ref, selectedSection, isSettingsExpanded),
@@ -41,46 +52,56 @@ class NavigationRailWidget extends ConsumerWidget {
     );
   }
 
-  List<NavigationRailDestination> _buildDestinations(bool isSettingsExpanded) {
+  List<NavigationRailDestination> _buildDestinations(
+      context, bool isSettingsExpanded) {
     List<NavigationRailDestination> destinations = [
-      const NavigationRailDestination(
-        icon: Icon(Icons.dashboard),
-        label: Text('Dashboard'),
+      NavigationRailDestination(
+        icon: Icon(
+          Icons.dashboard,
+          color: AppTheme.iconTheme.color,
+        ),
+        label: Text(
+          'Dashboard',
+          style: Theme.of(context).textTheme.titleSmall?.copyWith(
+              fontWeight: FontWeight.bold, color: AppTheme.textPrimary),
+        ),
       ),
-      const NavigationRailDestination(
-        icon: Icon(Icons.report),
-        label: Text('Report'),
+      NavigationRailDestination(
+        icon: Icon(Icons.report, color: AppTheme.iconTheme.color),
+        label: Text('Report',
+            style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                fontWeight: FontWeight.bold, color: AppTheme.textPrimary)),
       ),
-      const NavigationRailDestination(
-        icon: Icon(Icons.recommend),
+      NavigationRailDestination(
+        icon: Icon(Icons.recommend, color: AppTheme.iconTheme.color),
         label: Text('Recommendation'),
       ),
-      const NavigationRailDestination(
-        icon: Icon(Icons.shopping_cart),
+      NavigationRailDestination(
+        icon: Icon(Icons.shopping_cart, color: AppTheme.iconTheme.color),
         label: Text('Orders'),
       ),
-      const NavigationRailDestination(
-        icon: Icon(Icons.restaurant),
+      NavigationRailDestination(
+        icon: Icon(Icons.restaurant, color: AppTheme.iconTheme.color),
         label: Text('Reservation'),
       ),
-      const NavigationRailDestination(
-        icon: Icon(Icons.group),
+      NavigationRailDestination(
+        icon: Icon(Icons.group, color: AppTheme.iconTheme.color),
         label: Text('Engagement'),
       ),
-      const NavigationRailDestination(
-        icon: Icon(Icons.menu),
+      NavigationRailDestination(
+        icon: Icon(Icons.menu, color: AppTheme.iconTheme.color),
         label: Text('Menu Management'),
       ),
-      const NavigationRailDestination(
-        icon: Icon(Icons.feedback),
+      NavigationRailDestination(
+        icon: Icon(Icons.feedback, color: AppTheme.iconTheme.color),
         label: Text('Feedback'),
       ),
-      const NavigationRailDestination(
-        icon: Icon(Icons.translate),
+      NavigationRailDestination(
+        icon: Icon(Icons.translate, color: AppTheme.iconTheme.color),
         label: Text('Translation Center'),
       ),
-      const NavigationRailDestination(
-        icon: Icon(Icons.store),
+      NavigationRailDestination(
+        icon: Icon(Icons.store, color: AppTheme.iconTheme.color),
         label: Text('Marketplace'),
       ),
       NavigationRailDestination(

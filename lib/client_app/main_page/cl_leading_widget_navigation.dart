@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:naya_menu/client_app/notifier.dart';
 import 'package:naya_menu/models/venue/venue.dart';
-import 'package:naya_menu/theme/app_theme.dart'; // Import your theme file
+import 'package:naya_menu/theme/app_theme.dart';
 
 class ClLeadingWidgetNavigation extends ConsumerWidget {
   const ClLeadingWidgetNavigation({super.key});
@@ -26,116 +26,80 @@ class ClLeadingWidgetNavigation extends ConsumerWidget {
         : (venueList.isNotEmpty ? venueList.first.venueName : null);
 
     return Container(
-      color: AppTheme.background,
-      width: 130,
-      child: InputDecorator(
-        decoration: InputDecoration(
-          filled: true,
-          fillColor: AppTheme.background,
-          border: InputBorder.none,
-          enabledBorder: InputBorder.none,
-
-          // OutlineInputBorder(
-          //   borderRadius: BorderRadius.circular(8),
-          //   borderSide: const BorderSide(color: AppTheme.accentColor),
-          // ),
-          // focusedBorder: OutlineInputBorder(
-          //   borderRadius: BorderRadius.circular(8),
-          //   borderSide: const BorderSide(color: AppTheme.accentColor),
-          // ),
-          labelStyle: const TextStyle(
-            fontFamily: AppTheme.fontName,
-            color: AppTheme.darkText,
-            fontSize: 16,
-          ),
-
-          contentPadding:
-              const EdgeInsets.all(10.0), // Adjust content padding here
-        ),
-        child: Container(
-          color: AppTheme.background, // Set the background color for the text
-          child: Theme(
-            data: Theme.of(context).copyWith(
-              splashColor: Color(0xFFFFF4EE), // Remove splash color
-              highlightColor: Color(0xFFFFF4EE), // Remove highlight color
-              hoverColor: Color(0xFFFFF4EE), // Remove hover color
-            ),
-            child: DropdownButtonHideUnderline(
-              child: DropdownButton<String>(
-                value: dropdownValue,
-                onChanged: (String? newValue) {
-                  if (newValue != null) {
-                    _handleVenueSelection(newValue, ref);
-                  }
-                },
-                icon: const Icon(Icons.arrow_drop_down),
-                iconEnabledColor:
-                    AppTheme.primaryColor, // Apply primary color for icon
-                dropdownColor: AppTheme.white, // Set dropdown background color
-                style: AppTheme.subtitle.copyWith(
-                    color: AppTheme.textPrimary), // Text style for dropdown
-                items: [
-                  // Map all venues to the dropdown items
-                  ...venueList.map((venue) {
-                    return DropdownMenuItem<String>(
-                      value: venue.venueName,
-                      child: FittedBox(
-                        fit: BoxFit.scaleDown,
-                        child: Text(
-                          venue.venueName,
-                          style:
-                              AppTheme.body1.copyWith(color: AppTheme.darkText),
-                        ),
-                      ),
-                    );
-                  }).toList(),
-                  const DropdownMenuItem<String>(
-                    enabled: false,
-                    child: Divider(), // Optional divider
+      width: 180, // Adjust as per the required width
+      padding: const EdgeInsets.symmetric(
+          horizontal: 10.0), // Add horizontal padding
+      decoration: BoxDecoration(
+        color: AppTheme.background, // Set background color
+        borderRadius: BorderRadius.circular(8), // Add border radius
+      ),
+      child: DropdownButtonHideUnderline(
+        child: Row(children: [
+          const Icon(Icons.store),
+          const SizedBox(width: 10),
+          DropdownButton<String>(
+            isDense:
+                true, // Reduce the dropdown height to align the text with the icon
+            value: dropdownValue,
+            onChanged: (String? newValue) {
+              if (newValue != null) {
+                _handleVenueSelection(newValue, ref);
+              }
+            },
+            icon: const Icon(Icons.arrow_drop_down),
+            iconEnabledColor:
+                AppTheme.primaryColor, // Apply primary color for icon
+            dropdownColor: AppTheme.white, // Set dropdown background color
+            style: AppTheme.display1.copyWith(
+                color: AppTheme.textPrimary), // Text style for dropdown items
+            items: [
+              ...venueList.map((venue) {
+                return DropdownMenuItem<String>(
+                  value: venue.venueName,
+                  child: Text(
+                    venue.venueName,
+                    style: AppTheme.body1.copyWith(color: AppTheme.darkText),
                   ),
-                  DropdownMenuItem<String>(
-                    value: 'add_venue',
-                    child: FittedBox(
-                      fit: BoxFit.scaleDown,
-                      child: Row(
-                        children: const [
-                          Icon(Icons.add,
-                              color: AppTheme.accentColor,
-                              size: 16), // Accent color for "Add" button
-                          SizedBox(width: 4), // Reduce spacing
-                          Text(
-                            'Add',
-                            style: TextStyle(
-                              color: AppTheme.accentColor,
-                              fontSize: 14,
-                              fontWeight: FontWeight.bold,
-                            ), // Smaller text with accent color
-                          ),
-                        ],
+                );
+              }).toList(),
+              const DropdownMenuItem<String>(
+                enabled: false,
+                child: Divider(), // Optional divider
+              ),
+              DropdownMenuItem<String>(
+                value: 'add_venue',
+                child: Row(
+                  children: const [
+                    Icon(Icons.add, color: AppTheme.accentColor, size: 16),
+                    SizedBox(width: 4),
+                    Text(
+                      'Add',
+                      style: TextStyle(
+                        color: AppTheme.accentColor,
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
-                  ),
-                ],
-                selectedItemBuilder: (BuildContext context) {
-                  return venueList.map((venue) {
-                    return FittedBox(
-                      fit: BoxFit.scaleDown,
-                      child: Text(
-                        currentVenue?.venueName ?? venue.venueName,
-                        style: AppTheme.body1.copyWith(
-                          fontWeight: FontWeight.bold,
-                          color: AppTheme.primaryColor,
-                        ), // Apply primary color and bold style
-                      ),
-                    );
-                  }).toList();
-                },
-                isExpanded:
-                    false, // Set to false to keep dropdown width minimal
+                  ],
+                ),
               ),
-            ),
+            ],
+            selectedItemBuilder: (BuildContext context) {
+              return venueList.map((venue) {
+                return Align(
+                  alignment: Alignment.centerLeft, // Align text to the left
+                  child: Text(
+                    currentVenue?.venueName ?? venue.venueName,
+                    style: AppTheme.body1.copyWith(
+                      fontWeight: FontWeight.bold,
+                      color: AppTheme.primaryColor,
+                    ),
+                  ),
+                );
+              }).toList();
+            },
           ),
-        ),
+        ]),
       ),
     );
   }
@@ -145,7 +109,6 @@ class ClLeadingWidgetNavigation extends ConsumerWidget {
     if (venueName == 'add_venue') {
       _showAddVenueDialog(ref, ref.context); // Directly pass the context
     } else {
-      // Find the selected venue in the list and update the provider
       final venueList = ref.read(venueListProvider).maybeWhen(
             data: (venues) => venues,
             orElse: () => <VenueModel>[],
@@ -153,14 +116,12 @@ class ClLeadingWidgetNavigation extends ConsumerWidget {
       final selectedVenue =
           venueList.firstWhere((venue) => venue.venueName == venueName);
 
-      // Set the selected venue in the venue provider
       ref.read(venueProvider.notifier).setVenue(selectedVenue);
     }
   }
 
   // Show the "Add Venue" dialog
   void _showAddVenueDialog(WidgetRef ref, BuildContext context) {
-    // Use the context from the ConsumerWidget to show the dialog
     showDialog(
       context: context,
       builder: (context) {

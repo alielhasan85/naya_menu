@@ -33,6 +33,7 @@ class _MainPageState extends ConsumerState<MainPage> {
     final user = ref.watch(userProvider);
 
     return Scaffold(
+      backgroundColor: AppTheme.background,
       appBar: CustomAppBar(
         title: "Aureola Platform",
         actions: [
@@ -72,45 +73,40 @@ class _MainPageState extends ConsumerState<MainPage> {
         ],
         centerTitle: false, // Adjust according to your preference
       ),
-      body: Row(
-        children: [
-          const NavigationRailWidget(), // Use NavigationRailWidget
-          const VerticalDivider(
-            color: AppTheme.accentColor,
-            thickness: 1,
-            width: 1,
-          ), // Separator
-          Expanded(
-            child: Column(
-              children: [
-                Align(
-                  alignment: Alignment.topLeft,
-                  child: IconButton(
-                    icon: Icon(
-                      isNavigationRailExpanded
-                          ? Icons.keyboard_arrow_left
-                          : Icons.keyboard_arrow_right,
-                      color: AppTheme.iconTheme.color,
-                    ),
-                    onPressed: () {
-                      ref
-                          .read(isNavigationRailExpandedProvider.notifier)
-                          .state = !isNavigationRailExpanded;
-                    },
-                  ),
-                ),
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.all(20.0),
-                    child: SectionContent(selectedSection: selectedSection),
-                  ),
-                ),
-              ],
+      body: Row(children: [
+        const NavigationRailWidget(), // Use NavigationRailWidget
+        const VerticalDivider(
+          color: AppTheme.accentColor,
+          thickness: 1,
+          width: 1,
+        ), // Separator
+        // column to place the icon for expanding of  navigation rail
+        SizedBox(
+          width: 30,
+          child: Align(
+            alignment: Alignment.topLeft,
+            child: IconButton(
+              icon: Icon(
+                isNavigationRailExpanded
+                    ? Icons.keyboard_arrow_left
+                    : Icons.keyboard_arrow_right,
+                color: AppTheme.iconTheme.color,
+              ),
+              onPressed: () {
+                ref.read(isNavigationRailExpandedProvider.notifier).state =
+                    !isNavigationRailExpanded;
+              },
             ),
           ),
-        ],
-      ),
-      backgroundColor: AppTheme.background,
+        ),
+
+        Expanded(
+          child: Padding(
+            padding: const EdgeInsets.only(top: 20, right: 30.0),
+            child: SectionContent(selectedSection: selectedSection),
+          ),
+        ),
+      ]),
     );
   }
 

@@ -7,68 +7,93 @@ class VenueInformationPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return DefaultTabController(
-      length: 3, // Number of tabs
-      child: Column(
-        children: [
-          Text(
-            'Venue Information',
-            style: AppTheme
-                .appBarTheme.titleTextStyle, // Adjust the style as needed
-          ),
-          const SizedBox(height: 16.0), // Add spacing between title and card
-
-          Expanded(
-            child: Card(
-              elevation: 4,
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SizedBox(height: 20),
-                    TabBar(
-                      labelColor: Theme.of(context).primaryColor,
-                      indicatorColor: Theme.of(context).primaryColor,
-                      unselectedLabelColor: Colors.grey,
-                      tabs: [
-                        Tab(text: 'Location'),
-                        Tab(text: 'Language'),
-                        Tab(text: 'Social Accounts'),
-                      ],
-                    ),
-                    const Divider(
-                      color: AppTheme.accentColor,
-                      thickness: 1,
-                    ),
-                    SizedBox(height: 20),
-                    Expanded(
-                      child: TabBarView(
-                        children: [
-                          // Location settings content
-                          LocationSettingsTab(),
-                          // Language options content
-                          LanguageOptionsTab(),
-                          // Social accounts content
-                          SocialAccountsTab(),
-                        ],
+    return Row(children: [
+      Expanded(
+        flex: 1,
+        child: DefaultTabController(
+          length: 3, // Number of tabs
+          child: Padding(
+            padding: EdgeInsets.only(right: 30),
+            child: Column(
+              children: [
+                Text(
+                  'Venue Information',
+                  style: AppTheme
+                      .appBarTheme.titleTextStyle, // Adjust the style as needed
+                ),
+                const SizedBox(
+                    height: 16.0), // Add spacing between title and card
+                // Scrollable content within the card
+                Expanded(
+                  child: SingleChildScrollView(
+                    child: ConstrainedBox(
+                      constraints: const BoxConstraints(
+                        maxWidth: 600, // Control the width of the card
+                      ),
+                      child: Card(
+                        elevation: 4,
+                        child: Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const SizedBox(height: 20),
+                              TabBar(
+                                labelColor: Theme.of(context).primaryColor,
+                                indicatorColor: Theme.of(context).primaryColor,
+                                unselectedLabelColor: Colors.grey,
+                                tabs: const [
+                                  Tab(text: 'Location'),
+                                  Tab(text: 'Language'),
+                                  Tab(text: 'Social Accounts'),
+                                ],
+                              ),
+                              const Divider(
+                                color: AppTheme.accentColor,
+                                thickness: 1,
+                              ),
+                              const SizedBox(height: 20),
+                              SizedBox(
+                                height:
+                                    400, // Set a fixed height for the TabBarView
+                                child: TabBarView(
+                                  children: [
+                                    // Location settings content
+                                    LocationSettingsTab(),
+                                    // Language options content
+                                    LanguageOptionsTab(),
+                                    // Social accounts content
+                                    SocialAccountsTab(),
+                                  ],
+                                ),
+                              ),
+                              const SizedBox(height: 20),
+                              ElevatedButton(
+                                onPressed: () {
+                                  // Logic to update venue information in Firestore
+                                },
+                                child: const Text('Save'),
+                              ),
+                            ],
+                          ),
+                        ),
                       ),
                     ),
-                    SizedBox(height: 20),
-                    ElevatedButton(
-                      onPressed: () {
-                        // Logic to update venue information in Firestore
-                      },
-                      child: Text('Save'),
-                    ),
-                  ],
+                  ),
                 ),
-              ),
+              ],
             ),
           ),
-        ],
+        ),
       ),
-    );
+      const VerticalDivider(
+        color: AppTheme.accentColor,
+        thickness: 1,
+        width: 1,
+      ),
+      Expanded(
+          flex: 2, child: Center(child: Text('To show the sample the menu'))),
+    ]);
   }
 }
 
