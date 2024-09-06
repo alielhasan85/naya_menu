@@ -1,23 +1,28 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:naya_menu/client_app/notifier.dart';
+import 'package:naya_menu/client_app/venue_management/cl_location_setting_tab.dart';
 import 'package:naya_menu/theme/app_theme.dart';
 import '../widgets/input_fields.dart';
 
-class VenueInformationPage extends StatelessWidget {
+class VenueInformationPage extends ConsumerWidget {
   const VenueInformationPage({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final venue = ref.watch(venueProvider);
+
     return Row(children: [
       Expanded(
         flex: 1,
         child: DefaultTabController(
           length: 3, // Number of tabs
           child: Padding(
-            padding: EdgeInsets.only(right: 30),
+            padding: const EdgeInsets.only(right: 30),
             child: Column(
               children: [
                 Text(
-                  'Venue Information',
+                  'Edit Venue Info',
                   style: AppTheme
                       .appBarTheme.titleTextStyle, // Adjust the style as needed
                 ),
@@ -67,13 +72,6 @@ class VenueInformationPage extends StatelessWidget {
                                   ],
                                 ),
                               ),
-                              const SizedBox(height: 20),
-                              ElevatedButton(
-                                onPressed: () {
-                                  // Logic to update venue information in Firestore
-                                },
-                                child: const Text('Save'),
-                              ),
                             ],
                           ),
                         ),
@@ -94,39 +92,6 @@ class VenueInformationPage extends StatelessWidget {
       Expanded(
           flex: 2, child: Center(child: Text('To show the sample the menu'))),
     ]);
-  }
-}
-
-// Updated Location Settings Tab
-class LocationSettingsTab extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.all(16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          InputField(
-            label: 'Address',
-            controller: TextEditingController(),
-            labelAboveField: true, // Label above the field
-          ),
-          SizedBox(height: 10),
-          InputField(
-            label: 'City',
-            controller: TextEditingController(),
-            labelAboveField: true, // Label above the field
-          ),
-          SizedBox(height: 10),
-          InputField(
-            label: 'State',
-            controller: TextEditingController(),
-            labelAboveField: true, // Label above the field
-          ),
-          // Add other location-related fields
-        ],
-      ),
-    );
   }
 }
 

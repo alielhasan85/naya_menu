@@ -15,6 +15,7 @@ class MyApp extends ConsumerStatefulWidget {
   const MyApp({super.key});
 
   @override
+  // ignore: library_private_types_in_public_api
   _MyAppState createState() => _MyAppState();
 }
 
@@ -32,7 +33,7 @@ class _MyAppState extends ConsumerState<MyApp> {
   Future<void> _logInDevelopmentAccount() async {
     try {
       const String email =
-          'elhasan.ali@gmail.com'; // Replace with your dev email
+          'elhasan.aliqa@gmail.com'; // Replace with your dev email
       const String password = 'rotation'; // Replace with your dev password
 
       UserCredential userCredential =
@@ -91,9 +92,13 @@ class _MyAppState extends ConsumerState<MyApp> {
         );
       },
       home: Scaffold(
-        body: _isLoggedIn && _userId != null
-            ? const MainPage() // Show main page when logged in
-            : const Center(child: CircularProgressIndicator()), // Loading state
+        body:
+            // LoadingPage(),
+
+            _isLoggedIn && _userId != null
+                ? const MainPage() // Show main page when logged in
+                : const Center(
+                    child: CircularProgressIndicator()), // Loading state
       ),
     );
   }

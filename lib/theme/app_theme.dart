@@ -131,7 +131,7 @@ class AppTheme {
       color: AppTheme.lightText,
       fontSize: 14,
     ),
-    contentPadding: const EdgeInsets.all(10.0), // Adjust content padding here
+    contentPadding: const EdgeInsets.all(6.0), // Adjust content padding here
   );
 
   // InputDecoration Theme

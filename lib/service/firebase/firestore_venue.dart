@@ -26,6 +26,7 @@ class FirestoreVenue {
       VenueModel defaultVenue = VenueModel(
         venueId: '', // Empty string, Firestore will generate the ID
         venueName: user.businessName, // Default venue name from user
+        userId: user.userId, // Pass the userId from the UserModel
         logoUrl: '', // Default empty URL for logo
         address: {
           'country': user.country,

@@ -36,7 +36,7 @@ class _PhoneNumberInputState extends State<PhoneNumberInput> {
       hintText: 'Enter your phone number',
       hintStyle: AppTheme.inputDecorationTheme.hintStyle ??
           const TextStyle(fontSize: 14.0),
-      filled: AppTheme.inputDecorationTheme.filled ?? true,
+      filled: AppTheme.inputDecorationTheme.filled,
       fillColor: AppTheme.inputDecorationTheme.fillColor ?? Colors.blue.shade50,
     );
 

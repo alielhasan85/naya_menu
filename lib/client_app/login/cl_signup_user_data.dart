@@ -100,6 +100,7 @@ class _ClSignUpUserDataState extends ConsumerState<ClSignUpUserData> {
 
         // Create a default venue using the user information
         VenueModel defaultVenue = VenueModel(
+          userId: user.userId, // Add the userId from the UserModel
           venueId: '', // Firestore will generate the ID
           venueName: user.businessName,
           logoUrl: '',
@@ -111,7 +112,6 @@ class _ClSignUpUserDataState extends ConsumerState<ClSignUpUserData> {
             'phoneNumber': user.phoneNumber,
           },
         );
-
         // Add the venue to Firestore
         final venueId =
             await FirestoreVenue().addVenue(user.userId, defaultVenue);
