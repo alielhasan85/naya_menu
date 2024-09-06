@@ -104,14 +104,12 @@ class _LoginFormState extends ConsumerState<LoginForm> {
       // Fetch the user data from Firestore
       await ref.read(userProvider.notifier).fetchUser(userId);
 
-      // Assuming you have a method to fetch the venue ID associated with the user
-      final user = ref.read(userProvider);
-      if (user != null) {
-        // Fetch the venue data associated with the user
-        final venueList = await FirestoreVenue().getAllVenues(userId);
-        if (venueList.isNotEmpty) {
-          ref.read(venueProvider.notifier).setVenue(venueList.first);
-        }
+      // Fetch the list of venues associated with the user directly
+      final venueList = await FirestoreVenue().getAllVenues(userId);
+
+      if (venueList.isNotEmpty) {
+        // Set the first venue as the selected venue
+        ref.read(venueProvider.notifier).setVenue(venueList.first);
       }
 
       // Navigate to the MainPage

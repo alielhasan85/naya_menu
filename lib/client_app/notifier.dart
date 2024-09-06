@@ -90,6 +90,14 @@ final venueProvider = StateNotifierProvider<VenueNotifier, VenueModel?>((ref) {
   return VenueNotifier();
 });
 
+final venueListProvider = FutureProvider<List<VenueModel>>((ref) async {
+  final user = ref.read(userProvider);
+  if (user != null) {
+    return FirestoreVenue().getAllVenues(user.userId);
+  }
+  return [];
+});
+
 final isNavigationRailExpandedProvider = StateProvider<bool>((ref) => true);
 
 final isSettingsExpandedProvider = StateProvider<bool>((ref) => false);

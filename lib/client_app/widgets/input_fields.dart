@@ -14,7 +14,8 @@ class InputField extends StatelessWidget {
   final bool labelAboveField; // Property to control label position
   final InputDecoration? decoration; // Allow custom decoration
 
-  InputField({
+  const InputField({
+    super.key,
     this.label, // Label is now optional
     this.hintText,
     required this.controller,

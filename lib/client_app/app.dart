@@ -28,12 +28,12 @@ class _MyAppState extends ConsumerState<MyApp> {
     _logInDevelopmentAccount();
   }
 
+  // Log in using development credentials
   Future<void> _logInDevelopmentAccount() async {
     try {
-      final String email =
-          'elhasan.ali@gmail.com'; // Replace with your development email
-      final String password =
-          'rotation'; // Replace with your development password
+      const String email =
+          'elhasan.ali@gmail.com'; // Replace with your dev email
+      const String password = 'rotation'; // Replace with your dev password
 
       UserCredential userCredential =
           await FirebaseAuth.instance.signInWithEmailAndPassword(
@@ -43,26 +43,23 @@ class _MyAppState extends ConsumerState<MyApp> {
 
       final userId = userCredential.user!.uid;
 
-      // Fetch the user data from Firestore and set it in the UserProvider
+      // Fetch and set user data in Riverpod
       await ref.read(userProvider.notifier).fetchUser(userId);
 
-      // Assuming you have a method to fetch the venue ID associated with the user
-      final user = ref.read(userProvider);
-      if (user != null) {
-        // Fetch the venue data associated with the user
-        final venueList = await FirestoreVenue().getAllVenues(userId);
-        if (venueList.isNotEmpty) {
-          ref.read(venueProvider.notifier).setVenue(venueList.first);
-        }
+      // Fetch associated venues
+      final venueList = await FirestoreVenue().getAllVenues(userId);
+      if (venueList.isNotEmpty) {
+        ref.read(venueProvider.notifier).setVenue(venueList.first);
       }
 
+      // Update the state when logged in successfully
       setState(() {
         _isLoggedIn = true;
         _userId = userId;
       });
     } catch (e) {
       print('Login failed: $e');
-      // Handle the error, e.g., show a Snackbar or dialog
+      // Handle login errors, such as showing a Snackbar or dialog
     }
   }
 
@@ -71,34 +68,33 @@ class _MyAppState extends ConsumerState<MyApp> {
     final currentLanguage = ref.watch(languageProvider);
 
     return MaterialApp(
-        debugShowCheckedModeBanner: false,
-        title: 'Client Interface',
-        theme: AppTheme.themeData(context),
-        supportedLocales: const [
-          Locale('en', ''),
-          Locale('ar', ''),
-        ],
-        localizationsDelegates: const [
-          AppLocalizations.delegate,
-          GlobalMaterialLocalizations.delegate,
-          GlobalWidgetsLocalizations.delegate,
-          GlobalCupertinoLocalizations.delegate,
-        ],
-        locale: Locale(currentLanguage == 'English' ? 'en' : 'ar'),
-        builder: (context, child) {
-          return Directionality(
-            textDirection: currentLanguage == 'Arabic'
-                ? TextDirection.rtl
-                : TextDirection.ltr,
-            child: child!,
-          );
-        },
-        home: Scaffold(
-          //body: LoadingPage()
-
-          body: _isLoggedIn && _userId != null
-              ? const MainPage() // Navigate to MainPage when logged in
-              : const Center(child: CircularProgressIndicator()),
-        ));
+      debugShowCheckedModeBanner: false,
+      title: 'Client Interface',
+      theme: AppTheme.themeData(context), // Apply the custom theme
+      supportedLocales: const [
+        Locale('en', ''),
+        Locale('ar', ''),
+      ],
+      localizationsDelegates: const [
+        AppLocalizations.delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      locale: Locale(currentLanguage == 'English' ? 'en' : 'ar'),
+      builder: (context, child) {
+        return Directionality(
+          textDirection: currentLanguage == 'Arabic'
+              ? TextDirection.rtl
+              : TextDirection.ltr,
+          child: child!,
+        );
+      },
+      home: Scaffold(
+        body: _isLoggedIn && _userId != null
+            ? const MainPage() // Show main page when logged in
+            : const Center(child: CircularProgressIndicator()), // Loading state
+      ),
+    );
   }
 }

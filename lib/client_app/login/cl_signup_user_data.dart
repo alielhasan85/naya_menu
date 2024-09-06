@@ -56,14 +56,9 @@ class _ClSignUpUserDataState extends ConsumerState<ClSignUpUserData> {
       });
 
       try {
-        // Extract and format phone number correctly
+        // Format phone number correctly
         String countryCode = _countryCodeController.text.trim();
         String phoneNumber = _phoneController.text.trim();
-
-        // Remove any existing country code from the phone number
-        if (phoneNumber.startsWith(countryCode)) {
-          phoneNumber = phoneNumber.substring(countryCode.length).trim();
-        }
 
         // Combine the final country code and phone number
         String fullPhoneNumber = '$countryCode $phoneNumber';
@@ -93,24 +88,21 @@ class _ClSignUpUserDataState extends ConsumerState<ClSignUpUserData> {
           userId: widget.userId,
           name: _nameController.text,
           email: widget.email,
-          phoneNumber: fullPhoneNumber, // Correctly formatted phone number
-          country: country, // Save the country name
+          phoneNumber: fullPhoneNumber,
+          country: country,
           businessName: _businessController.text.trim(),
           emailNotification: true,
           smsNotification: true,
         );
 
-        // Save user information to Firestore using FirestoreUser service
+        // Save user information to Firestore
         await _firestoreUser.addUser(user);
-
-        // Create the venue in Firestore
-        FirestoreVenue venueService = FirestoreVenue();
 
         // Create a default venue using the user information
         VenueModel defaultVenue = VenueModel(
           venueId: '', // Firestore will generate the ID
           venueName: user.businessName,
-          logoUrl: '', // Default empty URL for logo
+          logoUrl: '',
           address: {
             'country': user.country,
           },
@@ -118,19 +110,17 @@ class _ClSignUpUserDataState extends ConsumerState<ClSignUpUserData> {
             'email': user.email,
             'phoneNumber': user.phoneNumber,
           },
-          // Additional fields can be left as default
         );
 
-        // Add the venue using the service and get the venue ID
-        final venueId = await venueService.addVenue(user.userId, defaultVenue);
-
-        print('Venue created successfully');
+        // Add the venue to Firestore
+        final venueId =
+            await FirestoreVenue().addVenue(user.userId, defaultVenue);
 
         // Set the UserProvider with the new user data
         ref.read(userProvider.notifier).setUser(user);
 
         // Set the VenueProvider with the newly created venue data
-        ref.read(venueProvider.notifier).fetchVenue(user.userId, venueId);
+        await ref.read(venueProvider.notifier).fetchVenue(user.userId, venueId);
 
         // Navigate to the MainPage
         Navigator.pushReplacement(

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:naya_menu/client_app/main_page/cl_leading_widget_navigation.dart';
 import 'package:naya_menu/client_app/notifier.dart';
 import '../../theme/app_theme.dart';
 
@@ -22,7 +23,9 @@ class NavigationRailWidget extends ConsumerWidget {
             constraints: BoxConstraints(minHeight: constraint.maxHeight),
             child: IntrinsicHeight(
               child: NavigationRail(
-                backgroundColor: AppTheme.appBarTheme.backgroundColor,
+                backgroundColor: AppTheme.background,
+                leading:
+                    const ClLeadingWidgetNavigation(), // to be developped to be dynamics
                 extended: isNavigationRailExpanded,
                 selectedIndex:
                     _getSelectedIndex(ref, selectedSection, isSettingsExpanded),
