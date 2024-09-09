@@ -82,7 +82,7 @@ class _MainPageState extends ConsumerState<MainPage> {
         ), // Separator
         // column to place the icon for expanding of  navigation rail
         SizedBox(
-          width: 30,
+          width: 50,
           child: Align(
             alignment: Alignment.topLeft,
             child: IconButton(
@@ -101,10 +101,7 @@ class _MainPageState extends ConsumerState<MainPage> {
         ),
 
         Expanded(
-          child: Padding(
-            padding: const EdgeInsets.only(top: 20, right: 30.0),
-            child: SectionContent(selectedSection: selectedSection),
-          ),
+          child: SectionContent(selectedSection: selectedSection),
         ),
       ]),
     );

@@ -18,7 +18,7 @@ class VenueInformationPage extends ConsumerWidget {
         child: DefaultTabController(
           length: 3, // Number of tabs
           child: Padding(
-            padding: const EdgeInsets.only(right: 30),
+            padding: const EdgeInsets.only(top: 20, right: 50),
             child: Column(
               children: [
                 Text(
@@ -60,7 +60,7 @@ class VenueInformationPage extends ConsumerWidget {
                               const SizedBox(height: 20),
                               SizedBox(
                                 height:
-                                    400, // Set a fixed height for the TabBarView
+                                    600, // Set a fixed height for the TabBarView
                                 child: TabBarView(
                                   children: [
                                     // Location settings content

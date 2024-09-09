@@ -136,7 +136,7 @@ class _ProfileTabState extends ConsumerState<ProfileTab> {
             // Email field (non-editable)
             InputField(
               label: 'Email',
-              controller: TextEditingController(text: user.email),
+              controller: TextEditingController(text: user.contact['email']),
               labelAboveField: true,
               keyboardType: TextInputType.emailAddress,
               onChanged: null, // Prevent editing
@@ -162,7 +162,7 @@ class _ProfileTabState extends ConsumerState<ProfileTab> {
                 Expanded(
                   child: InputField(
                     label: 'Phone Number',
-                    controller: TextEditingController(text: user.phoneNumber),
+                    controller: TextEditingController(text: user.contact['']),
                     labelAboveField: true,
                     keyboardType: TextInputType.phone,
                   ),

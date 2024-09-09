@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:naya_menu/models/venue/venue.dart';
-import 'package:naya_menu/models/client/users.dart'; // Import the user model
+import 'package:naya_menu/models/client/users.dart'; // Import the updated UserModel
 
 class FirestoreVenue {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -23,19 +23,22 @@ class FirestoreVenue {
   // Create a default venue when a user account is created
   Future<void> createDefaultVenue(UserModel user) async {
     try {
+      // Extracting the necessary contact information (email, phone, country code) from user model
       VenueModel defaultVenue = VenueModel(
-        venueId: '', // Empty string, Firestore will generate the ID
-        venueName: user.businessName, // Default venue name from user
+        venueId: '', // Firestore will generate the ID
+        venueName: user.businessName, // Default venue name from the user model
         userId: user.userId, // Pass the userId from the UserModel
-        logoUrl: '', // Default empty URL for logo
+        logoUrl: '', // Default empty logo URL
         address: {
-          'country': user.country,
+          'country': user.address['country'], // From the user's address map
+          // Other address fields can be included here (state, city, etc.)
         },
         contact: {
-          'email': user.email,
-          'phoneNumber': user.phoneNumber,
+          'email': user.contact['email'], // From the user's contact map
+          'phoneNumber': user.contact['phoneNumber'], // Phone number from user
+          'countryCode': user.contact['countryCode'], // Country code from user
         },
-        // Additional fields can be left as default or set as required
+        // Additional fields left as defaults or set according to your needs
         socialAccounts: {},
         operations: {},
         qrCodes: {},

@@ -1,25 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl_phone_field/intl_phone_field.dart';
+import 'package:naya_menu/client_app/main_page/cl_main_page.dart';
 import 'package:naya_menu/client_app/notifier.dart';
 import 'package:naya_menu/client_app/widgets/input_fields.dart';
-import 'package:naya_menu/client_app/login/cl_signup_phone.dart';
 import 'package:naya_menu/models/client/users.dart';
 import 'package:naya_menu/models/venue/venue.dart';
 import 'package:naya_menu/service/firebase/firestore_user.dart';
-import 'package:naya_menu/client_app/main_page/cl_main_page.dart';
 import 'package:naya_menu/service/firebase/firestore_venue.dart';
-import 'package:naya_menu/theme/app_theme.dart'; // Import your AppTheme
-import 'package:dropdown_search/dropdown_search.dart';
-import 'package:naya_menu/theme/country_list.dart';
-
+import 'package:naya_menu/theme/app_theme.dart';
 import '../widgets/progress_indicator.dart';
 
 class ClSignUpUserData extends ConsumerStatefulWidget {
   final String userId;
   final String email; // Email passed from the authentication page
 
-  const ClSignUpUserData(
-      {required this.userId, required this.email, super.key});
+  const ClSignUpUserData({
+    required this.userId,
+    required this.email,
+    super.key,
+  });
 
   @override
   _ClSignUpUserDataState createState() => _ClSignUpUserDataState();
@@ -27,27 +27,18 @@ class ClSignUpUserData extends ConsumerStatefulWidget {
 
 class _ClSignUpUserDataState extends ConsumerState<ClSignUpUserData> {
   final TextEditingController _nameController = TextEditingController();
-  final TextEditingController _phoneController = TextEditingController();
   final TextEditingController _businessController = TextEditingController();
-  final TextEditingController _countryCodeController = TextEditingController();
+  final TextEditingController _phoneController = TextEditingController();
+  final TextEditingController _countryCodeController =
+      TextEditingController(); // For storing country code
+  final TextEditingController _countryNameController =
+      TextEditingController(); // For storing country name
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   bool _isLoading = false;
 
-  final FirestoreUser _firestoreUser =
-      FirestoreUser(); // Instance of FirestoreUser
-
-  String country = '';
-
-  void _onCountrySelected(String? selectedCountry) {
-    country = selectedCountry ?? '';
-    setState(() {
-      _countryCodeController.text = countryToCode[country] ?? '';
-      _phoneController.text = '${_countryCodeController.text} ';
-      _phoneController.selection = TextSelection.fromPosition(
-        TextPosition(offset: _phoneController.text.length),
-      );
-    });
-  }
+  final FirestoreUser _firestoreUser = FirestoreUser(); // Firestore instance
+  String country = ''; // To store selected country
+  String countryCode = ''; // To store country code
 
   Future<void> _submitInfo() async {
     if (_formKey.currentState!.validate()) {
@@ -56,17 +47,15 @@ class _ClSignUpUserDataState extends ConsumerState<ClSignUpUserData> {
       });
 
       try {
-        // Format phone number correctly
-        String countryCode = _countryCodeController.text.trim();
+        // Get phone number and country code
         String phoneNumber = _phoneController.text.trim();
-
-        // Combine the final country code and phone number
-        String fullPhoneNumber = '$countryCode $phoneNumber';
+        String countryCode = _countryCodeController.text.trim();
+        String countryName = _countryNameController.text.trim();
 
         // Check if the phone number already exists
         bool phoneExists = await _firestoreUser.checkIfUserExists(
           email: widget.email,
-          phoneNumber: fullPhoneNumber,
+          phoneNumber: '$countryCode $phoneNumber',
         );
 
         if (phoneExists) {
@@ -87,12 +76,22 @@ class _ClSignUpUserDataState extends ConsumerState<ClSignUpUserData> {
         UserModel user = UserModel(
           userId: widget.userId,
           name: _nameController.text,
-          email: widget.email,
-          phoneNumber: fullPhoneNumber,
-          country: country,
+          address: {
+            'country': countryName,
+            'state': '',
+            'city': '',
+            'address': '',
+          },
+          contact: {
+            'phoneNumber': phoneNumber, // Save phone number
+            'countryCode': countryCode, // Save country code
+            'email': widget.email, // Save email
+          },
           businessName: _businessController.text.trim(),
-          emailNotification: true,
-          smsNotification: true,
+          notifications: {
+            'emailNotification': true,
+            'smsNotification': true,
+          },
         );
 
         // Save user information to Firestore
@@ -105,13 +104,17 @@ class _ClSignUpUserDataState extends ConsumerState<ClSignUpUserData> {
           venueName: user.businessName,
           logoUrl: '',
           address: {
-            'country': user.country,
+            'country':
+                user.address['country'], // Save the country name in the address
           },
           contact: {
-            'email': user.email,
-            'phoneNumber': user.phoneNumber,
+            'email': user.contact['email'], // Save email
+            'phoneNumber': user.contact['phoneNumber'], // Save phone number
+            'countryCode':
+                user.contact['countryCode'], // Save country code separately
           },
         );
+
         // Add the venue to Firestore
         final venueId =
             await FirestoreVenue().addVenue(user.userId, defaultVenue);
@@ -130,7 +133,6 @@ class _ClSignUpUserDataState extends ConsumerState<ClSignUpUserData> {
           ),
         );
       } catch (e) {
-        print('Error during submission: $e');
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text('Failed to save user information. Please try again.'),
@@ -219,60 +221,7 @@ class _ClSignUpUserDataState extends ConsumerState<ClSignUpUserData> {
                           },
                         ),
                         const SizedBox(height: 20.0),
-                        Text(
-                          "What is your country?",
-                          style: Theme.of(context)
-                              .textTheme
-                              .titleSmall
-                              ?.copyWith(fontSize: 16),
-                        ),
-                        DropdownSearch<String>(
-                          items: countries, // Use the list of countries here
-                          selectedItem: null,
-                          dropdownDecoratorProps: DropDownDecoratorProps(
-                            dropdownSearchDecoration: InputDecoration(
-                              filled: AppTheme.inputDecorationTheme.filled,
-                              fillColor:
-                                  AppTheme.inputDecorationTheme.fillColor,
-                              border: AppTheme.inputDecorationTheme.border,
-                              enabledBorder:
-                                  AppTheme.inputDecorationTheme.enabledBorder,
-                              focusedBorder:
-                                  AppTheme.inputDecorationTheme.focusedBorder,
-                              contentPadding: const EdgeInsets.all(10.0),
-                              hintText: "Select your country",
-                              hintStyle:
-                                  AppTheme.inputDecorationTheme.hintStyle,
-                            ),
-                          ),
-                          onChanged: _onCountrySelected,
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return 'Please select your country';
-                            }
-                            return null;
-                          },
-                          popupProps: PopupProps.menu(
-                            showSearchBox: true,
-                            searchFieldProps: TextFieldProps(
-                              decoration: InputDecoration(
-                                filled: AppTheme.inputDecorationTheme.filled,
-                                fillColor:
-                                    AppTheme.inputDecorationTheme.fillColor,
-                                border: AppTheme.inputDecorationTheme.border,
-                                enabledBorder:
-                                    AppTheme.inputDecorationTheme.enabledBorder,
-                                focusedBorder:
-                                    AppTheme.inputDecorationTheme.focusedBorder,
-                                contentPadding: const EdgeInsets.all(10.0),
-                                // hintText: "Search your country",
-                                hintStyle:
-                                    AppTheme.inputDecorationTheme.hintStyle,
-                              ),
-                            ),
-                          ),
-                        ),
-                        const SizedBox(height: 20.0),
+
                         Text(
                           "What is your business name?",
                           style: Theme.of(context)
@@ -299,14 +248,25 @@ class _ClSignUpUserDataState extends ConsumerState<ClSignUpUserData> {
                               .titleSmall
                               ?.copyWith(fontSize: 16),
                         ),
-                        PhoneNumberInput(
-                          controller: _phoneController,
-                          countryCodeController: _countryCodeController,
-                          validator: (phone) {
-                            if (phone == null || phone.isEmpty) {
-                              return 'Please enter your phone number';
-                            }
-                            return null;
+
+                        // Phone Number Input Field using intl_phone_field
+                        IntlPhoneField(
+                          decoration: InputDecoration(
+                            border: AppTheme.inputDecorationTheme.border,
+                          ),
+                          dropdownDecoration: BoxDecoration(),
+                          initialCountryCode: 'US', // Default country
+                          onChanged: (phone) {
+                            _phoneController.text =
+                                phone.number; // Save phone number
+                            _countryCodeController.text = phone
+                                .countryCode; // Save country code (ISO like 'QA')
+                          },
+                          onCountryChanged: (country) {
+                            _countryCodeController.text =
+                                country.dialCode; // Save dial code (like +974)
+                            _countryNameController.text = country
+                                .name; // Save full country name (like 'Qatar')
                           },
                         ),
                         const SizedBox(height: 30.0),

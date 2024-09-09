@@ -22,13 +22,12 @@ the user will have this data:
 class UserModel {
   final String userId;
   final String name;
-  final String email;
-  final String phoneNumber;
-  final String country;
   final String jobTitle;
+  final Map<String, dynamic> contact; // Map to store contact details
+  final Map<String, dynamic> address; // Map to store address information
   final String businessName;
-  final bool emailNotification;
-  final bool smsNotification;
+  final Map<String, bool>
+      notifications; // Map to store notification preferences
   final List<String> staff;
   final DateTime createdAt;
   final int loginCount;
@@ -42,13 +41,14 @@ class UserModel {
   UserModel({
     required this.userId,
     required this.name,
-    required this.email,
-    required this.phoneNumber,
-    required this.country,
+    required this.contact, // Map storing 'email', 'phoneNumber', and 'countryCode'
+    required this.address, // Map storing address information
     required this.businessName,
     this.jobTitle = '',
-    this.emailNotification = true,
-    this.smsNotification = true,
+    this.notifications = const {
+      'emailNotification': true,
+      'smsNotification': true
+    }, // Notifications map
     this.staff = const [],
     DateTime? createdAt,
     this.loginCount = 0,
@@ -60,16 +60,14 @@ class UserModel {
     this.userSettings,
   }) : createdAt = createdAt ?? DateTime.now();
 
-  // Add this copyWith method
+  // Add this copyWith method to update specific fields
   UserModel copyWith({
     String? name,
-    String? email,
-    String? phoneNumber,
-    String? country,
     String? jobTitle,
+    Map<String, dynamic>? contact,
+    Map<String, dynamic>? address,
     String? businessName,
-    bool? emailNotification,
-    bool? smsNotification,
+    Map<String, bool>? notifications,
     List<String>? staff,
     DateTime? createdAt,
     int? loginCount,
@@ -81,15 +79,12 @@ class UserModel {
     Map<String, dynamic>? userSettings,
   }) {
     return UserModel(
-      userId: this.userId, // id is not changeable
+      userId: this.userId, // userId remains unchanged
       name: name ?? this.name,
-      email: email ?? this.email,
-      phoneNumber: phoneNumber ?? this.phoneNumber,
-      country: country ?? this.country,
-      jobTitle: jobTitle ?? this.jobTitle,
+      contact: contact ?? this.contact,
+      address: address ?? this.address,
       businessName: businessName ?? this.businessName,
-      emailNotification: emailNotification ?? this.emailNotification,
-      smsNotification: smsNotification ?? this.smsNotification,
+      notifications: notifications ?? this.notifications,
       staff: staff ?? this.staff,
       createdAt: createdAt ?? this.createdAt,
       loginCount: loginCount ?? this.loginCount,
@@ -102,18 +97,17 @@ class UserModel {
     );
   }
 
-  // Convert a UserModel into a Map. The keys must correspond to the names of the fields in Firestore.
+  // Convert a UserModel into a Map. The keys must correspond to the field names in Firestore.
   Map<String, dynamic> toMap() {
     return {
       'userId': userId,
       'name': name,
-      'email': email,
-      'phoneNumber': phoneNumber,
-      'country': country,
-      'businessName': businessName,
       'jobTitle': jobTitle,
-      'emailNotification': emailNotification,
-      'smsNotification': smsNotification,
+      'contact':
+          contact, // Contact details map (phoneNumber, countryCode, email)
+      'address': address, // Address details map
+      'businessName': businessName,
+      'notifications': notifications, // Notifications map
       'staff': staff,
       'createdAt': createdAt.toIso8601String(),
       'loginCount': loginCount,
@@ -131,13 +125,12 @@ class UserModel {
     return UserModel(
       userId: userId,
       name: map['name'],
-      email: map['email'],
-      phoneNumber: map['phoneNumber'],
-      country: map['country'],
-      businessName: map['businessName'],
       jobTitle: map['jobTitle'],
-      emailNotification: map['emailNotification'] ?? true,
-      smsNotification: map['smsNotification'] ?? true,
+      contact: Map<String, dynamic>.from(map['contact']), // Get contact map
+      address: Map<String, dynamic>.from(map['address']), // Get address map
+      businessName: map['businessName'],
+      notifications: Map<String, bool>.from(map['notifications'] ??
+          {'emailNotification': true, 'smsNotification': true}),
       staff: List<String>.from(map['staff'] ?? []),
       createdAt: DateTime.parse(map['createdAt']),
       loginCount: map['loginCount'] ?? 0,

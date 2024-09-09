@@ -16,6 +16,8 @@ class LocationSettingsTab extends ConsumerStatefulWidget {
 class _LocationSettingsTabState extends ConsumerState<LocationSettingsTab> {
   late TextEditingController _venueNameController;
   late TextEditingController _addressController;
+  late TextEditingController _phoneNumberController;
+
   String countryValue = '';
   String stateValue = '';
   String cityValue = '';
@@ -36,6 +38,8 @@ class _LocationSettingsTabState extends ConsumerState<LocationSettingsTab> {
       _venueNameController = TextEditingController(text: venue.venueName);
       _addressController =
           TextEditingController(text: venue.address['address'] ?? '');
+      _phoneNumberController =
+          TextEditingController(text: venue.contact['phoneNumber'] ?? '');
 
       // Set initial values for country, state, and city from the venue data
       setState(() {
@@ -48,6 +52,7 @@ class _LocationSettingsTabState extends ConsumerState<LocationSettingsTab> {
       // If no venue data is available, initialize with empty fields
       _venueNameController = TextEditingController();
       _addressController = TextEditingController();
+      _phoneNumberController = TextEditingController();
       setState(() {
         _isLoading = false; // Mark data as loaded even if empty
       });
@@ -59,6 +64,7 @@ class _LocationSettingsTabState extends ConsumerState<LocationSettingsTab> {
     // Dispose of the controllers when the widget is destroyed
     _venueNameController.dispose();
     _addressController.dispose();
+    _phoneNumberController.dispose();
     super.dispose();
   }
 
@@ -70,7 +76,7 @@ class _LocationSettingsTabState extends ConsumerState<LocationSettingsTab> {
     final venue = ref.read(venueProvider);
 
     if (venue != null) {
-      // Update the venue's name and address in the provider
+      // Update the venue's name, address, and contact (including phone number) in the provider
       final updatedVenue = venue.copyWith(
         venueName: _venueNameController.text,
         address: {
@@ -78,6 +84,10 @@ class _LocationSettingsTabState extends ConsumerState<LocationSettingsTab> {
           'state': stateValue,
           'city': cityValue,
           'address': _addressController.text,
+        },
+        contact: {
+          'email': venue.contact['email'], // Keep the existing email
+          'phoneNumber': _phoneNumberController.text, // Update the phone number
         },
       );
       ref.read(venueProvider.notifier).setVenue(updatedVenue);
@@ -93,6 +103,11 @@ class _LocationSettingsTabState extends ConsumerState<LocationSettingsTab> {
             'state': stateValue,
             'city': cityValue,
             'address': _addressController.text,
+          },
+          'contact': {
+            'email': venue.contact['email'], // Keep the existing email
+            'phoneNumber':
+                _phoneNumberController.text, // Save updated phone number
           },
         },
       );
@@ -132,6 +147,14 @@ class _LocationSettingsTabState extends ConsumerState<LocationSettingsTab> {
                   InputField(
                     label: 'Full Address',
                     controller: _addressController,
+                    labelAboveField: true,
+                  ),
+                  const SizedBox(height: 20),
+
+                  // Phone Number Field
+                  InputField(
+                    label: 'Phone Number',
+                    controller: _phoneNumberController,
                     labelAboveField: true,
                   ),
                   const SizedBox(height: 20),

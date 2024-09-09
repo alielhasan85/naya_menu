@@ -26,43 +26,43 @@ class _MyAppState extends ConsumerState<MyApp> {
   @override
   void initState() {
     super.initState();
-    _logInDevelopmentAccount();
+    // _logInDevelopmentAccount();
   }
 
-  // Log in using development credentials
-  Future<void> _logInDevelopmentAccount() async {
-    try {
-      const String email =
-          'elhasan.aliqa@gmail.com'; // Replace with your dev email
-      const String password = 'rotation'; // Replace with your dev password
+  // // Log in using development credentials
+  // Future<void> _logInDevelopmentAccount() async {
+  //   try {
+  //     const String email =
+  //         'elhasan.aliqa@gmail.com'; // Replace with your dev email
+  //     const String password = 'rotation'; // Replace with your dev password
 
-      UserCredential userCredential =
-          await FirebaseAuth.instance.signInWithEmailAndPassword(
-        email: email,
-        password: password,
-      );
+  //     UserCredential userCredential =
+  //         await FirebaseAuth.instance.signInWithEmailAndPassword(
+  //       email: email,
+  //       password: password,
+  //     );
 
-      final userId = userCredential.user!.uid;
+  //     final userId = userCredential.user!.uid;
 
-      // Fetch and set user data in Riverpod
-      await ref.read(userProvider.notifier).fetchUser(userId);
+  //     // Fetch and set user data in Riverpod
+  //     await ref.read(userProvider.notifier).fetchUser(userId);
 
-      // Fetch associated venues
-      final venueList = await FirestoreVenue().getAllVenues(userId);
-      if (venueList.isNotEmpty) {
-        ref.read(venueProvider.notifier).setVenue(venueList.first);
-      }
+  //     // Fetch associated venues
+  //     final venueList = await FirestoreVenue().getAllVenues(userId);
+  //     if (venueList.isNotEmpty) {
+  //       ref.read(venueProvider.notifier).setVenue(venueList.first);
+  //     }
 
-      // Update the state when logged in successfully
-      setState(() {
-        _isLoggedIn = true;
-        _userId = userId;
-      });
-    } catch (e) {
-      print('Login failed: $e');
-      // Handle login errors, such as showing a Snackbar or dialog
-    }
-  }
+  //     // Update the state when logged in successfully
+  //     setState(() {
+  //       _isLoggedIn = true;
+  //       _userId = userId;
+  //     });
+  //   } catch (e) {
+  //     print('Login failed: $e');
+  //     // Handle login errors, such as showing a Snackbar or dialog
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -92,13 +92,12 @@ class _MyAppState extends ConsumerState<MyApp> {
         );
       },
       home: Scaffold(
-        body:
-            // LoadingPage(),
+        body: LoadingPage(),
 
-            _isLoggedIn && _userId != null
-                ? const MainPage() // Show main page when logged in
-                : const Center(
-                    child: CircularProgressIndicator()), // Loading state
+        // _isLoggedIn && _userId != null
+        //     ? const MainPage() // Show main page when logged in
+        //     : const Center(
+        //         child: CircularProgressIndicator()), // Loading state
       ),
     );
   }
