@@ -33,12 +33,16 @@ class _ClSignUpUserDataState extends ConsumerState<ClSignUpUserData> {
       TextEditingController(); // For storing country code
   final TextEditingController _countryNameController =
       TextEditingController(); // For storing country name
+
+  final TextEditingController _countryDialController =
+      TextEditingController(); // For storing country name
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   bool _isLoading = false;
 
   final FirestoreUser _firestoreUser = FirestoreUser(); // Firestore instance
   String country = ''; // To store selected country
   String countryCode = ''; // To store country code
+  String dialCode = ''; // To store +961
 
   Future<void> _submitInfo() async {
     if (_formKey.currentState!.validate()) {
@@ -47,15 +51,20 @@ class _ClSignUpUserDataState extends ConsumerState<ClSignUpUserData> {
       });
 
       try {
-        // Get phone number and country code
+        // Get phone number and country dial code
         String phoneNumber = _phoneController.text.trim();
-        String countryCode = _countryCodeController.text.trim();
-        String countryName = _countryNameController.text.trim();
+        String countryDial = _countryDialController.text
+            .trim(); // Only save dial code (e.g., +1)
+
+        String countryCode = _countryCodeController.text
+            .trim(); // Only save dial code (e.g., +1)
+        String countryName = _countryNameController.text
+            .trim(); // Optional if needed for display
 
         // Check if the phone number already exists
         bool phoneExists = await _firestoreUser.checkIfUserExists(
           email: widget.email,
-          phoneNumber: '$countryCode $phoneNumber',
+          phoneNumber: '$countryDial $phoneNumber', // Dial code + phone number
         );
 
         if (phoneExists) {
@@ -72,20 +81,23 @@ class _ClSignUpUserDataState extends ConsumerState<ClSignUpUserData> {
           return;
         }
 
-        // Create UserModel with the provided information
+        // Create UserModel with the provided information (store countryDial and phoneNumber only)
         UserModel user = UserModel(
           userId: widget.userId,
           name: _nameController.text,
+          contact: {
+            'email': widget.email,
+            'phoneNumber': phoneNumber, // Store phone number only
+            'countryCode': countryCode,
+            'countryDial': countryDial,
+            // Store only the dial code (e.g., +1)
+          },
           address: {
-            'country': countryName,
+            'country':
+                countryName, // If you want to store country name for display purposes
             'state': '',
             'city': '',
             'address': '',
-          },
-          contact: {
-            'phoneNumber': phoneNumber, // Save phone number
-            'countryCode': countryCode, // Save country code
-            'email': widget.email, // Save email
           },
           businessName: _businessController.text.trim(),
           notifications: {
@@ -99,19 +111,18 @@ class _ClSignUpUserDataState extends ConsumerState<ClSignUpUserData> {
 
         // Create a default venue using the user information
         VenueModel defaultVenue = VenueModel(
-          userId: user.userId, // Add the userId from the UserModel
+          userId: user.userId,
           venueId: '', // Firestore will generate the ID
           venueName: user.businessName,
           logoUrl: '',
           address: {
-            'country':
-                user.address['country'], // Save the country name in the address
+            'country': user.address['country'],
           },
           contact: {
-            'email': user.contact['email'], // Save email
+            'email': user.contact['email'],
             'phoneNumber': user.contact['phoneNumber'], // Save phone number
-            'countryCode':
-                user.contact['countryCode'], // Save country code separately
+            'countryCode': user.contact['countryCode'], // Save only dial code
+            'countryDial': user.contact['countryDial']
           },
         );
 
@@ -249,24 +260,31 @@ class _ClSignUpUserDataState extends ConsumerState<ClSignUpUserData> {
                               ?.copyWith(fontSize: 16),
                         ),
 
-                        // Phone Number Input Field using intl_phone_field
+// Phone Number Input Field using intl_phone_field
                         IntlPhoneField(
                           decoration: InputDecoration(
                             border: AppTheme.inputDecorationTheme.border,
                           ),
                           dropdownDecoration: BoxDecoration(),
-                          initialCountryCode: 'US', // Default country
+                          initialCountryCode: _countryCodeController
+                                  .text.isNotEmpty
+                              ? _countryCodeController
+                                  .text // Pre-fill country code if available
+                              : 'US', // Default country
+                          initialValue: _phoneController
+                              .text, // Pre-fill phone number if available
                           onChanged: (phone) {
-                            _phoneController.text =
-                                phone.number; // Save phone number
-                            _countryCodeController.text = phone
-                                .countryCode; // Save country code (ISO like 'QA')
+                            // Store phone number without dial code
+                            _phoneController.text = phone.number;
+
+                            // Store relevant country information in controllers
                           },
                           onCountryChanged: (country) {
-                            _countryCodeController.text =
-                                country.dialCode; // Save dial code (like +974)
+                            // Save country details when the country is changed
+                            _countryDialController.text = country.dialCode;
+                            _countryCodeController.text = country.code;
                             _countryNameController.text = country
-                                .name; // Save full country name (like 'Qatar')
+                                .name; // Save country name like 'United States'
                           },
                         ),
                         const SizedBox(height: 30.0),

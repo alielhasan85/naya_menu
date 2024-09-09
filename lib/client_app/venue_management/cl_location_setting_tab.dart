@@ -1,6 +1,7 @@
 import 'package:csc_picker/csc_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl_phone_field/intl_phone_field.dart';
 import 'package:naya_menu/service/firebase/firestore_venue.dart';
 import 'package:naya_menu/theme/app_theme.dart';
 import '../widgets/input_fields.dart';
@@ -18,6 +19,11 @@ class _LocationSettingsTabState extends ConsumerState<LocationSettingsTab> {
   late TextEditingController _addressController;
   late TextEditingController _phoneNumberController;
 
+  late TextEditingController _countryCodeController; // For country code 'us'
+  late TextEditingController _countryNameController; // For country name
+  late TextEditingController _countryDialController; // '+1'
+  // late TextEditingController _countryDialController; // For storing country dial code
+
   String countryValue = '';
   String stateValue = '';
   String cityValue = '';
@@ -27,6 +33,9 @@ class _LocationSettingsTabState extends ConsumerState<LocationSettingsTab> {
   void initState() {
     super.initState();
     _initializeVenueData();
+
+    // _countryCodeController = TextEditingController();
+    // _countryNameController = TextEditingController();
   }
 
   // Initialize data from venueProvider, not Firestore
@@ -36,10 +45,19 @@ class _LocationSettingsTabState extends ConsumerState<LocationSettingsTab> {
     if (venue != null) {
       // Initialize the controllers with the current venue data from the provider
       _venueNameController = TextEditingController(text: venue.venueName);
+
       _addressController =
           TextEditingController(text: venue.address['address'] ?? '');
+
       _phoneNumberController =
           TextEditingController(text: venue.contact['phoneNumber'] ?? '');
+      _countryCodeController = TextEditingController(
+          text: venue.contact['countryCode'] ?? ''); // Initialize country code
+      _countryNameController = TextEditingController(
+          text: venue.address['country'] ?? ''); // Initialize country name
+
+      _countryDialController =
+          TextEditingController(text: venue.contact['countryDial'] ?? '');
 
       // Set initial values for country, state, and city from the venue data
       setState(() {
@@ -53,6 +71,10 @@ class _LocationSettingsTabState extends ConsumerState<LocationSettingsTab> {
       _venueNameController = TextEditingController();
       _addressController = TextEditingController();
       _phoneNumberController = TextEditingController();
+      _countryCodeController = TextEditingController();
+      _countryNameController = TextEditingController();
+      _countryDialController = TextEditingController();
+
       setState(() {
         _isLoading = false; // Mark data as loaded even if empty
       });
@@ -61,10 +83,12 @@ class _LocationSettingsTabState extends ConsumerState<LocationSettingsTab> {
 
   @override
   void dispose() {
-    // Dispose of the controllers when the widget is destroyed
     _venueNameController.dispose();
+    _countryDialController.dispose();
     _addressController.dispose();
     _phoneNumberController.dispose();
+    _countryCodeController.dispose(); // Dispose country code controller
+    _countryNameController.dispose(); // Dispose country name controller
     super.dispose();
   }
 
@@ -86,6 +110,8 @@ class _LocationSettingsTabState extends ConsumerState<LocationSettingsTab> {
           'address': _addressController.text,
         },
         contact: {
+          'countryCode': _countryCodeController.text,
+          'countryDial': _countryDialController.text,
           'email': venue.contact['email'], // Keep the existing email
           'phoneNumber': _phoneNumberController.text, // Update the phone number
         },
@@ -106,6 +132,8 @@ class _LocationSettingsTabState extends ConsumerState<LocationSettingsTab> {
           },
           'contact': {
             'email': venue.contact['email'], // Keep the existing email
+            'countryCode': _countryCodeController.text,
+            'countryDial': _countryDialController.text,
             'phoneNumber':
                 _phoneNumberController.text, // Save updated phone number
           },
@@ -151,12 +179,37 @@ class _LocationSettingsTabState extends ConsumerState<LocationSettingsTab> {
                   ),
                   const SizedBox(height: 20),
 
-                  // Phone Number Field
-                  InputField(
-                    label: 'Phone Number',
-                    controller: _phoneNumberController,
-                    labelAboveField: true,
+// Phone Number Input Field using intl_phone_field
+                  IntlPhoneField(
+                    decoration: InputDecoration(
+                      border: AppTheme.inputDecorationTheme.border,
+                    ),
+                    dropdownDecoration: BoxDecoration(),
+                    initialCountryCode: _countryCodeController.text.isNotEmpty
+                        ? _countryCodeController
+                            .text // This should be the country ISO code like 'US'
+                        : 'US', // Default country if no data is available
+                    initialValue: _phoneNumberController
+                        .text, // Pre-fill phone number if available
+                    onChanged: (phone) {
+                      // Store phone number without dial code
+                      _phoneNumberController.text = phone.number;
+
+                      // Store country information in controllers
+                      // Save dial code like '+1'
+                    },
+                    onCountryChanged: (country) {
+                      _countryNameController.text = country.name;
+                      _countryCodeController.text = country.code;
+                      _countryDialController.text = country.dialCode;
+
+                      print(country.code + 'country code');
+                      print(country.dialCode +
+                          'country dial code'); // Save country name like 'United States'
+                      // Save country name like 'United States'
+                    },
                   ),
+
                   const SizedBox(height: 20),
 
                   // Country, State, and City Picker using csc_picker

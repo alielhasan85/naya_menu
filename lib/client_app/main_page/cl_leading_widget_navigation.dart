@@ -34,7 +34,7 @@ class ClLeadingWidgetNavigation extends ConsumerWidget {
         borderRadius: BorderRadius.circular(8), // Add border radius
       ),
       child: DropdownButtonHideUnderline(
-        child: Row(children: [
+        child: Row(mainAxisAlignment: MainAxisAlignment.start, children: [
           const Icon(Icons.store),
           const SizedBox(width: 10),
           DropdownButton<String>(
