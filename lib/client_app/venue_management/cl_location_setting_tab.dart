@@ -23,6 +23,7 @@ class _LocationSettingsTabState extends ConsumerState<LocationSettingsTab> {
   late TextEditingController _countryNameController; // For country name
   late TextEditingController _countryDialController; // '+1'
   // late TextEditingController _countryDialController; // For storing country dial code
+  late TextEditingController _websiteController; //
 
   String countryValue = '';
   String stateValue = '';
@@ -59,6 +60,9 @@ class _LocationSettingsTabState extends ConsumerState<LocationSettingsTab> {
       _countryDialController =
           TextEditingController(text: venue.contact['countryDial'] ?? '');
 
+      _websiteController =
+          TextEditingController(text: venue.contact['website'] ?? '');
+
       // Set initial values for country, state, and city from the venue data
       setState(() {
         countryValue = venue.address['country'] ?? '';
@@ -74,6 +78,7 @@ class _LocationSettingsTabState extends ConsumerState<LocationSettingsTab> {
       _countryCodeController = TextEditingController();
       _countryNameController = TextEditingController();
       _countryDialController = TextEditingController();
+      _websiteController = TextEditingController();
 
       setState(() {
         _isLoading = false; // Mark data as loaded even if empty
@@ -89,6 +94,7 @@ class _LocationSettingsTabState extends ConsumerState<LocationSettingsTab> {
     _phoneNumberController.dispose();
     _countryCodeController.dispose(); // Dispose country code controller
     _countryNameController.dispose(); // Dispose country name controller
+    _websiteController.dispose();
     super.dispose();
   }
 
@@ -114,6 +120,8 @@ class _LocationSettingsTabState extends ConsumerState<LocationSettingsTab> {
           'countryDial': _countryDialController.text,
           'email': venue.contact['email'], // Keep the existing email
           'phoneNumber': _phoneNumberController.text, // Update the phone number
+          if (_websiteController.text.isNotEmpty)
+            'website': _websiteController.text
         },
       );
       ref.read(venueProvider.notifier).setVenue(updatedVenue);
@@ -134,8 +142,9 @@ class _LocationSettingsTabState extends ConsumerState<LocationSettingsTab> {
             'email': venue.contact['email'], // Keep the existing email
             'countryCode': _countryCodeController.text,
             'countryDial': _countryDialController.text,
-            'phoneNumber':
-                _phoneNumberController.text, // Save updated phone number
+            'phoneNumber': _phoneNumberController.text,
+            if (_websiteController.text.isNotEmpty)
+              'website': _websiteController.text // Save updated phone number
           },
         },
       );
@@ -170,16 +179,19 @@ class _LocationSettingsTabState extends ConsumerState<LocationSettingsTab> {
                     labelAboveField: true,
                   ),
                   const SizedBox(height: 20),
-
-                  // Address Field
-                  InputField(
-                    label: 'Full Address',
-                    controller: _addressController,
-                    labelAboveField: true,
-                  ),
-                  const SizedBox(height: 20),
+// TODO: change the ui of the phone picker especially the drop down menu to be same as other input field
 
 // Phone Number Input Field using intl_phone_field
+
+                  Text(
+                    'Phone Number',
+                    textAlign: TextAlign.left,
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodyMedium, // Use theme text style
+                  ),
+
+                  const SizedBox(height: 8.0),
                   IntlPhoneField(
                     decoration: InputDecoration(
                       border: AppTheme.inputDecorationTheme.border,
@@ -203,16 +215,27 @@ class _LocationSettingsTabState extends ConsumerState<LocationSettingsTab> {
                       _countryCodeController.text = country.code;
                       _countryDialController.text = country.dialCode;
 
-                      print(country.code + 'country code');
-                      print(country.dialCode +
-                          'country dial code'); // Save country name like 'United States'
+                      // Save country name like 'United States'
                       // Save country name like 'United States'
                     },
                   ),
 
                   const SizedBox(height: 20),
 
+// TODO: change the ui of the address icker to be same as other input field
+// TODO: to add feature to add location from map
+
                   // Country, State, and City Picker using csc_picker
+
+                  Text(
+                    'Address',
+                    textAlign: TextAlign.left,
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodyMedium, // Use theme text style
+                  ),
+
+                  const SizedBox(height: 8.0),
                   CSCPicker(
                     showStates: true,
                     showCities: true,
@@ -250,6 +273,20 @@ class _LocationSettingsTabState extends ConsumerState<LocationSettingsTab> {
                   ),
                   const SizedBox(height: 20),
 
+                  // Address Field
+                  InputField(
+                    label: 'Full Address',
+                    controller: _addressController,
+                    labelAboveField: true,
+                  ),
+                  const SizedBox(height: 20),
+
+                  InputField(
+                    label: 'Website',
+                    controller: _websiteController,
+                    labelAboveField: true,
+                  ),
+                  const SizedBox(height: 20),
                   // Save Button
                   ElevatedButton(
                     onPressed: _saveVenueData, // Call the save method

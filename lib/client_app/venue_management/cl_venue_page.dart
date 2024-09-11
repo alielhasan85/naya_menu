@@ -42,15 +42,23 @@ class VenueInformationPage extends ConsumerWidget {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              const SizedBox(height: 20),
+                              const SizedBox(height: 10),
                               TabBar(
+                                isScrollable: true,
+                                labelStyle: TextStyle(
+                                  fontSize:
+                                      14.0, // Font size for the selected tab
+                                  fontWeight: FontWeight
+                                      .bold, // Font weight for the selected tab
+                                ),
                                 labelColor: Theme.of(context).primaryColor,
                                 indicatorColor: Theme.of(context).primaryColor,
                                 unselectedLabelColor: Colors.grey,
                                 tabs: const [
                                   Tab(text: 'Location'),
-                                  Tab(text: 'Language'),
+                                  Tab(text: 'Design & Display'),
                                   Tab(text: 'Social Accounts'),
+                                  Tab(text: 'Price Options'),
                                 ],
                               ),
                               const Divider(

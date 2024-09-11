@@ -2,7 +2,6 @@ class VenueModel {
   final String venueId;
   final String venueName;
   final String userId; // Add the userId field here
-  final String logoUrl;
   final Map<String, dynamic> address;
   final Map<String, dynamic> contact;
   final List<String> languageOptions;
@@ -16,7 +15,6 @@ class VenueModel {
     required this.venueId,
     required this.venueName,
     required this.userId, // Required userId
-    this.logoUrl = '', // Default empty string if no logo is provided
     required this.address,
     required this.contact,
     this.languageOptions = const ['English'], // Default to English
@@ -33,7 +31,6 @@ class VenueModel {
       'venueId': venueId,
       'venueName': venueName,
       'userId': userId, // Ensure to add userId in the map
-      'logoUrl': logoUrl,
       'address': address,
       'contact': contact,
       'languageOptions': languageOptions,
@@ -51,7 +48,6 @@ class VenueModel {
       venueId: venueId,
       venueName: map['venueName'],
       userId: map['userId'], // Read the userId from the map
-      logoUrl: map['logoUrl'],
       address: Map<String, dynamic>.from(map['address']),
       contact: Map<String, dynamic>.from(map['contact']),
       languageOptions: List<String>.from(map['languageOptions'] ?? ['English']),
@@ -82,7 +78,6 @@ class VenueModel {
       venueId: venueId ?? this.venueId,
       venueName: venueName ?? this.venueName,
       userId: userId ?? this.userId, // Ensure the userId is preserved
-      logoUrl: logoUrl ?? this.logoUrl,
       address: address ?? this.address,
       contact: contact ?? this.contact,
       languageOptions: languageOptions ?? this.languageOptions,

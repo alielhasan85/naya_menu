@@ -114,7 +114,6 @@ class _ClSignUpUserDataState extends ConsumerState<ClSignUpUserData> {
           userId: user.userId,
           venueId: '', // Firestore will generate the ID
           venueName: user.businessName,
-          logoUrl: '',
           address: {
             'country': user.address['country'],
           },
