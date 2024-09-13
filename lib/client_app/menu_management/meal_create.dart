@@ -12,7 +12,7 @@ import '../../models/old/meal.dart';
 import '../../service/firebase/old/firestore_category_service.dart';
 import '../../service/firebase/old/firestore_meal_service.dart';
 import '../widgets/input_fields.dart';
-import '../image/image_upload_popup.dart';
+import '../image/old/image_upload_popup.dart';
 
 class MealCreatePage extends StatefulWidget {
   final String restaurantId;

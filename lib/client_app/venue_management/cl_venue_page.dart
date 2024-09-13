@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:naya_menu/client_app/notifier.dart';
 import 'package:naya_menu/client_app/venue_management/cl_location_setting_tab.dart';
+import 'package:naya_menu/client_app/venue_management/design_tab.dart';
 import 'package:naya_menu/theme/app_theme.dart';
 import '../widgets/input_fields.dart';
 
@@ -16,7 +17,7 @@ class VenueInformationPage extends ConsumerWidget {
       Expanded(
         flex: 1,
         child: DefaultTabController(
-          length: 3, // Number of tabs
+          length: 4, // Number of tabs
           child: Padding(
             padding: const EdgeInsets.only(top: 20, right: 50),
             child: Column(
@@ -73,8 +74,12 @@ class VenueInformationPage extends ConsumerWidget {
                                   children: [
                                     // Location settings content
                                     LocationSettingsTab(),
-                                    // Language options content
+                                    DesignTab(),
+
                                     LanguageOptionsTab(),
+
+                                    // Language options content
+
                                     // Social accounts content
                                     SocialAccountsTab(),
                                   ],
