@@ -64,7 +64,6 @@ class VenueModel {
     String? venueId,
     String? venueName,
     String? userId, // Add userId here for copying
-    String? logoUrl,
     Map<String, dynamic>? address,
     Map<String, dynamic>? contact,
     List<String>? languageOptions,

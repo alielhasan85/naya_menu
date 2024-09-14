@@ -1,3 +1,5 @@
+//general page for entering venue information it has several tab for general info, deisgn etc
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:naya_menu/client_app/notifier.dart';

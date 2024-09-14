@@ -2,7 +2,7 @@
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
-import 'package:naya_menu/service/firebase/old/firebase_storage_service.dart';
+import 'package:naya_menu/service/firebase/firebase_storage_service.dart';
 import 'package:universal_io/io.dart' as uio;
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -115,17 +115,17 @@ class _MealCreatePageState extends State<MealCreatePage> {
       String title = _mealTitleController.text;
       String downloadUrl;
       if (_imageFile != null) {
-        downloadUrl = await _firebaseStorageService.uploadImage(_imageFile!,
-            widget.restaurantId, title, 'meals/${_selectedCategory!.id}');
+        // downloadUrl = await _firebaseStorageService.uploadImage(_imageFile!,
+        //     widget.restaurantId, title, 'meals/${_selectedCategory!.id}');
       } else {
-        downloadUrl = await _firebaseStorageService.uploadImageBytes(
-            _imageBytes!,
-            widget.restaurantId,
-            title,
-            'meals/${_selectedCategory!.id}');
+        // downloadUrl = await _firebaseStorageService.uploadImage(
+        //     _imageBytes!,
+        //     widget.restaurantId,
+        //     title,
+        //     'meals/${_selectedCategory!.id}');
       }
       setState(() {
-        _downloadUrl = downloadUrl;
+        // _downloadUrl = downloadUrl;
       });
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Image uploaded successfully.')),
