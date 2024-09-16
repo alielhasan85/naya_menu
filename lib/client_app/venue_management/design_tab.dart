@@ -1,4 +1,8 @@
+//in this page we will upload the design paramter of the venue like logo (upload image and save url in firestore), text color, font style,
+//it is part of
+
 import 'dart:typed_data';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:naya_menu/client_app/image/image_picker.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -15,28 +19,26 @@ class DesignTab extends ConsumerStatefulWidget {
 }
 
 class _DesignTabState extends ConsumerState<DesignTab>
-    with AutomaticKeepAliveClientMixin {
+// with AutomaticKeepAliveClientMixin
+
+{
   Uint8List? _selectedLogo;
   Uint8List? _selectedBackground;
   String? _logoErrorMessage;
   String? _backgroundErrorMessage;
 
   final FirebaseStorageService _storageService = FirebaseStorageService();
-
-  @override
-  bool get wantKeepAlive => true;
-
+  // @override
+  // bool get wantKeepAlive => true;
   @override
   Widget build(BuildContext context) {
-    super.build(context); // Required when using AutomaticKeepAliveClientMixin
-
+    // super.build(context);
     // Access the venue provider here using ref from ConsumerState
     final venue = ref.watch(venueProvider);
-
-    // Extract designAndDisplay and image URLs
     final Map<String, dynamic> designAndDisplay = venue?.designAndDisplay ?? {};
-    final String? logoUrl = designAndDisplay['logoUrl'] as String?;
-    final String? backgroundUrl = designAndDisplay['backgroundUrl'] as String?;
+    final String logoUrl = designAndDisplay['logoUrl'];
+
+    final String backgroundUrl = designAndDisplay['backgroundUrl'];
 
     return Padding(
       padding: const EdgeInsets.all(16),
@@ -49,7 +51,6 @@ class _DesignTabState extends ConsumerState<DesignTab>
           ),
           const SizedBox(height: 20),
 
-          // Row for uploading the logo
           Row(
             children: [
               Expanded(
@@ -81,20 +82,14 @@ class _DesignTabState extends ConsumerState<DesignTab>
                         ),
                         child: _selectedLogo != null
                             ? Image.memory(_selectedLogo!, fit: BoxFit.cover)
-                            : logoUrl != null
-                                ? Image.network(
-                                    logoUrl,
+                            : (logoUrl != null)
+                                ? CachedNetworkImage(
+                                    imageUrl: logoUrl,
                                     fit: BoxFit.cover,
-                                    errorBuilder: (context, error, stackTrace) {
-                                      return Center(
-                                        child: Text(
-                                          'Failed to load image',
-                                          style: TextStyle(
-                                              fontSize: 14,
-                                              color: Colors.grey[600]),
-                                        ),
-                                      );
-                                    },
+                                    placeholder: (context, url) =>
+                                        const CircularProgressIndicator(),
+                                    errorWidget: (context, url, error) =>
+                                        const Icon(Icons.error),
                                   )
                                 : Center(
                                     child: Text(
@@ -156,20 +151,12 @@ class _DesignTabState extends ConsumerState<DesignTab>
                         child: _selectedBackground != null
                             ? Image.memory(_selectedBackground!,
                                 fit: BoxFit.cover)
-                            : backgroundUrl != null
+                            : (backgroundUrl != null)
                                 ? Image.network(
                                     backgroundUrl,
                                     fit: BoxFit.cover,
-                                    errorBuilder: (context, error, stackTrace) {
-                                      return Center(
-                                        child: Text(
-                                          'Failed to load image',
-                                          style: TextStyle(
-                                              fontSize: 14,
-                                              color: Colors.grey[600]),
-                                        ),
-                                      );
-                                    },
+                                    errorBuilder: (context, url, error) =>
+                                        const Text('not '),
                                   )
                                 : Center(
                                     child: Text(
@@ -199,10 +186,8 @@ class _DesignTabState extends ConsumerState<DesignTab>
 
           // Save Button to upload images and update Firestore
           ElevatedButton(
-            onPressed: venue != null
-                ? () =>
-                    _saveDesignSettings(context, venue.userId, venue.venueId)
-                : null,
+            onPressed: () =>
+                _saveDesignSettings(context, venue!.userId, venue.venueId),
             child: const Text('Save Design Settings'),
           ),
         ],
@@ -249,14 +234,9 @@ class _DesignTabState extends ConsumerState<DesignTab>
         builder: (context) => const Center(child: CircularProgressIndicator()),
       );
 
-      // Initialize Firestore service
-      final FirestoreVenue firestoreVenue = FirestoreVenue();
-
-      // Get the current venue details from Firestore (to check if URLs already exist)
-      VenueModel? currentVenue =
-          await firestoreVenue.getVenueById(userId, venueId);
-      Map<String, dynamic> designAndDisplay =
-          currentVenue?.designAndDisplay ?? {};
+      // Access the venue provider directly
+      final venue = ref.read(venueProvider);
+      Map<String, dynamic> designAndDisplay = venue?.designAndDisplay ?? {};
 
       // Upload logo if selected and update the designAndDisplay map
       if (_selectedLogo != null) {
@@ -298,14 +278,20 @@ class _DesignTabState extends ConsumerState<DesignTab>
 
       // If any changes were made, update Firestore and the provider
       if (designAndDisplay.isNotEmpty) {
+        final FirestoreVenue firestoreVenue = FirestoreVenue();
         await firestoreVenue.updateDesignAndDisplay(
             userId, venueId, designAndDisplay);
 
-        // Update the provider
-        final updatedVenue = ref.read(venueProvider.notifier).state!.copyWith(
-              designAndDisplay: designAndDisplay,
-            );
+        // Update the provider directly with new values
+        final updatedVenue =
+            venue!.copyWith(designAndDisplay: designAndDisplay);
         ref.read(venueProvider.notifier).state = updatedVenue;
+
+        // Clear the selected images
+        setState(() {
+          _selectedLogo = null;
+          _selectedBackground = null;
+        });
 
         // Show success feedback
         ScaffoldMessenger.of(context).showSnackBar(

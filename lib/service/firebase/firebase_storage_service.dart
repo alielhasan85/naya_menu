@@ -13,17 +13,17 @@ class FirebaseStorageService {
   }) async {
     try {
       // Create a storage reference with a logical naming convention
-      String fileName = _generateFileName(userId, venueId, imageType);
-      Reference ref = _storage.ref().child(fileName);
+      final fileName = _generateFileName(userId, venueId, imageType);
+      final ref = _storage.ref().child(fileName);
 
       // Upload the image
-      UploadTask uploadTask = ref.putData(imageData);
+      final uploadTask = ref.putData(imageData);
 
       // Wait for the upload to complete
-      TaskSnapshot snapshot = await uploadTask;
+      final snapshot = await uploadTask.whenComplete(() => null);
 
       // Get the download URL
-      String downloadUrl = await snapshot.ref.getDownloadURL();
+      final downloadUrl = await snapshot.ref.getDownloadURL();
       return downloadUrl;
     } catch (e) {
       print("Error uploading image: $e");
@@ -31,10 +31,25 @@ class FirebaseStorageService {
     }
   }
 
+//  // Function to upload an image from bytes and return the download URL
+//   Future<String> uploadImageBytes(Uint8List imageBytes, String restaurantName,
+//       String title, String type) async {
+//     try {
+//       final storageRef =
+//           _storage.ref().child('$restaurantName/$type/$title.webp');
+//       final uploadTask = storageRef.putData(imageBytes);
+//       final snapshot = await uploadTask.whenComplete(() => null);
+//       final downloadUrl = await snapshot.ref.getDownloadURL();
+//       return downloadUrl;
+//     } catch (e) {
+//       throw Exception('Error uploading image: $e');
+//     }
+//   }
+
   // Generate a unique and logical file name
   String _generateFileName(String userId, String venueId, String imageType) {
     String timestamp = DateTime.now().millisecondsSinceEpoch.toString();
-    return 'users/$userId/venues/$venueId/images/$imageType-$timestamp.jpg';
+    return 'users/$userId/venues/images/$imageType-$timestamp.webp';
   }
 
   // Delete image from Firebase Storage by URL

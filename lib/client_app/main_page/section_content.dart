@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:naya_menu/client_app/notifier.dart';
 import 'package:naya_menu/client_app/venue_management/cl_venue_page.dart';
 
 class SectionContent extends ConsumerWidget {
@@ -9,13 +10,22 @@ class SectionContent extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final venue = ref.watch(venueProvider);
+
     if (selectedSection.startsWith('Settings')) {
       return _buildSettingsContent(context, ref);
     }
 
     switch (selectedSection) {
       case 'Dashboard':
-        return Center(child: Text('Dashboard Content'));
+        try {
+          return Center(
+              child: Image.network(venue?.designAndDisplay['logoUrl'] ?? ''));
+        } catch (e) {
+          print('Error loading image: $e');
+          return Center(child: Text('Failed to load logo'));
+        }
+
       case 'Report':
         return Center(child: Text('Report Content'));
       case 'Recommendation':
