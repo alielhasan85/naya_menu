@@ -2,6 +2,7 @@
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
+import 'package:naya_menu/client_app/image/image_picker.dart';
 import 'package:naya_menu/service/firebase/firebase_storage_service.dart';
 import 'package:universal_io/io.dart' as uio;
 import 'package:firebase_auth/firebase_auth.dart';
@@ -12,7 +13,6 @@ import '../../models/old/meal.dart';
 import '../../service/firebase/old/firestore_category_service.dart';
 import '../../service/firebase/old/firestore_meal_service.dart';
 import '../widgets/input_fields.dart';
-import '../image/old/image_upload_popup.dart';
 
 class MealCreatePage extends StatefulWidget {
   final String restaurantId;
@@ -71,18 +71,11 @@ class _MealCreatePageState extends State<MealCreatePage> {
   // }
 
   void _openImageUploadPopup() {
-    showDialog(
-      context: context,
-      builder: (context) => ImageUploadPopup(
-        onImageUploaded: (String? downloadUrl) {
-          setState(() {
-            if (downloadUrl != null) {
-              _downloadUrl = downloadUrl;
-            }
-          });
-        },
-      ),
-    );
+    // showDialog(
+    //   context: context,
+    //   builder: (context) =>
+
+    // );
   }
 
   Future<void> _uploadImage() async {

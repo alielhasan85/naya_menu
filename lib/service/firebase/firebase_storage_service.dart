@@ -31,21 +31,6 @@ class FirebaseStorageService {
     }
   }
 
-//  // Function to upload an image from bytes and return the download URL
-//   Future<String> uploadImageBytes(Uint8List imageBytes, String restaurantName,
-//       String title, String type) async {
-//     try {
-//       final storageRef =
-//           _storage.ref().child('$restaurantName/$type/$title.webp');
-//       final uploadTask = storageRef.putData(imageBytes);
-//       final snapshot = await uploadTask.whenComplete(() => null);
-//       final downloadUrl = await snapshot.ref.getDownloadURL();
-//       return downloadUrl;
-//     } catch (e) {
-//       throw Exception('Error uploading image: $e');
-//     }
-//   }
-
   // Generate a unique and logical file name
   String _generateFileName(String userId, String venueId, String imageType) {
     String timestamp = DateTime.now().millisecondsSinceEpoch.toString();

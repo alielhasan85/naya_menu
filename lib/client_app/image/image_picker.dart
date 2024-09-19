@@ -136,8 +136,9 @@ class _CropperDialogState extends State<CropperDialog> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 600, // Fixed width for the dialog
-      height: 400, // Fixed height for the dialog
+      //TODO: to study later
+      width: 800, // Fixed width for the dialog
+      height: 600, // Fixed height for the dialog
       padding: const EdgeInsets.all(16), // Add padding inside the dialog
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,

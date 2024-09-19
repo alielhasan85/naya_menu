@@ -6,10 +6,10 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:naya_menu/client_app/image/image_picker.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:naya_menu/client_app/venue_management/cl_color.dart';
 import 'package:naya_menu/service/firebase/firebase_storage_service.dart';
 import 'package:naya_menu/client_app/notifier.dart';
 import 'package:naya_menu/service/firebase/firestore_venue.dart';
-import 'package:naya_menu/models/venue/venue.dart';
 
 class DesignTab extends ConsumerStatefulWidget {
   const DesignTab({super.key});
@@ -27,6 +27,13 @@ class _DesignTabState extends ConsumerState<DesignTab>
   String? _logoErrorMessage;
   String? _backgroundErrorMessage;
 
+  Color _primaryColor = Colors.blue;
+  Color _secondaryColor = Colors.blue;
+  Color _backgroundColor = Colors.white;
+  Color _cardColor = Colors.white;
+  Color _textColor = Colors.black;
+  Color _buttonColor = Colors.blue;
+
   final FirebaseStorageService _storageService = FirebaseStorageService();
   // @override
   // bool get wantKeepAlive => true;
@@ -40,157 +47,181 @@ class _DesignTabState extends ConsumerState<DesignTab>
 
     final String backgroundUrl = designAndDisplay['backgroundUrl'];
 
-    return Padding(
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text(
-            'Design and Display Settings',
-            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-          ),
-          const SizedBox(height: 20),
+    return SingleChildScrollView(
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              'Design and Display Settings',
+              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 20),
 
-          Row(
-            children: [
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text(
-                      'Upload Venue Logo',
-                      style: TextStyle(fontSize: 18),
-                    ),
-                    const SizedBox(height: 8),
-                    const Text(
-                      'Image shall be less than 15 MB',
-                      style: TextStyle(fontSize: 12, color: Colors.grey),
-                    ),
-                    const SizedBox(height: 10),
-                    InkWell(
-                      onTap: () {
-                        ImagePickerWidget(onImageSelected: _onLogoImageSelected)
-                            .pickImage(context);
-                      },
-                      child: Container(
-                        width: 150,
-                        height: 100,
-                        decoration: BoxDecoration(
-                          color: Colors.grey[300],
-                          border: Border.all(color: Colors.grey),
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        child: _selectedLogo != null
-                            ? Image.memory(_selectedLogo!, fit: BoxFit.cover)
-                            : (logoUrl != null)
-                                ? CachedNetworkImage(
-                                    imageUrl: logoUrl,
-                                    fit: BoxFit.cover,
-                                    placeholder: (context, url) =>
-                                        const CircularProgressIndicator(),
-                                    errorWidget: (context, url, error) =>
-                                        const Icon(Icons.error),
-                                  )
-                                : Center(
-                                    child: Text(
-                                      'Upload Logo',
-                                      style: TextStyle(
-                                          fontSize: 14,
-                                          color: Colors.grey[600]),
+            ColorPaletteWidget(
+              primaryColor: _primaryColor,
+              secondaryColor: _secondaryColor,
+              backgroundColor: _backgroundColor,
+              cardColor: _cardColor,
+              textColor: _textColor,
+              buttonColor: _buttonColor,
+              onPrimaryColorChanged: (newColor) =>
+                  setState(() => _primaryColor = newColor),
+              onSecondaryColorChanged: (newColor) =>
+                  setState(() => _secondaryColor = newColor),
+              onBackgroundColorChanged: (newColor) =>
+                  setState(() => _backgroundColor = newColor),
+              onCardColorChanged: (newColor) =>
+                  setState(() => _cardColor = newColor),
+              onTextColorChanged: (newColor) =>
+                  setState(() => _textColor = newColor),
+              onButtonColorChanged: (newColor) =>
+                  setState(() => _buttonColor = newColor),
+            ),
+
+            Row(
+              children: [
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        'Upload Venue Logo',
+                        style: TextStyle(fontSize: 18),
+                      ),
+                      const SizedBox(height: 8),
+                      const Text(
+                        'Image shall be less than 15 MB',
+                        style: TextStyle(fontSize: 12, color: Colors.grey),
+                      ),
+                      const SizedBox(height: 10),
+                      InkWell(
+                        onTap: () {
+                          ImagePickerWidget(
+                                  onImageSelected: _onLogoImageSelected)
+                              .pickImage(context);
+                        },
+                        child: Container(
+                          width: 150,
+                          height: 100,
+                          decoration: BoxDecoration(
+                            color: Colors.grey[300],
+                            border: Border.all(color: Colors.grey),
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: _selectedLogo != null
+                              ? Image.memory(_selectedLogo!, fit: BoxFit.cover)
+                              : (logoUrl != null)
+                                  ? CachedNetworkImage(
+                                      imageUrl: logoUrl,
+                                      fit: BoxFit.cover,
+                                      placeholder: (context, url) =>
+                                          const CircularProgressIndicator(),
+                                      errorWidget: (context, url, error) =>
+                                          const Icon(Icons.error),
+                                    )
+                                  : Center(
+                                      child: Text(
+                                        'Upload Logo',
+                                        style: TextStyle(
+                                            fontSize: 14,
+                                            color: Colors.grey[600]),
+                                      ),
                                     ),
-                                  ),
-                      ),
-                    ),
-                    if (_logoErrorMessage != null)
-                      Padding(
-                        padding: const EdgeInsets.only(top: 8),
-                        child: Text(
-                          _logoErrorMessage!,
-                          style: const TextStyle(color: Colors.red),
                         ),
                       ),
-                  ],
+                      if (_logoErrorMessage != null)
+                        Padding(
+                          padding: const EdgeInsets.only(top: 8),
+                          child: Text(
+                            _logoErrorMessage!,
+                            style: const TextStyle(color: Colors.red),
+                          ),
+                        ),
+                    ],
+                  ),
                 ),
-              ),
-            ],
-          ),
+              ],
+            ),
 
-          const SizedBox(height: 40),
+            const SizedBox(height: 40),
 
-          // Row for uploading the background image
-          Row(
-            children: [
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text(
-                      'Upload Background Image',
-                      style: TextStyle(fontSize: 18),
-                    ),
-                    const SizedBox(height: 8),
-                    const Text(
-                      'Image shall be less than 15 MB',
-                      style: TextStyle(fontSize: 12, color: Colors.grey),
-                    ),
-                    const SizedBox(height: 10),
-                    InkWell(
-                      onTap: () {
-                        ImagePickerWidget(
-                                onImageSelected: _onBackgroundImageSelected)
-                            .pickImage(context);
-                      },
-                      child: Container(
-                        width: 150,
-                        height: 100,
-                        decoration: BoxDecoration(
-                          color: Colors.grey[300],
-                          border: Border.all(color: Colors.grey),
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        child: _selectedBackground != null
-                            ? Image.memory(_selectedBackground!,
-                                fit: BoxFit.cover)
-                            : (backgroundUrl != null)
-                                ? Image.network(
-                                    backgroundUrl,
-                                    fit: BoxFit.cover,
-                                    errorBuilder: (context, url, error) =>
-                                        const Text('not '),
-                                  )
-                                : Center(
-                                    child: Text(
-                                      'Upload Background',
-                                      style: TextStyle(
-                                          fontSize: 14,
-                                          color: Colors.grey[600]),
+            // Row for uploading the background image
+            Row(
+              children: [
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        'Upload Background Image',
+                        style: TextStyle(fontSize: 18),
+                      ),
+                      const SizedBox(height: 8),
+                      const Text(
+                        'Image shall be less than 15 MB',
+                        style: TextStyle(fontSize: 12, color: Colors.grey),
+                      ),
+                      const SizedBox(height: 10),
+                      InkWell(
+                        onTap: () {
+                          ImagePickerWidget(
+                                  onImageSelected: _onBackgroundImageSelected)
+                              .pickImage(context);
+                        },
+                        child: Container(
+                          width: 150,
+                          height: 100,
+                          decoration: BoxDecoration(
+                            color: Colors.grey[300],
+                            border: Border.all(color: Colors.grey),
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: _selectedBackground != null
+                              ? Image.memory(_selectedBackground!,
+                                  fit: BoxFit.cover)
+                              : (backgroundUrl != null)
+                                  ? Image.network(
+                                      backgroundUrl,
+                                      fit: BoxFit.cover,
+                                      errorBuilder: (context, url, error) =>
+                                          const Text('not '),
+                                    )
+                                  : Center(
+                                      child: Text(
+                                        'Upload Background',
+                                        style: TextStyle(
+                                            fontSize: 14,
+                                            color: Colors.grey[600]),
+                                      ),
                                     ),
-                                  ),
-                      ),
-                    ),
-                    if (_backgroundErrorMessage != null)
-                      Padding(
-                        padding: const EdgeInsets.only(top: 8),
-                        child: Text(
-                          _backgroundErrorMessage!,
-                          style: const TextStyle(color: Colors.red),
                         ),
                       ),
-                  ],
+                      if (_backgroundErrorMessage != null)
+                        Padding(
+                          padding: const EdgeInsets.only(top: 8),
+                          child: Text(
+                            _backgroundErrorMessage!,
+                            style: const TextStyle(color: Colors.red),
+                          ),
+                        ),
+                    ],
+                  ),
                 ),
-              ),
-            ],
-          ),
+              ],
+            ),
 
-          const SizedBox(height: 40),
+            const SizedBox(height: 40),
 
-          // Save Button to upload images and update Firestore
-          ElevatedButton(
-            onPressed: () =>
-                _saveDesignSettings(context, venue!.userId, venue.venueId),
-            child: const Text('Save Design Settings'),
-          ),
-        ],
+            // Save Button to upload images and update Firestore
+            ElevatedButton(
+              onPressed: () =>
+                  _saveDesignSettings(context, venue!.userId, venue.venueId),
+              child: const Text('Save Design Settings'),
+            ),
+          ],
+        ),
       ),
     );
   }
