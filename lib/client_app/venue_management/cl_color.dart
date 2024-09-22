@@ -1,35 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:naya_menu/client_app/venue_management/cl_color_picker.dart';
+import 'package:naya_menu/theme/app_theme.dart';
+import 'package:naya_menu/client_app/notifier.dart'; // Import the provider
 
-class ColorPaletteWidget extends StatelessWidget {
-  final Color primaryColor;
-  final Color secondaryColor;
-  final Color backgroundColor;
-  final Color cardColor;
-  final Color textColor;
-  final Color buttonColor;
-  final ValueChanged<Color> onPrimaryColorChanged;
-  final ValueChanged<Color> onSecondaryColorChanged;
-  final ValueChanged<Color> onBackgroundColorChanged;
-  final ValueChanged<Color> onCardColorChanged;
-  final ValueChanged<Color> onTextColorChanged;
-  final ValueChanged<Color> onButtonColorChanged;
-
-  const ColorPaletteWidget({
-    required this.primaryColor,
-    required this.secondaryColor,
-    required this.backgroundColor,
-    required this.cardColor,
-    required this.textColor,
-    required this.buttonColor,
-    required this.onPrimaryColorChanged,
-    required this.onSecondaryColorChanged,
-    required this.onBackgroundColorChanged,
-    required this.onCardColorChanged,
-    required this.onTextColorChanged,
-    required this.onButtonColorChanged,
-    Key? key,
-  }) : super(key: key);
+class ColorPaletteWidget extends ConsumerWidget {
+  const ColorPaletteWidget({Key? key}) : super(key: key);
 
   Widget _buildColorPicker(BuildContext context, String label, Color color,
       ValueChanged<Color> onColorChanged) {
@@ -46,13 +22,37 @@ class ColorPaletteWidget extends StatelessWidget {
       child: Container(
         height: 50,
         width: 50,
-        color: color,
+        decoration: BoxDecoration(
+          borderRadius: const BorderRadius.all(Radius.circular(6)),
+          color: color, // Current selected color
+          border: Border.all(
+            color: AppTheme.grey, // Border color
+            width: 1.2, // Border width
+          ),
+        ),
       ),
     );
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    // Access the venue provider to get the current colors
+    final venue = ref.watch(venueProvider);
+    final designAndDisplay = venue?.designAndDisplay ?? {};
+
+    // Retrieve colors from the designAndDisplay map and convert Hex to Color
+    Color backgroundColor = designAndDisplay.containsKey('backgroundColor')
+        ? _hexToColor(designAndDisplay['backgroundColor'])
+        : Colors.blue; // Default color
+
+    Color highlightColor = designAndDisplay.containsKey('highlightColor')
+        ? _hexToColor(designAndDisplay['highlightColor'])
+        : Colors.blue; // Default color
+
+    Color textColor = designAndDisplay.containsKey('textColor')
+        ? _hexToColor(designAndDisplay['textColor'])
+        : Colors.white; // Default color
+
     return Card(
       elevation: 4.0,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
@@ -78,41 +78,39 @@ class ColorPaletteWidget extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Text('Primary Color'),
-                          _buildColorPicker(context, 'Primary Color',
-                              primaryColor, onPrimaryColorChanged),
-                        ],
-                      ),
-                    ),
-                    TableCell(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text('Secondary Color'),
-                          _buildColorPicker(context, 'Secondary Color',
-                              secondaryColor, onSecondaryColorChanged),
-                        ],
-                      ),
-                    ),
-                    TableCell(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
                           const Text('Background Color'),
-                          _buildColorPicker(context, 'Background Color',
-                              backgroundColor, onBackgroundColorChanged),
+                          _buildColorPicker(
+                            context,
+                            'Background Color',
+                            backgroundColor,
+                            (newColor) {
+                              // Update the background color in the provider
+                              ref
+                                  .read(venueProvider.notifier)
+                                  .updateDesignAndDisplay(
+                                      'backgroundColor', _colorToHex(newColor));
+                            },
+                          ),
                         ],
                       ),
                     ),
-                  ]),
-                  TableRow(children: [
                     TableCell(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Text('Card Color'),
-                          _buildColorPicker(context, 'Card Color', cardColor,
-                              onCardColorChanged),
+                          const Text('Highlight Color'),
+                          _buildColorPicker(
+                            context,
+                            'Highlight Color',
+                            highlightColor,
+                            (newColor) {
+                              // Update the highlight color in the provider
+                              ref
+                                  .read(venueProvider.notifier)
+                                  .updateDesignAndDisplay(
+                                      'highlightColor', _colorToHex(newColor));
+                            },
+                          ),
                         ],
                       ),
                     ),
@@ -121,18 +119,18 @@ class ColorPaletteWidget extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           const Text('Text Color'),
-                          _buildColorPicker(context, 'Text Color', textColor,
-                              onTextColorChanged),
-                        ],
-                      ),
-                    ),
-                    TableCell(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text('Button Color'),
-                          _buildColorPicker(context, 'Button Color',
-                              buttonColor, onButtonColorChanged),
+                          _buildColorPicker(
+                            context,
+                            'Text Color',
+                            textColor,
+                            (newColor) {
+                              // Update the text color in the provider
+                              ref
+                                  .read(venueProvider.notifier)
+                                  .updateDesignAndDisplay(
+                                      'textColor', _colorToHex(newColor));
+                            },
+                          ),
                         ],
                       ),
                     ),
@@ -144,5 +142,18 @@ class ColorPaletteWidget extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  // Utility method to convert a Color to a hex string
+  String _colorToHex(Color color) {
+    return '#${color.value.toRadixString(16).substring(2).toUpperCase()}';
+  }
+
+  // Utility method to convert a hex string to a Color object
+  Color _hexToColor(String hexString) {
+    final buffer = StringBuffer();
+    if (hexString.length == 6 || hexString.length == 7) buffer.write('ff');
+    buffer.write(hexString.replaceFirst('#', ''));
+    return Color(int.parse(buffer.toString(), radix: 16));
   }
 }

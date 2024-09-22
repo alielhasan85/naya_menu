@@ -10,6 +10,7 @@ import 'package:naya_menu/client_app/venue_management/cl_color.dart';
 import 'package:naya_menu/service/firebase/firebase_storage_service.dart';
 import 'package:naya_menu/client_app/notifier.dart';
 import 'package:naya_menu/service/firebase/firestore_venue.dart';
+import 'package:naya_menu/theme/app_theme.dart';
 
 class DesignTab extends ConsumerStatefulWidget {
   const DesignTab({super.key});
@@ -18,21 +19,25 @@ class DesignTab extends ConsumerStatefulWidget {
   _DesignTabState createState() => _DesignTabState();
 }
 
-class _DesignTabState extends ConsumerState<DesignTab>
-// with AutomaticKeepAliveClientMixin
-
-{
+class _DesignTabState extends ConsumerState<DesignTab> {
   Uint8List? _selectedLogo;
   Uint8List? _selectedBackground;
   String? _logoErrorMessage;
   String? _backgroundErrorMessage;
 
-  Color _primaryColor = Colors.blue;
-  Color _secondaryColor = Colors.blue;
-  Color _backgroundColor = Colors.white;
-  Color _cardColor = Colors.white;
-  Color _textColor = Colors.black;
-  Color _buttonColor = Colors.blue;
+  Color _backgroundColor = AppTheme.background;
+  Color _highlightColor = AppTheme.accentColor;
+  Color _textColor = AppTheme.primaryColor;
+
+  String _colorToHex(Color color) =>
+      '#${color.value.toRadixString(16).substring(2).toUpperCase()}';
+
+  Color _hexToColor(String hexString) {
+    final buffer = StringBuffer();
+    if (hexString.length == 6 || hexString.length == 7) buffer.write('ff');
+    buffer.write(hexString.replaceFirst('#', ''));
+    return Color(int.parse(buffer.toString(), radix: 16));
+  }
 
   final FirebaseStorageService _storageService = FirebaseStorageService();
   // @override
@@ -43,6 +48,17 @@ class _DesignTabState extends ConsumerState<DesignTab>
     // Access the venue provider here using ref from ConsumerState
     final venue = ref.watch(venueProvider);
     final Map<String, dynamic> designAndDisplay = venue?.designAndDisplay ?? {};
+// Retrieve colors from the designAndDisplay map and convert Hex to Color
+    _backgroundColor = designAndDisplay.containsKey('backgroundColor')
+        ? _hexToColor(designAndDisplay['backgroundColor'])
+        : Colors.blue; // Default color
+    _highlightColor = designAndDisplay.containsKey('highlightColor')
+        ? _hexToColor(designAndDisplay['highlightColor'])
+        : Colors.blue; // Default color
+    _textColor = designAndDisplay.containsKey('textColor')
+        ? _hexToColor(designAndDisplay['textColor'])
+        : Colors.white; // Default color
+
     final String logoUrl = designAndDisplay['logoUrl'];
 
     final String backgroundUrl = designAndDisplay['backgroundUrl'];
@@ -55,30 +71,11 @@ class _DesignTabState extends ConsumerState<DesignTab>
           children: [
             const Text(
               'Design and Display Settings',
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 16),
 
-            ColorPaletteWidget(
-              primaryColor: _primaryColor,
-              secondaryColor: _secondaryColor,
-              backgroundColor: _backgroundColor,
-              cardColor: _cardColor,
-              textColor: _textColor,
-              buttonColor: _buttonColor,
-              onPrimaryColorChanged: (newColor) =>
-                  setState(() => _primaryColor = newColor),
-              onSecondaryColorChanged: (newColor) =>
-                  setState(() => _secondaryColor = newColor),
-              onBackgroundColorChanged: (newColor) =>
-                  setState(() => _backgroundColor = newColor),
-              onCardColorChanged: (newColor) =>
-                  setState(() => _cardColor = newColor),
-              onTextColorChanged: (newColor) =>
-                  setState(() => _textColor = newColor),
-              onButtonColorChanged: (newColor) =>
-                  setState(() => _buttonColor = newColor),
-            ),
+            ColorPaletteWidget(),
 
             Row(
               children: [
@@ -92,7 +89,7 @@ class _DesignTabState extends ConsumerState<DesignTab>
                       ),
                       const SizedBox(height: 8),
                       const Text(
-                        'Image shall be less than 15 MB',
+                        'Image shall be lessthan 15 MB',
                         style: TextStyle(fontSize: 12, color: Colors.grey),
                       ),
                       const SizedBox(height: 10),
@@ -268,6 +265,11 @@ class _DesignTabState extends ConsumerState<DesignTab>
       // Access the venue provider directly
       final venue = ref.read(venueProvider);
       Map<String, dynamic> designAndDisplay = venue?.designAndDisplay ?? {};
+
+      // Save the selected colors to the designAndDisplay map
+      designAndDisplay['backgroundColor'] = _colorToHex(_backgroundColor);
+      designAndDisplay['highlightColor'] = _colorToHex(_highlightColor);
+      designAndDisplay['textColor'] = _colorToHex(_textColor);
 
       // Upload logo if selected and update the designAndDisplay map
       if (_selectedLogo != null) {

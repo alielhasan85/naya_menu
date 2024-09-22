@@ -2,6 +2,7 @@ import 'package:csc_picker/csc_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
+import 'package:naya_menu/client_app/venue_management/cl_currency_control.dart';
 import 'package:naya_menu/service/firebase/firestore_venue.dart';
 import 'package:naya_menu/theme/app_theme.dart';
 import '../widgets/input_fields.dart';
@@ -22,7 +23,7 @@ class _LocationSettingsTabState extends ConsumerState<LocationSettingsTab> {
   late TextEditingController _countryCodeController; // For country code 'us'
   late TextEditingController _countryNameController; // For country name
   late TextEditingController _countryDialController; // '+1'
-  // late TextEditingController _countryDialController; // For storing country dial code
+
   late TextEditingController _websiteController; //
 
   String countryValue = '';
@@ -30,13 +31,12 @@ class _LocationSettingsTabState extends ConsumerState<LocationSettingsTab> {
   String cityValue = '';
   bool _isLoading = true; // Track whether data is still being loaded
 
+  late String _selectedCurrency;
+
   @override
   void initState() {
     super.initState();
     _initializeVenueData();
-
-    // _countryCodeController = TextEditingController();
-    // _countryNameController = TextEditingController();
   }
 
   // Initialize data from venueProvider, not Firestore
@@ -63,6 +63,8 @@ class _LocationSettingsTabState extends ConsumerState<LocationSettingsTab> {
       _websiteController =
           TextEditingController(text: venue.contact['website'] ?? '');
 
+      _selectedCurrency = venue.priceOptions['currency'] ?? 'USD';
+
       // Set initial values for country, state, and city from the venue data
       setState(() {
         countryValue = venue.address['country'] ?? '';
@@ -79,6 +81,7 @@ class _LocationSettingsTabState extends ConsumerState<LocationSettingsTab> {
       _countryNameController = TextEditingController();
       _countryDialController = TextEditingController();
       _websiteController = TextEditingController();
+      _selectedCurrency = 'USD';
 
       setState(() {
         _isLoading = false; // Mark data as loaded even if empty
@@ -95,6 +98,7 @@ class _LocationSettingsTabState extends ConsumerState<LocationSettingsTab> {
     _countryCodeController.dispose(); // Dispose country code controller
     _countryNameController.dispose(); // Dispose country name controller
     _websiteController.dispose();
+
     super.dispose();
   }
 
@@ -123,6 +127,15 @@ class _LocationSettingsTabState extends ConsumerState<LocationSettingsTab> {
           if (_websiteController.text.isNotEmpty)
             'website': _websiteController.text
         },
+        priceOptions: {
+          ...venue.priceOptions,
+          'currency': venue.priceOptions['currency'],
+          'currencySymbol': venue.priceOptions['currencySymbol'],
+          'priceDisplay': venue.priceOptions['priceDisplay'],
+          'displayCurrencySign': venue.priceOptions['displayCurrencySign'],
+          'displayCurrencyFraction':
+              venue.priceOptions['displayCurrencyFraction'],
+        },
       );
       ref.read(venueProvider.notifier).setVenue(updatedVenue);
 
@@ -146,6 +159,14 @@ class _LocationSettingsTabState extends ConsumerState<LocationSettingsTab> {
             if (_websiteController.text.isNotEmpty)
               'website': _websiteController.text // Save updated phone number
           },
+          'priceOptions': {
+            'currency': venue.priceOptions['currency'],
+            'currencySymbol': venue.priceOptions['currencySymbol'],
+            'priceDisplay': venue.priceOptions['priceDisplay'],
+            'displayCurrencySign': venue.priceOptions['displayCurrencySign'],
+            'displayCurrencyFraction':
+                venue.priceOptions['displayCurrencyFraction'],
+          },
         },
       );
 
@@ -168,13 +189,20 @@ class _LocationSettingsTabState extends ConsumerState<LocationSettingsTab> {
                 CircularProgressIndicator()) // Show loading indicator while fetching data
         : SingleChildScrollView(
             child: Padding(
-              padding: const EdgeInsets.all(16),
+              padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 5),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   // Venue Name Field
+                  Text(
+                    'Venu Name',
+                    textAlign: TextAlign.left,
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodyMedium, // Use theme text style
+                  ),
+                  const SizedBox(height: 10),
                   InputField(
-                    label: 'Venue Name',
                     controller: _venueNameController,
                     labelAboveField: true,
                   ),
@@ -191,7 +219,8 @@ class _LocationSettingsTabState extends ConsumerState<LocationSettingsTab> {
                         .bodyMedium, // Use theme text style
                   ),
 
-                  const SizedBox(height: 8.0),
+                  const SizedBox(height: 10),
+
                   IntlPhoneField(
                     decoration: InputDecoration(
                       border: AppTheme.inputDecorationTheme.border,
@@ -219,9 +248,22 @@ class _LocationSettingsTabState extends ConsumerState<LocationSettingsTab> {
                       // Save country name like 'United States'
                     },
                   ),
+                  const SizedBox(height: 10),
+                  const Divider(
+                    color: AppTheme.accentColor,
+                    thickness: 0.5,
+                  ),
+                  const SizedBox(height: 10),
 
-                  const SizedBox(height: 20),
+                  CurrencyControl(),
 
+                  const SizedBox(height: 10),
+                  const Divider(
+                    color: AppTheme.accentColor,
+                    thickness: 0.5,
+                  ),
+
+                  const SizedBox(height: 10),
 // TODO: change the ui of the address icker to be same as other input field
 // TODO: to add feature to add location from map
 
@@ -235,7 +277,8 @@ class _LocationSettingsTabState extends ConsumerState<LocationSettingsTab> {
                         .bodyMedium, // Use theme text style
                   ),
 
-                  const SizedBox(height: 8.0),
+                  const SizedBox(height: 10),
+
                   CSCPicker(
                     showStates: true,
                     showCities: true,
@@ -279,15 +322,28 @@ class _LocationSettingsTabState extends ConsumerState<LocationSettingsTab> {
                     controller: _addressController,
                     labelAboveField: true,
                   ),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 10),
+                  const Divider(
+                    color: AppTheme.accentColor,
+                    thickness: 0,
+                  ),
 
+                  const SizedBox(height: 10),
                   InputField(
                     label: 'Website',
                     controller: _websiteController,
                     labelAboveField: true,
                   ),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 10),
+
+                  const Divider(
+                    color: AppTheme.accentColor,
+                    thickness: 0,
+                  ),
+
+                  const SizedBox(height: 10),
                   // Save Button
+
                   ElevatedButton(
                     onPressed: _saveVenueData, // Call the save method
                     child: const Text('Save'),

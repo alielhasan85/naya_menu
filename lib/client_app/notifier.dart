@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:naya_menu/models/client/users.dart';
 import 'package:naya_menu/models/venue/venue.dart';
@@ -63,6 +64,33 @@ class VenueNotifier extends StateNotifier<VenueModel?> {
     }
   }
 
+  void updateDesignAndDisplay(String key, String value) {
+    if (state != null) {
+      final updatedDesignAndDisplay = {...state!.designAndDisplay, key: value};
+      state = state!.copyWith(designAndDisplay: updatedDesignAndDisplay);
+    }
+  }
+
+  // Method to update price options such as currency, price display, etc.
+  void updatePriceOption(String key, dynamic value) {
+    if (state != null) {
+      final updatedPriceOptions = {...state!.priceOptions, key: value};
+      state = state!.copyWith(priceOptions: updatedPriceOptions);
+    }
+  }
+
+  void updateColor(String colorType, Color color) {
+    if (state != null) {
+      final updatedDesignAndDisplay = {...state!.designAndDisplay};
+      updatedDesignAndDisplay[colorType] = _colorToHex(color);
+      state = state!.copyWith(designAndDisplay: updatedDesignAndDisplay);
+    }
+  }
+
+  String _colorToHex(Color color) {
+    return '#${color.value.toRadixString(16).substring(2).toUpperCase()}';
+  }
+
   // Function to update venue data locally and in Firestore
   Future<void> updateVenueData(
       String userId, String venueId, Map<String, dynamic> updatedData) async {
@@ -106,5 +134,3 @@ final selectedProfileSectionProvider =
     StateProvider<String>((ref) => 'Profile');
 
 final selectedSectionProvider = StateProvider<String>((ref) => 'Dashboard');
-
-// Add other related providers here

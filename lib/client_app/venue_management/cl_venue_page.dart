@@ -66,9 +66,9 @@ class VenueInformationPage extends ConsumerWidget {
                               ),
                               const Divider(
                                 color: AppTheme.accentColor,
-                                thickness: 1,
+                                thickness: 0,
                               ),
-                              const SizedBox(height: 20),
+                              const SizedBox(height: 10),
                               SizedBox(
                                 height:
                                     600, // Set a fixed height for the TabBarView
@@ -102,7 +102,7 @@ class VenueInformationPage extends ConsumerWidget {
       const VerticalDivider(
         color: AppTheme.accentColor,
         thickness: 1,
-        width: 1,
+        width: 0,
       ),
       Expanded(
           flex: 2, child: Center(child: Text('To show the sample the menu'))),

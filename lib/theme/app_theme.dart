@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 
 class AppTheme {
-  AppTheme._();
-
   // Colors extracted from the image
   static const Color background = Color(0xFFFFF4EE);
   static const Color primaryColor = Color(0xFF2e4857);
