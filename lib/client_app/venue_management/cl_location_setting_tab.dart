@@ -260,7 +260,7 @@ class _LocationSettingsTabState extends ConsumerState<LocationSettingsTab> {
                   const SizedBox(height: 10),
                   const Divider(
                     color: AppTheme.accentColor,
-                    thickness: 0.5,
+                    thickness: 0,
                   ),
 
                   const SizedBox(height: 10),

@@ -2,7 +2,6 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:naya_menu/client_app/notifier.dart';
 import 'package:naya_menu/client_app/venue_management/cl_location_setting_tab.dart';
 import 'package:naya_menu/client_app/venue_management/design_tab.dart';
 import 'package:naya_menu/theme/app_theme.dart';
@@ -13,13 +12,11 @@ class VenueInformationPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final venue = ref.watch(venueProvider);
-
     return Row(children: [
       Expanded(
         flex: 1,
         child: DefaultTabController(
-          length: 4, // Number of tabs
+          length: 3, // Number of tabs
           child: Padding(
             padding: const EdgeInsets.only(top: 20, right: 50),
             child: Column(
@@ -61,7 +58,6 @@ class VenueInformationPage extends ConsumerWidget {
                                   Tab(text: 'Location'),
                                   Tab(text: 'Design & Display'),
                                   Tab(text: 'Social Accounts'),
-                                  Tab(text: 'Price Options'),
                                 ],
                               ),
                               const Divider(
@@ -83,7 +79,6 @@ class VenueInformationPage extends ConsumerWidget {
                                     // Language options content
 
                                     // Social accounts content
-                                    SocialAccountsTab(),
                                   ],
                                 ),
                               ),
