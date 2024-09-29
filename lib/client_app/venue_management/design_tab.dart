@@ -2,11 +2,11 @@
 //it is part of
 
 import 'dart:typed_data';
-import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:naya_menu/client_app/image/image_picker.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:naya_menu/client_app/venue_management/cl_color.dart';
+import 'package:naya_menu/client_app/venue_management/cl_image_picker_card.dart';
 import 'package:naya_menu/service/firebase/firebase_storage_service.dart';
 import 'package:naya_menu/client_app/notifier.dart';
 import 'package:naya_menu/service/firebase/firestore_venue.dart';
@@ -22,46 +22,25 @@ class DesignTab extends ConsumerStatefulWidget {
 class _DesignTabState extends ConsumerState<DesignTab> {
   Uint8List? _selectedLogo;
   Uint8List? _selectedBackground;
+
   String? _logoErrorMessage;
   String? _backgroundErrorMessage;
 
-  Color _backgroundColor = AppTheme.background;
-  Color _highlightColor = AppTheme.accentColor;
-  Color _textColor = AppTheme.primaryColor;
-
-  String _colorToHex(Color color) =>
-      '#${color.value.toRadixString(16).substring(2).toUpperCase()}';
-
-  Color _hexToColor(String hexString) {
-    final buffer = StringBuffer();
-    if (hexString.length == 6 || hexString.length == 7) buffer.write('ff');
-    buffer.write(hexString.replaceFirst('#', ''));
-    return Color(int.parse(buffer.toString(), radix: 16));
-  }
+  final Color _backgroundColor = AppTheme.background;
+  final Color _highlightColor = AppTheme.accentColor;
+  final Color _textColor = AppTheme.primaryColor;
 
   final FirebaseStorageService _storageService = FirebaseStorageService();
-  // @override
-  // bool get wantKeepAlive => true;
+  final FirestoreVenue _firestoreVenue = FirestoreVenue();
+
   @override
   Widget build(BuildContext context) {
-    // super.build(context);
     // Access the venue provider here using ref from ConsumerState
     final venue = ref.watch(venueProvider);
     final Map<String, dynamic> designAndDisplay = venue?.designAndDisplay ?? {};
-// Retrieve colors from the designAndDisplay map and convert Hex to Color
-    _backgroundColor = designAndDisplay.containsKey('backgroundColor')
-        ? _hexToColor(designAndDisplay['backgroundColor'])
-        : Colors.blue; // Default color
-    _highlightColor = designAndDisplay.containsKey('highlightColor')
-        ? _hexToColor(designAndDisplay['highlightColor'])
-        : Colors.blue; // Default color
-    _textColor = designAndDisplay.containsKey('textColor')
-        ? _hexToColor(designAndDisplay['textColor'])
-        : Colors.white; // Default color
 
-    final String logoUrl = designAndDisplay['logoUrl'];
-
-    final String backgroundUrl = designAndDisplay['backgroundUrl'];
+    final String? logoUrl = designAndDisplay['logoUrl'];
+    final String? backgroundUrl = designAndDisplay['backgroundUrl'];
 
     return SingleChildScrollView(
       child: Padding(
@@ -69,144 +48,44 @@ class _DesignTabState extends ConsumerState<DesignTab> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
-              'Design and Display Settings',
-              style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+            Text(
+              'Customize your brand look',
+              style: AppTheme.display1
+                  .copyWith(fontSize: 24, color: AppTheme.primaryColor),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              'Add your brand\'s colors to personalize your product. Choose text, background, and highlight colors to match your identity!',
+              style: AppTheme.body2
+                  .copyWith(fontSize: 12, color: AppTheme.lightText),
             ),
             const SizedBox(height: 16),
 
-            ColorPaletteWidget(),
+            const ColorPaletteWidget(),
+            const SizedBox(height: 40),
 
-            Row(
-              children: [
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text(
-                        'Upload Venue Logo',
-                        style: TextStyle(fontSize: 18),
-                      ),
-                      const SizedBox(height: 8),
-                      const Text(
-                        'Image shall be lessthan 15 MB',
-                        style: TextStyle(fontSize: 12, color: Colors.grey),
-                      ),
-                      const SizedBox(height: 10),
-                      InkWell(
-                        onTap: () {
-                          ImagePickerWidget(
-                                  onImageSelected: _onLogoImageSelected)
-                              .pickImage(context);
-                        },
-                        child: Container(
-                          width: 150,
-                          height: 100,
-                          decoration: BoxDecoration(
-                            color: Colors.grey[300],
-                            border: Border.all(color: Colors.grey),
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          child: _selectedLogo != null
-                              ? Image.memory(_selectedLogo!, fit: BoxFit.cover)
-                              : (logoUrl != null)
-                                  ? CachedNetworkImage(
-                                      imageUrl: logoUrl,
-                                      fit: BoxFit.cover,
-                                      placeholder: (context, url) =>
-                                          const CircularProgressIndicator(),
-                                      errorWidget: (context, url, error) =>
-                                          const Icon(Icons.error),
-                                    )
-                                  : Center(
-                                      child: Text(
-                                        'Upload Logo',
-                                        style: TextStyle(
-                                            fontSize: 14,
-                                            color: Colors.grey[600]),
-                                      ),
-                                    ),
-                        ),
-                      ),
-                      if (_logoErrorMessage != null)
-                        Padding(
-                          padding: const EdgeInsets.only(top: 8),
-                          child: Text(
-                            _logoErrorMessage!,
-                            style: const TextStyle(color: Colors.red),
-                          ),
-                        ),
-                    ],
-                  ),
-                ),
-              ],
+            // Logo Upload Section
+            ImageUploadCard(
+              title: 'Upload Venue Logo',
+              subtitle: 'Image should be less than 15 MB',
+              imageData: _selectedLogo,
+              imageUrl: logoUrl,
+              errorMessage: _logoErrorMessage,
+              onImageSelected: _onLogoImageSelected,
+              onDeleteImage: _onLogoImageDeleted, // Added this line
             ),
 
             const SizedBox(height: 40),
 
-            // Row for uploading the background image
-            Row(
-              children: [
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text(
-                        'Upload Background Image',
-                        style: TextStyle(fontSize: 18),
-                      ),
-                      const SizedBox(height: 8),
-                      const Text(
-                        'Image shall be less than 15 MB',
-                        style: TextStyle(fontSize: 12, color: Colors.grey),
-                      ),
-                      const SizedBox(height: 10),
-                      InkWell(
-                        onTap: () {
-                          ImagePickerWidget(
-                                  onImageSelected: _onBackgroundImageSelected)
-                              .pickImage(context);
-                        },
-                        child: Container(
-                          width: 150,
-                          height: 100,
-                          decoration: BoxDecoration(
-                            color: Colors.grey[300],
-                            border: Border.all(color: Colors.grey),
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          child: _selectedBackground != null
-                              ? Image.memory(_selectedBackground!,
-                                  fit: BoxFit.cover)
-                              : (backgroundUrl != null)
-                                  ? Image.network(
-                                      backgroundUrl,
-                                      fit: BoxFit.cover,
-                                      errorBuilder: (context, url, error) =>
-                                          const Text('not '),
-                                    )
-                                  : Center(
-                                      child: Text(
-                                        'Upload Background',
-                                        style: TextStyle(
-                                            fontSize: 14,
-                                            color: Colors.grey[600]),
-                                      ),
-                                    ),
-                        ),
-                      ),
-                      if (_backgroundErrorMessage != null)
-                        Padding(
-                          padding: const EdgeInsets.only(top: 8),
-                          child: Text(
-                            _backgroundErrorMessage!,
-                            style: const TextStyle(color: Colors.red),
-                          ),
-                        ),
-                    ],
-                  ),
-                ),
-              ],
+            // Background Image Upload Section
+            ImageUploadCard(
+              title: 'Upload Background Image',
+              subtitle: 'Image should be less than 15 MB',
+              imageData: _selectedBackground,
+              imageUrl: backgroundUrl,
+              errorMessage: _backgroundErrorMessage,
+              onImageSelected: _onBackgroundImageSelected,
+              onDeleteImage: _onBackgroundImageDeleted, // Added this line
             ),
 
             const SizedBox(height: 40),
@@ -251,6 +130,107 @@ class _DesignTabState extends ConsumerState<DesignTab> {
     });
   }
 
+  Future<void> _onLogoImageDeleted() async {
+    bool confirmDelete = await _showDeleteConfirmationDialog('logo image');
+    if (confirmDelete) {
+      await _deleteImage('logoUrl');
+    }
+  }
+
+  // Function to handle background image deletion
+  Future<void> _onBackgroundImageDeleted() async {
+    bool confirmDelete =
+        await _showDeleteConfirmationDialog('background image');
+    if (confirmDelete) {
+      await _deleteImage('backgroundUrl');
+    }
+  }
+
+  // Helper function to show a confirmation dialog
+  Future<bool> _showDeleteConfirmationDialog(String imageType) async {
+    return await showDialog<bool>(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: Text('Delete $imageType'),
+            content: Text('Are you sure you want to delete the $imageType?'),
+            actions: [
+              TextButton(
+                onPressed: () =>
+                    Navigator.of(context).pop(false), // Return false
+                child: const Text('Cancel'),
+              ),
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(true), // Return true
+                child: const Text('Delete'),
+              ),
+            ],
+          ),
+        ) ??
+        false;
+  }
+
+  Future<void> _deleteImage(String imageKey) async {
+    try {
+      // Show a loading indicator
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) => const Center(child: CircularProgressIndicator()),
+      );
+
+      final venue = ref.read(venueProvider);
+      final userId = venue!.userId;
+      final venueId = venue.venueId;
+      Map<String, dynamic> designAndDisplay =
+          Map.from(venue.designAndDisplay ?? {});
+
+      if (designAndDisplay.containsKey(imageKey)) {
+        // Delete the image from Firebase Storage
+        await _storageService.deleteImage(designAndDisplay[imageKey]);
+
+        // Remove the image URL from the designAndDisplay map
+        designAndDisplay.remove(imageKey);
+
+        // Update Firestore: Use dot notation to delete the specific field
+        await _firestoreVenue.deleteDesignAndDisplayField(
+          userId,
+          venueId,
+          imageKey,
+        );
+
+        // Update the provider state
+        final updatedVenue = venue.copyWith(designAndDisplay: designAndDisplay);
+        ref.read(venueProvider.notifier).state = updatedVenue;
+
+        // Clear the local image data
+        setState(() {
+          if (imageKey == 'logoUrl') {
+            _selectedLogo = null;
+            _logoErrorMessage = null;
+          } else if (imageKey == 'backgroundUrl') {
+            _selectedBackground = null;
+            _backgroundErrorMessage = null;
+          }
+        });
+
+        // Show success feedback
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+              content: Text(
+                  '${imageKey == 'logoUrl' ? 'Logo' : 'Background'} image deleted successfully!')),
+        );
+      }
+    } catch (e) {
+      // Show error feedback
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error deleting image: $e')),
+      );
+    } finally {
+      // Remove the loading indicator
+      Navigator.of(context).pop();
+    }
+  }
+
   // Function to handle image upload, Firestore update, and provider update
   Future<void> _saveDesignSettings(
       BuildContext context, String userId, String venueId) async {
@@ -264,7 +244,8 @@ class _DesignTabState extends ConsumerState<DesignTab> {
 
       // Access the venue provider directly
       final venue = ref.read(venueProvider);
-      Map<String, dynamic> designAndDisplay = venue?.designAndDisplay ?? {};
+      Map<String, dynamic> designAndDisplay =
+          Map.from(venue?.designAndDisplay ?? {});
 
       // Save the selected colors to the designAndDisplay map
       designAndDisplay['backgroundColor'] = _colorToHex(_backgroundColor);
@@ -311,8 +292,8 @@ class _DesignTabState extends ConsumerState<DesignTab> {
 
       // If any changes were made, update Firestore and the provider
       if (designAndDisplay.isNotEmpty) {
-        final FirestoreVenue firestoreVenue = FirestoreVenue();
-        await firestoreVenue.updateDesignAndDisplay(
+        // Update Firestore using FirestoreVenue
+        await _firestoreVenue.updateDesignAndDisplay(
             userId, venueId, designAndDisplay);
 
         // Update the provider directly with new values
@@ -344,5 +325,18 @@ class _DesignTabState extends ConsumerState<DesignTab> {
       // Remove the loading indicator
       Navigator.of(context).pop();
     }
+  }
+
+  // Utility method to convert a Color to a hex string
+  String _colorToHex(Color color) {
+    return '#${color.value.toRadixString(16).substring(2).toUpperCase()}';
+  }
+
+  // Utility method to convert a hex string to a Color object
+  Color _hexToColor(String hexString) {
+    final buffer = StringBuffer();
+    if (hexString.length == 6 || hexString.length == 7) buffer.write('ff');
+    buffer.write(hexString.replaceFirst('#', ''));
+    return Color(int.parse(buffer.toString(), radix: 16));
   }
 }

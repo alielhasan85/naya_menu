@@ -182,4 +182,16 @@ class FirestoreVenue {
       'recentActivities': FieldValue.arrayUnion([activity]),
     });
   }
+
+  // New method to delete a specific field within designAndDisplay
+  Future<void> deleteDesignAndDisplayField(
+      String userId, String venueId, String fieldKey) async {
+    final venueDoc = _firestore
+        .collection('users')
+        .doc(userId)
+        .collection('venues')
+        .doc(venueId);
+
+    await venueDoc.update({'designAndDisplay.$fieldKey': FieldValue.delete()});
+  }
 }

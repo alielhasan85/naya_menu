@@ -45,7 +45,7 @@ class VenueInformationPage extends ConsumerWidget {
                               const SizedBox(height: 10),
                               TabBar(
                                 isScrollable: true,
-                                labelStyle: TextStyle(
+                                labelStyle: const TextStyle(
                                   fontSize:
                                       14.0, // Font size for the selected tab
                                   fontWeight: FontWeight
@@ -65,7 +65,7 @@ class VenueInformationPage extends ConsumerWidget {
                                 thickness: 0,
                               ),
                               const SizedBox(height: 10),
-                              SizedBox(
+                              const SizedBox(
                                 height:
                                     600, // Set a fixed height for the TabBarView
                                 child: TabBarView(
@@ -99,7 +99,7 @@ class VenueInformationPage extends ConsumerWidget {
         thickness: 1,
         width: 0,
       ),
-      Expanded(
+      const Expanded(
           flex: 2, child: Center(child: Text('To show the sample the menu'))),
     ]);
   }
@@ -107,21 +107,25 @@ class VenueInformationPage extends ConsumerWidget {
 
 // Updated Language Options Tab
 class LanguageOptionsTab extends StatelessWidget {
+  const LanguageOptionsTab({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.all(16),
+      padding: const EdgeInsets.all(16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
+        children:
+            //TODO: to check language tab
+            [
           DropdownButtonFormField<String>(
-            items: [
+            items: const [
               DropdownMenuItem(value: 'English', child: Text('English')),
               DropdownMenuItem(value: 'Spanish', child: Text('Spanish')),
               // Add more language options
             ],
             onChanged: (value) {},
-            decoration: InputDecoration(labelText: 'Select Language'),
+            decoration: const InputDecoration(labelText: 'Select Language'),
           ),
           // Add other language-related options
         ],
@@ -132,10 +136,12 @@ class LanguageOptionsTab extends StatelessWidget {
 
 // Updated Social Accounts Tab
 class SocialAccountsTab extends StatelessWidget {
+  const SocialAccountsTab({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.all(16),
+      padding: const EdgeInsets.all(16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -144,13 +150,13 @@ class SocialAccountsTab extends StatelessWidget {
             controller: TextEditingController(),
             labelAboveField: true, // Label above the field
           ),
-          SizedBox(height: 10),
+          const SizedBox(height: 10),
           InputField(
             label: 'Twitter',
             controller: TextEditingController(),
             labelAboveField: true, // Label above the field
           ),
-          SizedBox(height: 10),
+          const SizedBox(height: 10),
           InputField(
             label: 'Instagram',
             controller: TextEditingController(),
