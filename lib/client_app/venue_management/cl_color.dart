@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:naya_menu/client_app/venue_management/cl_color_picker.dart';
+import 'package:naya_menu/service/firebase/firestore_venue.dart';
 import 'package:naya_menu/theme/app_theme.dart';
 import 'package:naya_menu/client_app/notifier.dart'; // Import the provider
 
@@ -10,22 +11,31 @@ class ColorPaletteWidget extends ConsumerWidget {
   Widget _buildColorOption(
     BuildContext context,
     String label,
-    Color color,
-    ValueChanged<Color> onColorChanged,
+    String
+        colorKey, // The colorKey corresponds to the 'backgroundColor', 'highlightColor', or 'textColor'
+    WidgetRef ref,
   ) {
+    final venue = ref.watch(venueProvider);
+    final designAndDisplay = venue?.designAndDisplay ?? {};
+
+    // Get the current color from the provider
+    Color color = designAndDisplay.containsKey(colorKey)
+        ? _hexToColor(designAndDisplay[colorKey])
+        : Colors.blue; // Default color if no value is found
+
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(label, style: TextStyle(fontSize: 14)),
+          Text(label, style: const TextStyle(fontSize: 14)),
           GestureDetector(
             onTap: () => showDialog(
               context: context,
               builder: (BuildContext context) {
                 return CustomColorPickerDialog(
-                  initialColor: color,
-                  onColorChanged: onColorChanged,
+                  // Pass the color key to the dialog instead of color and callback
+                  colorKey: colorKey,
                 );
               },
             ),
@@ -46,23 +56,6 @@ class ColorPaletteWidget extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // Access the venue provider to get the current colors
-    final venue = ref.watch(venueProvider);
-    final designAndDisplay = venue?.designAndDisplay ?? {};
-
-    // Retrieve colors from the designAndDisplay map and convert Hex to Color
-    Color backgroundColor = designAndDisplay.containsKey('backgroundColor')
-        ? _hexToColor(designAndDisplay['backgroundColor'])
-        : Colors.blue; // Default color
-
-    Color highlightColor = designAndDisplay.containsKey('highlightColor')
-        ? _hexToColor(designAndDisplay['highlightColor'])
-        : Colors.blue; // Default color
-
-    Color textColor = designAndDisplay.containsKey('textColor')
-        ? _hexToColor(designAndDisplay['textColor'])
-        : Colors.white; // Default color
-
     return Card(
       surfaceTintColor: AppTheme.grey,
       elevation: 4,
@@ -72,44 +65,64 @@ class ColorPaletteWidget extends ConsumerWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Customize Colors', style: TextStyle(fontSize: 18)),
+            const Text('Customize Colors', style: TextStyle(fontSize: 18)),
             const SizedBox(height: 16),
             _buildColorOption(
               context,
               'Background Color',
-              backgroundColor,
-              (newColor) {
-                // Update the background color in the provider
-                ref.read(venueProvider.notifier).updateDesignAndDisplay(
-                    'backgroundColor', _colorToHex(newColor));
-              },
+              'backgroundColor', // Key for background color
+              ref,
             ),
             _buildColorOption(
               context,
               'Highlight Color',
-              highlightColor,
-              (newColor) {
-                // Update color in provider
-                // Update the highlight color in the provider
-                ref.read(venueProvider.notifier).updateDesignAndDisplay(
-                    'highlightColor', _colorToHex(newColor));
-              },
+              'highlightColor', // Key for highlight color
+              ref,
             ),
             _buildColorOption(
               context,
               'Text Color',
-              textColor,
-              (newColor) {
-                // Update color in provider
-                ref
-                    .read(venueProvider.notifier)
-                    .updateDesignAndDisplay('textColor', _colorToHex(newColor));
-              },
+              'textColor', // Key for text color
+              ref,
+            ),
+            const SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: () => _saveColorsToFirestore(ref, context),
+              child: const Text('Save Color Theme'),
             ),
           ],
         ),
       ),
     );
+  }
+
+  // Method to save colors to Firestore
+  Future<void> _saveColorsToFirestore(
+      WidgetRef ref, BuildContext context) async {
+    try {
+      final venue = ref.read(venueProvider);
+      if (venue == null) return; // Handle null check
+
+      // Get colors from provider
+      final designAndDisplay = venue.designAndDisplay ?? {};
+      final userId = venue.userId;
+      final venueId = venue.venueId;
+
+      if (designAndDisplay.isNotEmpty) {
+        // Save colors to Firestore using FirestoreVenue service
+        final FirestoreVenue firestoreVenue = FirestoreVenue();
+        await firestoreVenue.updateDesignAndDisplay(
+            userId, venueId, designAndDisplay);
+
+        // Show success message
+        ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Color theme saved successfully!')));
+      }
+    } catch (e) {
+      // Show error message
+      ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error saving color theme: $e')));
+    }
   }
 
   // Utility method to convert a Color to a hex string

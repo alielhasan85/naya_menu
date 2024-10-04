@@ -5,39 +5,35 @@ import 'package:naya_menu/client_app/image/image_picker.dart';
 
 import 'package:naya_menu/theme/app_theme.dart';
 
-class ImageUploadCard extends StatelessWidget {
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+class ImageUploadCard extends ConsumerWidget {
   final String title;
   final String subtitle;
-  final Uint8List? imageData;
   final String? imageUrl;
-  final String? errorMessage;
-  final Function(Uint8List?) onImageSelected;
   final VoidCallback? onDeleteImage;
+  final String imageKey;
 
   const ImageUploadCard({
     super.key,
     required this.title,
     required this.subtitle,
-    this.imageData,
     this.imageUrl,
-    this.errorMessage,
-    required this.onImageSelected,
+    required this.imageKey,
     this.onDeleteImage,
   });
 
-  Future<void> _pickImage(BuildContext context) async {
+  Future<void> _pickImage(BuildContext context, WidgetRef ref) async {
     // Initialize ImagePickerWidget and pick image
-    final imagePicker = ImagePickerWidget(onImageSelected: onImageSelected);
-    await imagePicker.pickImage(context);
+    final imagePicker = ImagePickerWidget(imageKey: imageKey);
+    await imagePicker.pickImage(context, ref);
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     Widget imageWidget;
 
-    if (imageData != null) {
-      imageWidget = Image.memory(imageData!, fit: BoxFit.cover);
-    } else if (imageUrl != null) {
+    if (imageUrl != null) {
       imageWidget = CachedNetworkImage(
         imageUrl: imageUrl!,
         fit: BoxFit.cover,
@@ -69,7 +65,7 @@ class ImageUploadCard extends StatelessWidget {
                 style: const TextStyle(fontSize: 12, color: Colors.grey)),
             const SizedBox(height: 10),
             InkWell(
-              onTap: () => _pickImage(context),
+              onTap: () => _pickImage(context, ref),
               child: Container(
                 width: 150,
                 height: 150,
@@ -86,8 +82,7 @@ class ImageUploadCard extends StatelessWidget {
                         child: imageWidget,
                       ),
                     ),
-                    if ((imageData != null || imageUrl != null) &&
-                        onDeleteImage != null)
+                    if (imageUrl != null && onDeleteImage != null)
                       Positioned(
                         top: 4,
                         right: 4,
@@ -100,14 +95,6 @@ class ImageUploadCard extends StatelessWidget {
                 ),
               ),
             ),
-            if (errorMessage != null)
-              Padding(
-                padding: const EdgeInsets.only(top: 8),
-                child: Text(
-                  errorMessage!,
-                  style: const TextStyle(color: Colors.red),
-                ),
-              ),
           ],
         ),
       ),
