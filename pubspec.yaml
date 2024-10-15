@@ -91,7 +91,17 @@ flutter:
     - assets/lang/en.json
     - assets/lang/ar.json
     - assets/images/demo/
-    - assets/fonts/
+
+  fonts:
+    - family: CinzelDecorative
+      fonts:
+        - asset: assets/fonts/CinzelDecorative-Bold.ttf
+    - family: comme
+      fonts:
+        # - asset: assets/fonts/comme-regular.ttf
+        # - asset: assets/fonts/comme-black.ttf
+        # - asset: assets/fonts/comme-bold.ttf
+        - asset: assets/fonts/comme-medium.ttf
 
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg

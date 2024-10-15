@@ -11,8 +11,17 @@ import 'package:naya_menu/client_app/notifier.dart';
 
 class ImagePickerWidget extends ConsumerWidget {
   final String imageKey;
+  final CropAspectRatio aspectRatio;
+  final String? imageName;
+  final Map<String, dynamic> extraData;
 
-  ImagePickerWidget({super.key, required this.imageKey});
+  ImagePickerWidget({
+    Key? key,
+    required this.imageKey,
+    required this.aspectRatio,
+    this.imageName,
+    this.extraData = const {},
+  }) : super(key: key);
 
   // Function to pick and check image size
   Future<void> pickImage(BuildContext context, WidgetRef ref) async {
@@ -50,9 +59,7 @@ class ImagePickerWidget extends ConsumerWidget {
 
     await ImageCropper().cropImage(
       sourcePath: url,
-      aspectRatio: imageKey == 'logoUrl'
-          ? const CropAspectRatio(ratioX: 1, ratioY: 1)
-          : const CropAspectRatio(ratioX: 4, ratioY: 3),
+      aspectRatio: aspectRatio,
       compressQuality: 100,
       uiSettings: [
         WebUiSettings(
@@ -73,9 +80,7 @@ class ImagePickerWidget extends ConsumerWidget {
                 crop: crop,
                 rotate: rotate,
                 imageUrl: url,
-                aspectRatio: imageKey == 'logoUrl'
-                    ? const CropAspectRatio(ratioX: 1, ratioY: 1)
-                    : const CropAspectRatio(ratioX: 4, ratioY: 3),
+                aspectRatio: aspectRatio,
                 imageKey: imageKey,
                 userId: userId,
                 venueId: venueId,

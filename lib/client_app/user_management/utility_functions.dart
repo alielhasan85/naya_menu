@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:naya_menu/client_app/main_page/cl_main_page.dart';
 import 'package:naya_menu/client_app/user_management/cl_user_profile_page.dart';
 
 void openNotifications(BuildContext context) {
@@ -18,9 +19,10 @@ void changeLanguage(BuildContext context) {
 }
 
 void openHelpCenter(BuildContext context) {
-  ScaffoldMessenger.of(context).showSnackBar(
-    const SnackBar(
-      content: Text('Help Center is under development.'),
+  Navigator.push(
+    context,
+    MaterialPageRoute(
+      builder: (context) => const MainPage(),
     ),
   );
 }

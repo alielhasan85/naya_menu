@@ -20,9 +20,9 @@ class SectionContent extends ConsumerWidget {
       case 'Dashboard':
         try {
           return Center(
-              child: Image.network(venue?.designAndDisplay['logoUrl'] ?? ''));
+              child: Image.network(venue?.designAndDisplay['logoUrl'] ?? Text('Failed to load logo')));
         } catch (e) {
-          print('Error loading image: $e');
+         
           return Center(child: Text('Failed to load logo'));
         }
 

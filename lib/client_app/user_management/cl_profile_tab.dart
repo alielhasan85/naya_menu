@@ -52,7 +52,7 @@ class _ProfileTabState extends ConsumerState<ProfileTab> {
           children: [
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 32.0),
-              child: Text('Personal Information',
+              child: Text('User Profile',
                   style: AppTheme.textTheme.titleSmall
                       ?.copyWith(fontSize: 18, fontWeight: FontWeight.w300)),
             ),

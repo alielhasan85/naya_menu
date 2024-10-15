@@ -3,6 +3,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:naya_menu/client_app/landing_page/cl_loading_page.dart';
 import 'package:naya_menu/client_app/main_page/cl_main_page.dart';
+import 'package:naya_menu/client_app/main_page/cl_main_page2.dart';
 import 'package:naya_menu/client_app/notifier.dart';
 import 'package:naya_menu/service/firebase/firestore_venue.dart';
 import 'package:naya_menu/service/lang/localization.dart';
@@ -59,7 +60,6 @@ class _MyAppState extends ConsumerState<MyApp> {
         _userId = userId;
       });
     } catch (e) {
-      print('Login failed: $e');
       // Handle login errors, such as showing a Snackbar or dialog
     }
   }
@@ -93,7 +93,7 @@ class _MyAppState extends ConsumerState<MyApp> {
       },
       home: Scaffold(
         body: _isLoggedIn && _userId != null
-            ? const MainPage() // Show main page when logged in
+            ? const MainPage2() // Show main page when logged in
             : const Center(child: CircularProgressIndicator()), // Loading state
       ),
     );

@@ -20,7 +20,7 @@ class UserProfilePage extends ConsumerWidget {
     if (user == null) {
       return Scaffold(
         appBar: CustomAppBar(
-          title: 'Account Settings',
+          title: 'User Profile',
           actions: [
             IconButton(
               tooltip: 'Close',
@@ -35,7 +35,7 @@ class UserProfilePage extends ConsumerWidget {
 
     return Scaffold(
       appBar: CustomAppBar(
-        title: 'Account Settings',
+        title: 'User Profile',
         actions: [
           IconButton(
             tooltip: 'Close',

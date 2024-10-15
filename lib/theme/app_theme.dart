@@ -2,19 +2,21 @@ import 'package:flutter/material.dart';
 
 class AppTheme {
   // Colors extracted from the image
-  static const Color background = Color(0xFFFFF4EE);
-  static const Color primaryColor = Color(0xFF2e4857);
-  static const Color accentColor = Color(0xFFff5e1e);
-  static const Color textPrimary = Color(0xFF3c3b39);
+  static const Color background = Color(0xFFF0F2F5);
+  static const Color primaryColor = Color(0xFF2E4857);
+  static const Color secondaryColor = Color(0xFF4E6776);
+  static const Color accentColor = Color(0xFFFF5E1E);
+  static const Color textPrimary = Color(0xFF2E4857);
   static const Color white = Color(0xFFFFFFFF);
-  static const Color grey = Color(0xFFa7afb8);
+  static const Color grey = Color(0xFFE0E0E0);
+  static const Color grey2 = Color(0xFFDAD5CF);
   static const Color lightGreen = Color(0xFFd3f1a7);
-  static const Color lightPeach = Color(0xFFfec195);
+  static const Color lightPeach = Color(0xFFFEC195);
 
   // Text Colors
   static const Color darkText = textPrimary;
-  static const Color lightText = Color(0xFF4A6572);
-  static const Color deactivatedText = Color(0xFF767676);
+  static const Color lightText = Color(0xFF4B4B4B);
+  static const Color deactivatedText = Color(0xFF4B4B4B);
 
   // Miscellaneous Colors
   static const Color chipBackground = Color(0xFFEEF1F3);
@@ -24,11 +26,29 @@ class AppTheme {
   static const TextTheme textTheme = TextTheme(
     headlineMedium: display1,
     headlineSmall: headline,
-    titleLarge: title,
     titleSmall: subtitle,
     bodyMedium: body2,
     bodyLarge: body1,
     bodySmall: caption,
+  );
+
+  static const TextStyle titleAureola = TextStyle(
+    fontFamily: 'CinzelDecorative',
+    fontWeight: FontWeight.bold,
+    fontSize: 48,
+    letterSpacing: 0.4,
+    height: 0.9,
+    color: AppTheme.primaryColor,
+  );
+
+  static const TextStyle titlePlatform = TextStyle(
+    fontFamily: 'comme',
+    fontWeight:
+        FontWeight.normal, // You can adjust the font weight or style here
+    fontSize: 46, // Same font size to keep consistency
+    letterSpacing: 0.4,
+    height: 0.8,
+    color: AppTheme.accentColor, // Apply a different color or style
   );
 
   static const TextStyle display1 = TextStyle(
@@ -45,14 +65,6 @@ class AppTheme {
     fontWeight: FontWeight.bold,
     fontSize: 24,
     letterSpacing: 0.27,
-    color: darkText,
-  );
-
-  static const TextStyle title = TextStyle(
-    fontFamily: fontName,
-    fontWeight: FontWeight.bold,
-    fontSize: 16,
-    letterSpacing: 0.18,
     color: darkText,
   );
 

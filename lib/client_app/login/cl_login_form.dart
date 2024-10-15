@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:naya_menu/client_app/main_page/cl_main_page2.dart';
 import 'package:naya_menu/service/firebase/auth_user.dart';
 import 'package:naya_menu/client_app/widgets/input_fields.dart';
 import 'package:naya_menu/service/firebase/firestore_venue.dart';
@@ -116,7 +117,7 @@ class _LoginFormState extends ConsumerState<LoginForm> {
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
-          builder: (context) => const MainPage(),
+          builder: (context) => const MainPage2(),
         ),
       );
     } on AuthException catch (e) {

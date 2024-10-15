@@ -1,9 +1,7 @@
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
-import 'package:file_picker/file_picker.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
-import 'dart:html' as html; // For web platforms
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -28,20 +26,19 @@ class CropperDialog extends ConsumerStatefulWidget {
     required this.initCropper,
     required this.crop,
     required this.rotate,
-    Key? key,
+    super.key,
     required this.imageUrl,
     required this.aspectRatio,
     required this.imageKey,
     required this.userId,
     required this.venueId,
-  }) : super(key: key);
+  });
 
   @override
   _CropperDialogState createState() => _CropperDialogState();
 }
 
 class _CropperDialogState extends ConsumerState<CropperDialog> {
-  Uint8List? _croppedImageData;
   bool _isUploading = false; // To show a loading indicator
 
   final FirebaseStorageService _storageService = FirebaseStorageService();

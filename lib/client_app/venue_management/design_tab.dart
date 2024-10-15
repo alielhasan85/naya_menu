@@ -9,13 +9,13 @@ import 'package:naya_menu/service/firebase/firebase_storage_service.dart';
 import 'package:naya_menu/client_app/notifier.dart';
 import 'package:naya_menu/service/firebase/firestore_venue.dart';
 import 'package:naya_menu/theme/app_theme.dart';
+import 'package:image_cropper/image_cropper.dart';
 
 class DesignTab extends ConsumerWidget {
   const DesignTab({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // Access the venue provider
     final venue = ref.watch(venueProvider);
     final Map<String, dynamic> designAndDisplay = venue?.designAndDisplay ?? {};
 
@@ -48,8 +48,8 @@ class DesignTab extends ConsumerWidget {
               subtitle: 'Image should be less than 15 MB',
               imageUrl: logoUrl,
               imageKey: 'logoUrl',
-              onDeleteImage: () => _onImageDeleted(
-                  context, ref, 'logoUrl'), // Pass the delete function
+              aspectRatio: const CropAspectRatio(ratioX: 1, ratioY: 1),
+              imageName: 'VenueLogo',
             ),
             const SizedBox(height: 40),
             // Background Image Upload Section
@@ -58,98 +58,12 @@ class DesignTab extends ConsumerWidget {
               subtitle: 'Image should be less than 15 MB',
               imageUrl: backgroundUrl,
               imageKey: 'backgroundUrl',
-              onDeleteImage: () => _onImageDeleted(
-                  context, ref, 'backgroundUrl'), // Pass the delete function
+              aspectRatio: const CropAspectRatio(ratioX: 4, ratioY: 3),
+              imageName: 'BackgroundImage',
             ),
           ],
         ),
       ),
     );
-  }
-
-  // Function to handle image deletion
-  Future<void> _onImageDeleted(
-      BuildContext context, WidgetRef ref, String imageKey) async {
-    bool confirmDelete = await _showDeleteConfirmationDialog(context, imageKey);
-    if (confirmDelete) {
-      await _deleteImage(context, ref, imageKey);
-    }
-  }
-
-  // Helper function to show a confirmation dialog
-  Future<bool> _showDeleteConfirmationDialog(
-      BuildContext context, String imageType) async {
-    return await showDialog<bool>(
-          context: context,
-          builder: (context) => AlertDialog(
-            title: Text('Delete $imageType'),
-            content: Text('Are you sure you want to delete the $imageType?'),
-            actions: [
-              TextButton(
-                onPressed: () =>
-                    Navigator.of(context).pop(false), // Return false
-                child: const Text('Cancel'),
-              ),
-              TextButton(
-                onPressed: () => Navigator.of(context).pop(true), // Return true
-                child: const Text('Delete'),
-              ),
-            ],
-          ),
-        ) ??
-        false;
-  }
-
-  // Function to delete image from Firebase and update provider
-  Future<void> _deleteImage(
-      BuildContext context, WidgetRef ref, String imageKey) async {
-    try {
-      // Show a loading indicator
-      showDialog(
-        context: context,
-        barrierDismissible: false,
-        builder: (context) => const Center(child: CircularProgressIndicator()),
-      );
-
-      final venue = ref.read(venueProvider);
-      final userId = venue!.userId;
-      final venueId = venue.venueId;
-      Map<String, dynamic> designAndDisplay =
-          Map.from(venue.designAndDisplay ?? {});
-
-      if (designAndDisplay.containsKey(imageKey)) {
-        // Delete the image from Firebase Storage
-        await FirebaseStorageService().deleteImage(designAndDisplay[imageKey]);
-
-        // Remove the image URL from the designAndDisplay map
-        designAndDisplay.remove(imageKey);
-
-        // Update Firestore: Use dot notation to delete the specific field
-        await FirestoreVenue().deleteDesignAndDisplayField(
-          userId,
-          venueId,
-          imageKey,
-        );
-
-        // Update the provider state
-        final updatedVenue = venue.copyWith(designAndDisplay: designAndDisplay);
-        ref.read(venueProvider.notifier).state = updatedVenue;
-
-        // Show success feedback
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-              content: Text(
-                  '${imageKey == 'logoUrl' ? 'Logo' : 'Background'} image deleted successfully!')),
-        );
-      }
-    } catch (e) {
-      // Show error feedback
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error deleting image: $e')),
-      );
-    } finally {
-      // Remove the loading indicator
-      Navigator.of(context).pop();
-    }
   }
 }

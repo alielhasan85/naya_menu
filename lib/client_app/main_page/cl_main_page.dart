@@ -73,7 +73,8 @@ class _MainPageState extends ConsumerState<MainPage> {
         ],
         centerTitle: false, // Adjust according to your preference
       ),
-      body: Row(children: [
+      body: Row(
+        children: [
         const NavigationRailWidget(), // Use NavigationRailWidget
         const VerticalDivider(
           color: AppTheme.accentColor,

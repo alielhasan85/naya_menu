@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart'; // Import Riverpod
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:naya_menu/client_app/notifier.dart';
 import '../../theme/app_theme.dart'; // Import your theme
 
@@ -14,13 +15,14 @@ class ProfileMenu extends ConsumerWidget {
     final user = ref.watch(userProvider);
 
     return PopupMenuButton<int>(
-      icon: Icon(
-        Icons.account_circle, // Profile icon
-        color: AppTheme.iconTheme.color, // Use icon color from AppTheme
+      icon: const Icon(
+        size: 30,
+        FontAwesomeIcons.circleUser, // Profile icon
+        color: AppTheme.primaryColor, // Use icon color from AppTheme
       ),
-      color: AppTheme.chipBackground, // Menu background color from AppTheme
+      color: AppTheme.background, // Menu background color from AppTheme
       onSelected: onChange, // Trigger the callback when an item is selected
-      offset: const Offset(-10, 50), // Adjust the position of the popup
+      offset: const Offset(-20, 50), // Adjust the position of the popup
       itemBuilder: (context) => [
         if (user != null)
           PopupMenuItem<int>(
@@ -36,10 +38,11 @@ class ProfileMenu extends ConsumerWidget {
   // Method to build the list of menu items
   List<PopupMenuEntry<int>> _buildMenuItems() {
     return [
-      _buildMenuItem(1, Icons.person, 'Account Settings'),
+      _buildMenuItem(1, FontAwesomeIcons.circleUser, 'User Profile'),
       _buildMenuItem(2, Icons.notifications, 'Notifications'),
       _buildMenuItem(3, Icons.language, 'Change Language'),
       _buildMenuItem(4, Icons.help_center, 'Help Center'),
+      const PopupMenuDivider(),
       _buildMenuItem(5, Icons.exit_to_app, 'Sign Out'),
     ];
   }
@@ -50,7 +53,7 @@ class ProfileMenu extends ConsumerWidget {
       value: value,
       child: Row(
         children: [
-          Icon(icon, color: AppTheme.iconTheme.color),
+          Icon(icon, color: AppTheme.background),
           const SizedBox(width: 10),
           Text(text, style: AppTheme.textTheme.bodyMedium),
         ],
